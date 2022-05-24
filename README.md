@@ -67,7 +67,6 @@ Once the above steps are done, open your browser and search :
 http://localhost/academy/web/
 ~~~
 
-Enjoy the project.. ;)
 
 ### Install from an Archive File
 
@@ -90,4 +89,4 @@ Once the above steps are done, open your browser and search :
 http://localhost/academy/web/
 ~~~
 
-Enjoy the project.. ;)
+Enjoy the project.. 😊
