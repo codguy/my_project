@@ -23,8 +23,7 @@ $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/admi
     <?php $this->head() ?>
     <style>
     body {
-    	background: rgb(29,222,110);
-        background: radial-gradient(circle, rgba(29,222,110,1) 0%, rgba(46,142,217,1) 62%); 
+        background: -webkit-linear-gradient(left, #36d1dc, #5b86e5); 
     	height: auto;
     	color: white;
     }
