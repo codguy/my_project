@@ -71,8 +71,6 @@ class SiteController extends Controller
             $this->layout = 'blank2';
             return $this->render('home');
         }
-//         $searchModel = new Feed();
-//         $dataProvider = $searchModel->search();
         $model = new Feed();
         return $this->render('index', [
             'model' => $model
@@ -84,23 +82,23 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionLogin()
-    {
-        $this->layout = 'blank';
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+public function actionLogin()
+{
+    $this->layout = 'blank';
+    if (!Yii::$app->user->isGuest) {
+        return $this->goHome();
     }
+
+    $model = new LoginForm();
+    if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        return $this->goBack();
+    }
+
+    $model->password = '';
+    return $this->render('login', [
+        'model' => $model,
+    ]);
+}
 
     /**
      * Logout action.
@@ -119,19 +117,19 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionContact()
-    {
-        $this->layout = 'blank2';
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
+public function actionContact()
+{
+    $this->layout = 'blank2';
+    $model = new ContactForm();
+    if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
+        Yii::$app->session->setFlash('contactFormSubmitted');
 
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
+        return $this->refresh();
     }
+    return $this->render('contact', [
+        'model' => $model,
+    ]);
+}
 
     /**
      * Displays about page.
@@ -143,57 +141,57 @@ class SiteController extends Controller
         return $this->render('about');
     }
     
-    public function actionSignUp()
-    {
-        $this->layout = 'blank';
-        $model = new Users();
-        $obj = rand(100, 999);
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post())) {
-                $model->created_on = date('Y-m-d H:i:s');
-                $model->updated_on = date('Y-m-d H:i:s');
-                $model->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
-                $model->state_id = Users::STATE_ACTIVE;
-                $model->authKey = 'test' . $obj . '.key';
-                $model->accessToken = $obj . '-token';
-                if(UploadedFile::getInstance($model, 'profile_picture') != null){
-                    $model->profile_picture = UploadedFile::getInstance($model, 'profile_picture');
-                    $model->profile_picture = $model->upload();
-                }
-                $transaction = \Yii::$app->db->beginTransaction();
-                try {
-                    if ($model->save(false)) {
-                        $title = 'New ' . $model->getRole($model->roll_id);
-                        $type = Notification::TYPE_NEW;
-                        $users = Users::find()->where([
-                            '<=',
-                            'roll_id',
-                            Users::ROLE_TRAINER
-                        ]);
-                        foreach ($users->each() as $user) {
-                            Notification::createNofication($title, $type, $model, $user->id, 'user');
-                        }
-                        Notification::createNofication('Welcome', Notification::TYPE_SUCCESS, $model, $model->id, 'user');
-                        $login = new LoginForm();
-                        $login->setAttributes($model->attributes);
-                        Yii::$app->user->login($model, 3600*24*30);
-                        return $this->redirect([
-                            'user/view',
-                            'id' => $model->id
-                        ]);
-                    }
-                    $transaction->commit();
-                } catch (\Exception $e) {
-                    $transaction->rollBack();
-                    print $e;
-                }
+public function actionSignUp()
+{
+    $this->layout = 'blank';
+    $model = new Users();
+    $obj = rand(100, 999);
+    if ($this->request->isPost) {
+        if ($model->load($this->request->post())) {
+            $model->created_on = date('Y-m-d H:i:s');
+            $model->updated_on = date('Y-m-d H:i:s');
+            $model->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
+            $model->state_id = Users::STATE_ACTIVE;
+            $model->authKey = 'test' . $obj . '.key';
+            $model->accessToken = $obj . '-token';
+            if(UploadedFile::getInstance($model, 'profile_picture') != null){
+                $model->profile_picture = UploadedFile::getInstance($model, 'profile_picture');
+                $model->profile_picture = $model->upload();
             }
-        } else {
-            $model->loadDefaultValues();
+            $transaction = \Yii::$app->db->beginTransaction();
+            try {
+                if ($model->save(false)) {
+                    $title = 'New ' . $model->getRole($model->roll_id);
+                    $type = Notification::TYPE_NEW;
+                    $users = Users::find()->where([
+                        '<=',
+                        'roll_id',
+                        Users::ROLE_TRAINER
+                    ]);
+                    foreach ($users->each() as $user) {
+                        Notification::createNofication($title, $type, $model, $user->id, 'user');
+                    }
+                    Notification::createNofication('Welcome', Notification::TYPE_SUCCESS, $model, $model->id, 'user');
+                    $login = new LoginForm();
+                    $login->setAttributes($model->attributes);
+                    Yii::$app->user->login($model, 3600*24*30);
+                    return $this->redirect([
+                        'user/view',
+                        'id' => $model->id
+                    ]);
+                }
+                $transaction->commit();
+            } catch (\Exception $e) {
+                $transaction->rollBack();
+                print $e;
+            }
         }
-        
-        return $this->render('sign-up', [
-            'model' => $model
-        ]);
+    } else {
+        $model->loadDefaultValues();
     }
+    
+    return $this->render('sign-up', [
+        'model' => $model
+    ]);
+}
 }
