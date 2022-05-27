@@ -410,4 +410,19 @@ public function actionView($id)
             }
         }
     }
+
+    public function actionDeleteFeed($id)
+    {
+        $feed = Feed::findOne($id);
+        $like = Like::find()->where([
+            'model' => get_class($feed),
+            'model_id' => $feed->id
+        ])->all();
+
+        $feed->delete();
+
+        return $this->redirect([
+            'site/index'
+        ]);
+    }
 }

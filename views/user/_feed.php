@@ -37,6 +37,7 @@ use yii\helpers\Html;
                 </a> <small class="text-muted"><?php echo date('M d, Y H:i A', strtotime($model->created_on))?></small>
 		</div>
 	</div>
+	<span class="float-right"><?php echo Html::a('<i class="close">x</a>', ['#']) ?></span>
 	<div class="social-body">
 		<h2 class="ml-4"><?php echo $model->title?></h2>
 		<p class="ml-4">

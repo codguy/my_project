@@ -14,7 +14,6 @@ $config = [
     'timeZone' => 'Asia/Calcutta',
     'components' => [
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '4YZf1BhEmDyWmPStvxCGV9HyQTCAi3mu',
             'enableCsrfValidation' => false,
         ],
@@ -45,14 +44,14 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
+        
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
+        
 //         'view' => [
 //             'theme' => [
 //                 'pathMap' => [
