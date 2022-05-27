@@ -53009,4 +53009,9 @@ a.text-muted:hover {
 .dark-mode .border-dark {
   border-color: #4b545c !important;
 }
+
+
+.profile_pic {
+	border-radius: 50%;
+}
 /*# sourceMappingURL=adminlte.css.map */
