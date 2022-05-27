@@ -4,7 +4,6 @@
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
-
 namespace app\assets;
 
 use yii\web\AssetBundle;
@@ -17,16 +16,29 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
+
     public $basePath = '@webroot';
+
     public $baseUrl = '@web';
+
     public $css = [
         'css/site.css',
+        'css/home.css',
+        'css/bootstrap.css'
     ];
+
+    public $js = [
+        'js/home.js',
+        'js/jquery.js',
+        'js/bootstrap.js'
+    ];
+
     public $jsOptions = array(
         'position' => \yii\web\View::POS_HEAD
     );
+
     public $depends = [
         'yii\web\YiiAsset',
-        'yii\bootstrap4\BootstrapAsset',
+        'yii\bootstrap4\BootstrapAsset'
     ];
 }

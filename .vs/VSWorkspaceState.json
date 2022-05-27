@@ -1,12 +1,12 @@
 {
   "ExpandedNodes": [
     "",
+    "\\assets",
     "\\controllers",
-    "\\models\\search",
-    "\\views\\user",
     "\\web",
+    "\\web\\css",
     "\\web\\js"
   ],
-  "SelectedNode": "\\web\\js\\jquery.js",
+  "SelectedNode": "\\assets",
   "PreviewInSolutionExplorer": false
 }

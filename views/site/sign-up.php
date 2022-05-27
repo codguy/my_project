@@ -16,25 +16,25 @@ use yii\widgets\ActiveForm;
 					<p class="lead" style="font-size:1.6rem;">Create a new acconut here</p>
 				</div>
 				<?php
-                    $form = ActiveForm::begin([
-                        'id' => 'signup-form',
-                        'options' => [
-                            'enctype' => 'multipart/form-data'
-                        ],
-                        'fieldConfig' => [
-                            'template' => "{label}\n{input}\n{error}",
-                            'labelOptions' => [
-                                'class' => 'col-form-label mr-lg-3'
-                            ],
-                            'inputOptions' => [
-                                'class' => 'form-control'
-                            ],
-                            'errorOptions' => [
-                                'class' => 'invalid-feedback'
-                            ]
-                        ]
-                    ]);
-                ?>
+    $form = ActiveForm::begin([
+        'id' => 'signup-form',
+        'options' => [
+            'enctype' => 'multipart/form-data'
+        ],
+        'fieldConfig' => [
+            'template' => "{label}\n{input}\n{error}",
+            'labelOptions' => [
+                'class' => 'col-form-label mr-lg-3'
+            ],
+            'inputOptions' => [
+                'class' => 'form-control'
+            ],
+            'errorOptions' => [
+                'class' => 'invalid-feedback'
+            ]
+        ]
+    ]);
+    ?>
 				<div class="card">
 					<div class="card-body">
 						<div class="col-6" style="float: left">
@@ -42,43 +42,43 @@ use yii\widgets\ActiveForm;
 								<div class="text-center">
 									<label class="fa fa-picture-o" for="file-ip-1">
         								<?php
-                                            if (! empty($model->profile_picture)) {
-                                                echo '<img src=' . $model->getImageUrl() . ' alt="Charles Hall" class="profile_pic" width="150" height="150"  id="file-ip-1-preview"/>';
-                                            } else {
-                                                echo '<img src="' . Yii::$app->request->baseUrl . '/images/user-icon.png" class="profile_pic" width="150" height="150"  id="file-ip-1-preview"/>';
-                                            }
-                                        ?>
+                if (! empty($model->profile_picture)) {
+                    echo '<img src=' . $model->getImageUrl() . ' alt="Charles Hall" class="profile_pic" width="150" height="150"  id="file-ip-1-preview"/>';
+                } else {
+                    echo '<img src="' . Yii::$app->request->baseUrl . '/images/user-icon.png" class="profile_pic" width="150" height="150"  id="file-ip-1-preview"/>';
+                }
+                ?>
                                     </label>
 								</div>
 								<div class="mb-3">
-                                    <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
+                                    <?=$form->field($model, 'username')->textInput(['maxlength' => true])?>
                                 </div>
 								<div class="mb-3">
-                                    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+                                    <?=$form->field($model, 'email')->textInput(['maxlength' => true])?>
                                 </div>
 							</div>
 						</div>
 						<div class="col-6" style="float: left">
 							<div class="m-sm-4">
 								<div class="mb-3">
-                                    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'minlength' => true]) ?>
+                                    <?=$form->field($model, 'password')->passwordInput(['maxlength' => true,'minlength' => true])?>
                                 </div>
 
 								<div class="mb-3">
-                                    <?= $form->field($model, 'roll_id')->dropDownList($model->getRoleOption()) ?>
+                                    <?=$form->field($model, 'roll_id')->dropDownList($model->getRoleOption())?>
                                 </div>
 								<div class="mb-3">
-                                    <?= $form->field($model, 'dob')->textInput(['type' => 'date'])?>
+                                    <?=$form->field($model, 'dob')->textInput(['type' => 'date'])?>
                                 </div>
 								<div class="mb-3">
-                                 <?= $form->field($model, 'gender',['template' => '{label}'])->textInput() ?>
-                                <?= $form->field($model, 'gender',['template' => '<div class ="Radio-btn">{input}Male</div>'])->textInput(['type'=>'radio', 'value' => 'Male', 'class' => 'gender mr-2', 'id' => 'Male']) ?>
-                                <?= $form->field($model, 'gender', ['template' => '<div class ="Radio-btn">{input}Female</div>'])->textInput(['type'=>'radio', 'value' => 'Female', 'class' => 'gender ml-4 mr-2', 'id' => 'Female']) ?>
+                                 <?=$form->field($model, 'gender', ['template' => '{label}'])->textInput()?>
+                                <?=$form->field($model, 'gender', ['template' => '<div class ="Radio-btn">{input}Male</div>'])->textInput(['type' => 'radio','value' => 'Male','class' => 'gender mr-2','id' => 'Male'])?>
+                                <?=$form->field($model, 'gender', ['template' => '<div class ="Radio-btn">{input}Female</div>'])->textInput(['type' => 'radio','value' => 'Female','class' => 'gender ml-4 mr-2','id' => 'Female'])?>
                                 </div>
 								<div class="mb-3">
 									<img style="display: none" class="profile_pic" width="150"
 										height="150">
-                                    <?= $form->field($model, 'profile_picture', ['template' => '{input}'])->fileInput(['onchange'=>"showPreview(event);", 'id'=>"file-ip-1", 'class'=>'form-input d-none' ])?>
+                                    <?=$form->field($model, 'profile_picture', ['template' => '{input}'])->fileInput(['onchange' => "showPreview(event);",'id' => "file-ip-1",'class' => 'form-input d-none'])?>
 <!--                                     <label id='upload-img'>Upload Image</label> -->
 								</div>
 							</div>
@@ -86,11 +86,14 @@ use yii\widgets\ActiveForm;
 						<div class="text-center mt-3">
 
 							<div class="form-group">
-                                    <?= Html::submitButton(Yii::t('app', 'Sign Up'), ['class' => 'shadow-sm bg-body rounded btn btn-primary login-btns m-4']) ?>
-                                    <?= Html::a(Yii::t('app', 'Sign In'), ['site/login'],['class' => 'shadow-sm bg-body rounded btn btn-secondary login-btns m-4']) ?>
+                                    <?=Html::submitButton(Yii::t('app', 'Sign Up'), ['class' => 'shadow-sm bg-body rounded btn btn-primary login-btns m-4'])?>
+                                    <?=Html::a(Yii::t('app', 'Sign In'), ['site/login'], ['class' => 'shadow-sm bg-body rounded btn btn-secondary login-btns m-4'])?>
                                 </div>
 						</div>
-                        <?php ActiveForm::end(); ?>
+                        <?php
+
+ActiveForm::end();
+                        ?>
 					</div>
 				</div>
 			</div>
