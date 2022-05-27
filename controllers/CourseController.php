@@ -41,16 +41,16 @@ class CourseController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
-    {
-        $searchModel = new CourseSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+public function actionIndex()
+{
+    $searchModel = new CourseSearch();
+    $dataProvider = $searchModel->search($this->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+    return $this->render('index', [
+        'searchModel' => $searchModel,
+        'dataProvider' => $dataProvider,
+    ]);
+}
 
     /**
      * Displays a single Course model.
@@ -58,43 +58,43 @@ class CourseController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+public function actionView($id)
+{
+    return $this->render('view', [
+        'model' => $this->findModel($id),
+    ]);
+}
 
     /**
      * Creates a new Course model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
-    {
-        $model = new Course();
+public function actionCreate()
+{
+    $model = new Course();
 
-        if ($this->request->isPost) {
-            $model->load($this->request->post());
-            $model->created_on = date('Y-m-d H:i:s');
-            $model->updated_on = date('Y-m-d H:i:s');
-            $model->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
-            $model->trainer_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
-            if(UploadedFile::getInstance($model, 'image') != null){
-                $model->image = UploadedFile::getInstance($model, 'image');
-                $model->image = $model->upload();
-            }
-            if ($model->save(false)) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
+    if ($this->request->isPost) {
+        $model->load($this->request->post());
+        $model->created_on = date('Y-m-d H:i:s');
+        $model->updated_on = date('Y-m-d H:i:s');
+        $model->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
+        $model->trainer_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
+        if(UploadedFile::getInstance($model, 'image') != null){
+            $model->image = UploadedFile::getInstance($model, 'image');
+            $model->image = $model->upload();
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        if ($model->save(false)) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+    } else {
+        $model->loadDefaultValues();
     }
+
+    return $this->render('create', [
+        'model' => $model,
+    ]);
+}
 
     /**
      * Updates an existing Course model.
@@ -157,32 +157,32 @@ class CourseController extends Controller
         throw new NotFoundHttpException(\Yii::t('app', 'The requested page does not exist.'));
     }
     
-    public function actionAddChapter($id) {
-        $model = new Chapter();
-        $post = $this->request->post();
-        if ($this->request->isPost) {
-            $model->created_on = date('Y-m-d H:i:s');
-            $model->updated_on = date('Y-m-d H:i:s');
-            $model->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
-            $model->course_id = $id;
-            $model->desciption = $post['Chapter']['desciption'];
-            if ($model->load($post) && $model->save(false)) {
-                return $this->redirect(['view', 'id' => $id]);
-            }
+public function actionAddChapter($id) {
+    $model = new Chapter();
+    $post = $this->request->post();
+    if ($this->request->isPost) {
+        $model->created_on = date('Y-m-d H:i:s');
+        $model->updated_on = date('Y-m-d H:i:s');
+        $model->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
+        $model->course_id = $id;
+        $model->desciption = $post['Chapter']['desciption'];
+        if ($model->load($post) && $model->save(false)) {
+            return $this->redirect(['view', 'id' => $id]);
         }
-        
-        return $this->render('add_chapter', [
-            'model' => $model,
-            'id' => $id
-        ]);
     }
     
-    public function actionViewChapter($id)
-    {
-        return $this->render('_chapter', [
-            'model' => Chapter::findOne($id),
-        ]);
-    }
+    return $this->render('add_chapter', [
+        'model' => $model,
+        'id' => $id
+    ]);
+}
+    
+public function actionViewChapter($id)
+{
+    return $this->render('_chapter', [
+        'model' => Chapter::findOne($id),
+    ]);
+}
     
     public function actionDiscuss() {
         $model = new Discussion();

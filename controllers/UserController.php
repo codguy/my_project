@@ -67,16 +67,16 @@ class UserController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
-    {
-        $searchModel = new UsersSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+public function actionIndex()
+{
+    $searchModel = new UsersSearch();
+    $dataProvider = $searchModel->search($this->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider
-        ]);
-    }
+    return $this->render('index', [
+        'searchModel' => $searchModel,
+        'dataProvider' => $dataProvider
+    ]);
+}
 
     /**
      * Displays a single Users model.
@@ -86,12 +86,12 @@ class UserController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id)
-        ]);
-    }
+public function actionView($id)
+{
+    return $this->render('view', [
+        'model' => $this->findModel($id)
+    ]);
+}
 
     /**
      * Creates a new Users model.
