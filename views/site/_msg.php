@@ -1,20 +1,4 @@
-<div class="card card-danger direct-chat direct-chat-danger">
-  <div class="card-header">
-    <h3 class="card-title">Direct Chat</h3>
-    <div class="card-tools">
-      <span data-toggle="tooltip" title="3 New Messages" class="badge badge-light">3</span>
-      <button type="button" class="btn btn-tool" data-card-widget="collapse">
-        <i class="fas fa-minus"></i>
-      </button>
-      <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle">
-        <i class="fas fa-comments"></i>
-      </button>
-      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
-      </button>
-    </div>
-  </div>
-  <!-- /.card-header -->
-  <div class="card-body">
+
     <!-- Conversations are loaded here -->
     <div class="direct-chat-messages">
       <!-- Message. Default to the left -->
@@ -24,7 +8,7 @@
           <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
         </div>
         <!-- /.direct-chat-infos -->
-        <img class="direct-chat-img" src="/docs/3.1//assets/img/user1-128x128.jpg" alt="message user image">
+        <img class="direct-chat-img" src="<?php //echo $model->getimageUrl() ?> " alt="message user image">
         <!-- /.direct-chat-img -->
         <div class="direct-chat-text">
           Is this template really for free? That's unbelievable!
@@ -39,7 +23,7 @@
           <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
         </div>
         <!-- /.direct-chat-infos -->
-        <img class="direct-chat-img" src="/docs/3.1//assets/img/user3-128x128.jpg" alt="message user image">
+        <img class="direct-chat-img" src="<?php //echo $model->getimageUrl() ?> " alt="message user image">
         <!-- /.direct-chat-img -->
         <div class="direct-chat-text">
           You better believe it!
@@ -54,7 +38,7 @@
           <span class="direct-chat-timestamp float-right">23 Jan 5:37 pm</span>
         </div>
         <!-- /.direct-chat-infos -->
-        <img class="direct-chat-img" src="/docs/3.1//assets/img/user1-128x128.jpg" alt="message user image">
+        <img class="direct-chat-img" src="<?php //echo $model->getimageUrl() ?> " alt="message user image">
         <!-- /.direct-chat-img -->
         <div class="direct-chat-text">
           Working with AdminLTE on a great new app! Wanna join?
@@ -69,7 +53,7 @@
           <span class="direct-chat-timestamp float-left">23 Jan 6:10 pm</span>
         </div>
         <!-- /.direct-chat-infos -->
-        <img class="direct-chat-img" src="/docs/3.1//assets/img/user3-128x128.jpg" alt="message user image">
+        <img class="direct-chat-img" src="<?php //echo $model->getimageUrl() ?> " alt="message user image">
         <!-- /.direct-chat-img -->
         <div class="direct-chat-text">
           I would love to.
@@ -84,7 +68,7 @@
       <ul class="contacts-list">
         <li>
           <a href="#">
-            <img class="contacts-list-img" src="/docs/3.1//assets/img/user1-128x128.jpg">
+            <img class="contacts-list-img" src="<?php //echo $model->getimageUrl() ?> ">
             <div class="contacts-list-info">
               <span class="contacts-list-name">
                 Count Dracula
@@ -98,7 +82,7 @@
         <!-- End Contact Item -->
         <li>
           <a href="#">
-            <img class="contacts-list-img" src="/docs/3.1//assets/img/user7-128x128.jpg">
+            <img class="contacts-list-img" src="<?php //echo $model->getimageUrl() ?> ">
             <div class="contacts-list-info">
               <span class="contacts-list-name">
                 Sarah Doe
@@ -112,7 +96,7 @@
         <!-- End Contact Item -->
         <li>
           <a href="#">
-            <img class="contacts-list-img" src="/docs/3.1//assets/img/user3-128x128.jpg">
+            <img class="contacts-list-img" src="<?php //echo $model->getimageUrl() ?> ">
             <div class="contacts-list-info">
               <span class="contacts-list-name">
                 Nadia Jolie
@@ -126,7 +110,7 @@
         <!-- End Contact Item -->
         <li>
           <a href="#">
-            <img class="contacts-list-img" src="/docs/3.1//assets/img/user5-128x128.jpg">
+            <img class="contacts-list-img" src="<?php //echo $model->getimageUrl() ?> ">
             <div class="contacts-list-info">
               <span class="contacts-list-name">
                 Nora S. Vans
@@ -140,7 +124,7 @@
         <!-- End Contact Item -->
         <li>
           <a href="#">
-            <img class="contacts-list-img" src="/docs/3.1//assets/img/user6-128x128.jpg">
+            <img class="contacts-list-img" src="<?php //echo $model->getimageUrl() ?> ">
             <div class="contacts-list-info">
               <span class="contacts-list-name">
                 John K.
@@ -154,7 +138,7 @@
         <!-- End Contact Item -->
         <li>
           <a href="#">
-            <img class="contacts-list-img" src="/docs/3.1//assets/img/user8-128x128.jpg">
+            <img class="contacts-list-img" src="<?php //echo $model->getimageUrl() ?> ">
             <div class="contacts-list-info">
               <span class="contacts-list-name">
                 Kenneth M.
@@ -170,18 +154,3 @@
       <!-- /.contacts-list -->
     </div>
     <!-- /.direct-chat-pane -->
-  </div>
-  <!-- /.card-body -->
-  <div class="card-footer">
-    <form action="#" method="post">
-      <div class="input-group">
-        <input type="text" name="message" placeholder="Type Message ..." class="form-control">
-        <span class="input-group-append">
-          <button type="button" class="btn btn-primary">Send</button>
-        </span>
-      </div>
-    </form>
-  </div>
-  <!-- /.card-footer-->
-</div>
-<!--/.direct-chat -->

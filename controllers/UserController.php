@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
+use app\models\Message;
 
 /**
  * UserController implements the CRUD actions for Users model.
@@ -425,5 +426,20 @@ public function actionView($id)
         return $this->redirect([
             'site/index'
         ]);
+    }
+    
+    public function actionAddMsg(){
+        $msg = new Message();
+        $post = $this->request->post();
+        if(!empty($post['msg'])){
+            $msg->message = $post['msg'];
+            $msg->created_by = \Yii::$app->user->id;
+            $msg->created_on = date('Y-m-d H:i:s');
+            $msg->updated_on = date('Y-m-d H:i:s');
+            $msg->user_id = 3;
+            if($msg->save()){
+                \Yii::$app->session->setFlash('success', 'Msg sent');
+            }
+        }
     }
 }

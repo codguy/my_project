@@ -167,15 +167,19 @@ $(document).on('click', '.like-btn', function(e){
 		id: id,
 		model: model,
 	}
-	$.ajax({
-	    type: 'POST',
-        dataType: 'json',
-	    data: arr,
-		url: '<?=Url::toRoute(['user/like-feed'])?>',
-		success: function(data) {
-			location.reload();
-		}
-	});
+// 	$.ajax({
+// 	    type: 'POST',
+//         dataType: 'json',
+// 	    data: arr,
+//		url: '<?=Url::toRoute(['user/like-feed'])?>',
+// 		success: function(data) {
+// 			$(document).Toasts('create', {
+//               title: 'Toast Title',
+//               body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+//             });
+
+// 		}
+// 	});
 		e.stopImmediatePropagation();
 		return false;
 });
