@@ -23,7 +23,7 @@ use app\models\search\Users;
 							</div>
                             <?php $form = ActiveForm::begin([
                                 'id' => 'login-form',
-                                // 'layout' => 'horizontal',
+                                'layout' => 'horizontal',
                                 'fieldConfig' => [
                                     'template' => "{label}\n{input}\n{error}",
                                     'labelOptions' => [
@@ -39,22 +39,18 @@ use app\models\search\Users;
                             ]);
                             ?>
 
-							<!-- 											<label class="form-label">Email</label> -->
-							<!-- 											<input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" /> -->
 							<?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
 
 
 							<div class="mb-3">
-								<!-- 											<label class="form-label">Password</label> -->
-								<!-- 											<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" /> -->
-        						<?= $form->field($model, 'password')->passwordInput() ?>
+								<?= $form->field($model, 'password')->passwordInput() ?>
 
     							<small> 
     								<a href="index.html" class="float-right">Forgot password?</a>
     							</small>
     						</div>
     						<div>
-											<?=$form->field($model, 'rememberMe')->checkbox(['template' => "<div class=\"offset-lg-1 col-lg-4 ml-n1 custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>"])?>
+											<?=$form->field($model, 'rememberMe')->checkbox(['template' => "<div class=\"offset-lg-1 col-lg-4 custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>"])?>
 										</div>
 							<div class="text-center mt-3">
 								<!-- 											<a href="index.html" class="btn btn-lg btn-primary">Sign in</a> -->

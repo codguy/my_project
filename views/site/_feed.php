@@ -36,7 +36,7 @@ use yii\helpers\Html;
 		</div>
 	</div>
 	<div class="social-body">
-		<h2 class="ml-4"><?php echo $model->title?></h2>
+		<h3 class="ml-4"><?php echo $model->title?></h3>
 		<p class="ml-4">
                 <?php echo $model->desciption ?>
             </p>
@@ -45,14 +45,14 @@ use yii\helpers\Html;
 			class="img-responsive col-11 m-4">
             <?php } ?>
             <div class="btn-group">
-			<button class="btn btn-white btn-xs like-btn"
+			<button class="btn btn-white btn like-btn"
 				data-id="<?php echo $model->id?>"
 				data-key="<?php echo get_class($model)?>">
 				<i class="fa fa-thumbs-up text-<?php echo $liked?> mr-2"></i><?php echo $like_count?></button>
-			<button class="btn btn-white btn-xs">
+			<button class="btn btn-white btn">
 				<i class="fa fa-comments"></i> Comment
 			</button>
-			<button class="btn btn-white btn-xs">
+			<button class="btn btn-white btn">
 				<i class="fa fa-share"></i> Share
 			</button>
 		</div>

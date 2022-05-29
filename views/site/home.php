@@ -1,19 +1,31 @@
-<?php use yii\helpers\Html;
+<?php
+use yii\helpers\Html;
+use yii\helpers\Url;
 // $this->registerCssFile('@web/css/assets/aos.css', ['depends'=> [yii\web\JqueryAsset::className()]]);
-$this->registerCssFile('@web/css/assets/bootstrap.min.css', ['depends'=> [yii\web\JqueryAsset::className()]]);
-// Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/assets/bootstrap.min.css');
+$this->registerCssFile('@web/css/assets/bootstrap.min.css', [
+    'depends' => [
+        yii\web\JqueryAsset::className()
+    ]
+]);
+$this->registerCssFile(Yii::$app->basePath . '/css/assets/bootstrap.min.css');
 // $this->registerCssFile('@web/css/assets/bootstap-icons.css', ['depends'=> [yii\web\JqueryAsset::className()]]);
 // $this->registerCssFile('@web/css/assets/glightbox.min.css', ['depends'=> [yii\web\JqueryAsset::className()]]);
 // $this->registerCssFile('@web/css/assets/remixicon.css', ['depends'=> [yii\web\JqueryAsset::className()]]);
-// $this->registerCssFile('@web/css/assets/swiper-bundle.min.css', ['depends'=> [yii\web\JqueryAsset::className()]]); 
+// $this->registerCssFile('@web/css/assets/swiper-bundle.min.css', ['depends'=> [yii\web\JqueryAsset::className()]]);
 
-$this->registerCssFile('@web/css/home.css', ['depends'=> [yii\web\JqueryAsset::className()]]);
+$this->registerCssFile('@web/css/home.css', [
+    'depends' => [
+        yii\web\JqueryAsset::className()
+    ]
+]);
 ?>
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="<?php
+
+    echo Url::toRoute('site/index')?>" class="logo d-flex align-items-center">
         <img src="images/logo.png" alt="">
         <span>Academy</span>
       </a>
@@ -23,8 +35,20 @@ $this->registerCssFile('@web/css/home.css', ['depends'=> [yii\web\JqueryAsset::c
           <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
           <li><a class="nav-link scrollto" href="#about">About</a></li>
           <li><a class="nav-link scrollto" href="#services">Services</a></li>
-          <li><?php echo Html::a('Contact',['site/contact'],['class' => 'nav-link']) ?></li>
-          <li><?php echo Html::a('Get Started',['site/login'],['class' => 'getstarted']) ?></li>
+          <li><?php
+
+        echo Html::a('Contact', [
+            'site/contact'
+        ], [
+            'class' => 'nav-link'
+        ])?></li>
+          <li><?php
+
+        echo Html::a('Get Started', [
+            'site/login'
+        ], [
+            'class' => 'getstarted'
+        ])?></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -43,7 +67,13 @@ $this->registerCssFile('@web/css/home.css', ['depends'=> [yii\web\JqueryAsset::c
           <div data-aos="fade-up" data-aos-delay="600">
             <div class="text-center text-lg-start">
               
-              <?php echo Html::a('Get Started',['site/login'],['class' => 'btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center pt-4 pb-4']) ?>
+              <?php
+
+            echo Html::a('Get Started', [
+                'site/login'
+            ], [
+                'class' => 'btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center pt-4 pb-4'
+            ])?>
             </div>
           </div>
         </div>
@@ -445,14 +475,46 @@ $this->registerCssFile('@web/css/home.css', ['depends'=> [yii\web\JqueryAsset::c
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <?php 
-  
-  $this->registerJsFile('@web/js/home.js', ['depends'=> [yii\web\JqueryAsset::className()]]);
-  $this->registerJsFile('@web/js/assets/precounter.js', ['depends'=> [yii\web\JqueryAsset::className()]]);
-  $this->registerJsFile('@web/js/assets/aos.js', ['depends'=> [yii\web\JqueryAsset::className()]]);
-  $this->registerJsFile('@web/js/assets/bootstrap.bundle.min.js', ['depends'=> [yii\web\JqueryAsset::className()]]);
-  $this->registerJsFile('@web/js/assets//glightbox.min.js', ['depends'=> [yii\web\JqueryAsset::className()]]);
-  $this->registerJsFile('@web/js/assets/isotope.pkgd.min.js', ['depends'=> [yii\web\JqueryAsset::className()]]);
-  $this->registerJsFile('@web/js/assets/swiper-bundle.min.js', ['depends'=> [yii\web\JqueryAsset::className()]]);
-  $this->registerJsFile('@web/js/assets/validate.js', ['depends'=> [yii\web\JqueryAsset::className()]]);
-  ?>
+  <?php
+
+$this->registerJsFile('@web/js/home.js', [
+    'depends' => [
+        yii\web\JqueryAsset::className()
+    ]
+]);
+$this->registerJsFile('@web/js/assets/precounter.js', [
+    'depends' => [
+        yii\web\JqueryAsset::className()
+    ]
+]);
+$this->registerJsFile('@web/js/assets/aos.js', [
+    'depends' => [
+        yii\web\JqueryAsset::className()
+    ]
+]);
+$this->registerJsFile('@web/js/assets/bootstrap.bundle.min.js', [
+    'depends' => [
+        yii\web\JqueryAsset::className()
+    ]
+]);
+$this->registerJsFile('@web/js/assets//glightbox.min.js', [
+    'depends' => [
+        yii\web\JqueryAsset::className()
+    ]
+]);
+$this->registerJsFile('@web/js/assets/isotope.pkgd.min.js', [
+    'depends' => [
+        yii\web\JqueryAsset::className()
+    ]
+]);
+$this->registerJsFile('@web/js/assets/swiper-bundle.min.js', [
+    'depends' => [
+        yii\web\JqueryAsset::className()
+    ]
+]);
+$this->registerJsFile('@web/js/assets/validate.js', [
+    'depends' => [
+        yii\web\JqueryAsset::className()
+    ]
+]);
+?>

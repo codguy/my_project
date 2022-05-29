@@ -1,20 +1,20 @@
 <?php
 namespace app\controllers;
 
+use app\models\Feed;
+use app\models\Follow;
+use app\models\Like;
+use app\models\Notification;
+use app\models\Skill;
+use app\models\SocialLink;
 use app\models\Users;
 use app\models\search\Users as UsersSearch;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
-use app\models\Notification;
-use app\models\SocialLink;
-use app\models\Follow;
-use app\models\Skill;
-use yii\filters\AccessControl;
-use app\components\AcessRuules;
-use app\models\Feed;
-use app\models\Like;
+use app\models\Message;
 
 /**
  * UserController implements the CRUD actions for Users model.
@@ -373,6 +373,7 @@ public function actionView($id)
             $model->created_on = date('Y-m-d H:i:s');
             $model->updated_on = date('Y-m-d H:i:s');
             if($model->save()){
+                \Yii::$app->session->setFlash('success', "Your message to display.");
                 $title = 'New Post';
                 $type = Notification::TYPE_NEW;
                 $followers = Follow::find()->where([
@@ -382,7 +383,7 @@ public function actionView($id)
                 foreach ($followers->each() as $follower){
                     Notification::createNofication($title, $type, $model, $follower->user_id, 'feed');
                 }
-                return $this->redirect('site/index');
+                return $this->redirect(['site/index']);
             }
         }
     }
@@ -406,7 +407,38 @@ public function actionView($id)
             $model->created_on = date('Y-m-d H:i:s');
             $model->updated_on = date('Y-m-d H:i:s');
             if ($model->save()) {
+                \Yii::$app->session->setFlash('success', "Your message to display.");
                 return true;
+            }
+        }
+    }
+
+    public function actionDeleteFeed($id)
+    {
+        $feed = Feed::findOne($id);
+        $like = Like::find()->where([
+            'model' => get_class($feed),
+            'model_id' => $feed->id
+        ])->all();
+
+        $feed->delete();
+
+        return $this->redirect([
+            'site/index'
+        ]);
+    }
+    
+    public function actionAddMsg(){
+        $msg = new Message();
+        $post = $this->request->post();
+        if(!empty($post['msg'])){
+            $msg->message = $post['msg'];
+            $msg->created_by = \Yii::$app->user->id;
+            $msg->created_on = date('Y-m-d H:i:s');
+            $msg->updated_on = date('Y-m-d H:i:s');
+            $msg->user_id = 3;
+            if($msg->save()){
+                \Yii::$app->session->setFlash('success', 'Msg sent');
             }
         }
     }

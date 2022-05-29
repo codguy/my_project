@@ -22,35 +22,67 @@ use yii\helpers\Html;
     ?>
 
 <div class="social-feed-box card">
-    <?php if (strtotime($model->created_on) >= strtotime('now')-3600){ ?>
+    <?php
+
+if (strtotime($model->created_on) >= strtotime('now') - 3600) {
+        ?>
     	<div class="ribbon-wrapper ribbon-lg">
     		<div class="ribbon bg-primary">New post</div>
     	</div>
-	<?php }?>
+	<?php
+
+}
+    ?>
         <div class="social-avatar">
 		<a href="" class="pull-left">
-                <?php echo $user->getImage()?>
+                <?php
+
+echo $user->getImage()?>
             </a>
 		<div class="media-body">
 			<a href="#">
-                    <?php echo $user->username?>
-                </a> <small class="text-muted"><?php echo date('M d, Y H:i A', strtotime($model->created_on))?></small>
+                    <?php
+
+echo $user->username?>
+                </a> <small class="text-muted"><?php
+
+echo date('M d, Y H:i A', strtotime($model->created_on))?></small>
 		</div>
 	</div>
 	<div class="social-body">
-		<h2 class="ml-4"><?php echo $model->title?></h2>
+		<h2 class="ml-4"><?php
+
+echo $model->title?></h2>
 		<p class="ml-4">
-                <?php echo $model->desciption ?>
+                <?php
+
+echo $model->desciption?>
             </p>
-            <?php if($model->image){ ?>
-            <img src="<?php echo $model->getImageUrl()?>"
+            <?php
+
+if ($model->image) {
+                ?>
+            <img src="<?php
+
+echo $model->getImageUrl()?>"
 			class="img-responsive col-11 m-4">
-            <?php } ?>
+            <?php
+
+}
+            ?>
             <div class="btn-group">
 			<button class="btn btn-white btn-xs like-btn"
-				data-id="<?php echo $model->id?>"
-				data-key="<?php echo get_class($model)?>">
-				<i class="fa fa-thumbs-up text-<?php echo $liked?> mr-2"></i><?php echo $like_count?></button>
+				data-id="<?php
+
+echo $model->id?>"
+				data-key="<?php
+
+echo get_class($model)?>">
+				<i class="fa fa-thumbs-up text-<?php
+
+echo $liked?> mr-2"></i><?php
+
+echo $like_count?></button>
 			<button class="btn btn-white btn-xs">
 				<i class="fa fa-comments"></i> Comment
 			</button>
@@ -74,16 +106,24 @@ use yii\helpers\Html;
 				<div class="d-flex m-3">
 				<div class="flex-shrink-0">
 					<img class="rounded-circle"
-						src="<?php echo $person->getImageUrl() ?>" height="50px"
+						src="<?php
+
+echo $person->getImageUrl()?>" height="50px"
 						width="50px" alt="..."
 						style="overflow: hidden; object-fit: cover;" />
 				</div>
 				<div class="ms-3 ml-3">
 					<div class="fw-bold">
-						<span class="font-weight-bold"><?php echo $person->username ?></span><small
-							class="font-weight-light ml-2"><?php echo date('M d, Y h:i A', strtotime($comment->created_on)) ?></small>
+						<span class="font-weight-bold"><?php
+
+echo $person->username?></span><small
+							class="font-weight-light ml-2"><?php
+
+echo date('M d, Y h:i A', strtotime($comment->created_on))?></small>
 					</div>
-						<?php echo $comment->message ?>
+						<?php
+
+echo $comment->message?>
 					</div>
 			</div>
 				<?php
@@ -93,12 +133,23 @@ use yii\helpers\Html;
 			<div class="social-comment">
 				<div class="row">
 					<a href="" class="pull-left">
-                    <?php echo $self->image?>
+                    <?php
+
+echo $self->image?>
                 </a>
 					<div class="media-body pull-left col-11">
 						<textarea class="form-control" placeholder="Write comment..."
-							id="discuss<?php echo $model->id?>"></textarea>
-                    <?php echo Html::button('send',[ "id"=>"discuss-btn", "class"=>"btn btn-secondary float-right discuss-btn", 'data-id'=>$model->id, 'data-key'=>get_class($model)])?>
+							id="discuss<?php
+
+echo $model->id?>"></textarea>
+                    <?php
+
+echo Html::button('send', [
+                        "id" => "discuss-btn",
+                        "class" => "btn btn-secondary float-right discuss-btn",
+                        'data-id' => $model->id,
+                        'data-key' => get_class($model)
+                    ])?>
                 </div>
 				</div>
 			</div>
@@ -116,15 +167,19 @@ $(document).on('click', '.like-btn', function(e){
 		id: id,
 		model: model,
 	}
-	$.ajax({
-	    type: 'POST',
-        dataType: 'json',
-	    data: arr,
-		url: '<?= Url::toRoute(['user/like-feed'])?>',
-		success: function(data) {
-			location.reload();
-		}
-	});
+// 	$.ajax({
+// 	    type: 'POST',
+//         dataType: 'json',
+// 	    data: arr,
+//		url: '<?=Url::toRoute(['user/like-feed'])?>',
+// 		success: function(data) {
+// 			$(document).Toasts('create', {
+//               title: 'Toast Title',
+//               body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+//             });
+
+// 		}
+// 	});
 		e.stopImmediatePropagation();
 		return false;
 });
@@ -142,7 +197,7 @@ $(document).on('click', '.discuss-btn', function(e){
 	    type: 'POST',
         dataType: 'json',
 	    data: arr,
-		url: '<?= Url::toRoute(['course/discuss'])?>',
+		url: '<?=Url::toRoute(['course/discuss'])?>',
 		success: function(data) {
 			location.reload();
 		}
