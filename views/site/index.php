@@ -5,6 +5,8 @@ use yii\data\ActiveDataProvider;
 use app\models\Feed;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use app\models\Message;
+use yii\widgets\Pjax;
 ?>
 
 <link
@@ -119,7 +121,7 @@ $form = ActiveForm::begin([
     ])?>
 </div>
 		<div class="col-md-3" style="position: relative; bottom: 0; right: 0">
-			<div class="card card-danger direct-chat direct-chat-danger">
+			<div class="card card-primary card-outline direct-chat direct-chat-primary">
 				<div class="card-header">
 					<h3 class="card-title">Direct Chat</h3>
 					<div class="card-tools">
@@ -140,8 +142,36 @@ $form = ActiveForm::begin([
 					</div>
 				</div>
 				<!-- /.card-header -->
+				
 				<div class="card-body">
-<?php echo $this->render('_msg')?>
+				
+	<div class="direct-chat-messages">
+	<?php Pjax::begin(['id' => 'chat']) ?>
+				<?php 
+    				$msg = Message::find()->where([
+    				    'created_by' => Yii::$app->user->id
+    				])->orWhere([
+    				    'user_id' => Yii::$app->user->id
+    				]);
+    				$msgProvider = new ActiveDataProvider([
+    				    'query' => $msg,
+    				    'sort' => [
+    				        'defaultOrder' => [
+    				            'created_on' => SORT_ASC
+    				        ]
+    				    ]
+    				]);
+				    echo ListView::widget([
+				        'dataProvider' => $msgProvider,
+				        'layout' => '{items}',
+				        'itemView' => '_msg'
+				    ]);
+				?>
+				
+				<?php Pjax::end() ?>
+				</div>
+			
+<?php //echo $this->render('_msg',['model' => msg])?>
   </div>
 				<!-- /.card-body -->
 				<div class="card-footer">
@@ -199,10 +229,14 @@ $(document).on('click', '#send-msg', function(){
 	$.ajax({
 	    type: 'POST',
         dataType: 'json',
-	    data: msg,
+	    data: {
+	    	msg	: msg 
+	    },
 		url: '<?= Url::toRoute(['user/add-msg'])?>',
-		success: function(data) {
-			console.log('success');
+		success: function(response) {
+			if(response == 'OK'){
+				$.pjax.reload({container: '#chat'});
+			}
 		}
 	});
 });
@@ -233,6 +267,8 @@ $(document).on('click', '#send-msg', function(){
     data: data,
     options: {}
   }; */
+  $('#chat-pane-toggle').DirectChat('toggle')
+  
 </script>
 <script>
  /*  const myChart = new Chart(

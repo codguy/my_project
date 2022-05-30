@@ -3,6 +3,7 @@ use yii\helpers\Html;
 use app\models\Notification;
 use app\models\Users;
 use app\models\User;
+use app\models\Message;
 
 ?>
 <!-- Navbar -->
@@ -57,29 +58,39 @@ use app\models\User;
 			</div></li>
 
 		<!-- Messages Dropdown Menu -->
-		<?php if(false){?>
+		<?php if(true){
+		      $msgs = Message::find()->where([
+		          'user_id' => Yii::$app->user->id
+		      ])->groupBy(['created_by'])->orderBy(['id' => SORT_ASC]);
+		      
+		    ?>
 			<li class="nav-item dropdown"><a class="nav-link"
 			data-toggle="dropdown" href="#"> <i class="far fa-comments"></i> <span
-				class="badge badge-danger navbar-badge">3</span>
+				class="badge badge-danger navbar-badge"><?php echo $msgs->count()?></span>
 		</a>
 			<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-				<a href="#" class="dropdown-item"> <!-- Message Start -->
+				<?php 
+				foreach ($msgs->each() as $msg){
+				    
+				    $messenger = Users::findOne([$msg->created_by]);
+				?>
+				<a href="#" class="dropdown-item" data-widget="chat-pane-toggle"> <!-- Message Start -->
 					<div class="media">
-						<img src="<?=$assetDir?>/img/user1-128x128.jpg" alt="User Avatar"
+						<img src="<?=$messenger->getImageUrl()?>" class="profile_pic mr-4" height="50px" width="50px" alt="User Avatar"
 							class="img-size-50 mr-3 img-circle">
 						<div class="media-body">
 							<h3 class="dropdown-item-title">
-								Brad Diesel <span class="float-right text-sm text-danger"><i
-									class="fas fa-star"></i></span>
+								<?=$messenger->username?>
 							</h3>
-							<p class="text-sm">Call me whenever you can...</p>
+							<p class="text-sm badge btn-outline-secondary"><?=$msg->message?></p>
 							<p class="text-sm text-muted">
-								<i class="far fa-clock mr-1"></i> 4 Hours Ago
+								<i class="far fa-clock mr-1"></i><?php echo Users::getTime($msg->created_on)?>
 							</p>
 						</div>
 					</div> <!-- Message End -->
 				</a>
-				<div class="dropdown-divider"></div>
+				<div class="dropdown-divider"></div>	
+				<?php } ?>
 				<a href="#" class="dropdown-item"> <!-- Message Start -->
 					<div class="media">
 						<img src="<?=$assetDir?>/img/user8-128x128.jpg" alt="User Avatar"

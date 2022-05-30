@@ -93,6 +93,20 @@ use yii\helpers\Html;
                             'course/index'
                         ],
                         'iconStyle' => 'fas fa-desktop'
+                    ],
+                    [
+                        'label' => 'Chat',
+                        'url' => [
+                            'user/chat'
+                        ],
+                        'iconStyle' => 'fas fa-comments'
+                    ],
+                    [
+                        'label' => 'Template',
+                        'url' => [
+                            'site/create-email-template'
+                        ],
+                        'iconStyle' => 'fas fa-paint-brush'
                     ]
                 ]
             ]);

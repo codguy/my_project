@@ -396,4 +396,52 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return ($id == \Yii::$app->user->identity->getId()) ? true : false;
     }
+    
+    public static function getTime($date) {
+        $start = strtotime($date);
+        $end = strtotime('now');
+        $time = ($end - $start) / 60;
+        $result = (int)($time) . ' mins ago';
+        if($time <= 1){
+            $time = (int)($time/60);
+            $result = 'Just now';
+        }
+        elseif($time >= 60 && $time <= 60*24){
+            $time = (int)($time/60);
+            $result = $time.' hrs ago';
+        }
+        elseif($time >= 60*24 && $time <= 60*24*2){
+            $time = (int)($time/60);
+            $result = $time.' day ago';
+        }
+        elseif($time >= 60*24*2 && $time <= 60*24*7){
+            $time = (int)($time/(60*24));
+            $result = $time.' days ago';
+        }
+        elseif($time >= 60*24*7 && $time <= 60*24*7*2){
+            $time = (int)($time/(60*24*7));
+            $result = $time.' week ago';
+        }
+        elseif($time >= 60*24*7*2 && $time <= 60*24*30){
+            $time = (int)($time/(60*24*7));
+            $result = $time.' weeks ago';
+        }
+        elseif($time >= 60*24*30 && $time <= 60*24*30*2){
+            $time = (int)($time/(60*24*30));
+            $result = $time.' month ago';
+        }
+        elseif($time >= 60*24*30*2 && $time <= 60*24*365){
+            $time = (int)($time/(60*24*30));
+            $result = $time.' months ago';
+        }
+        elseif($time >= 60*24*365 && $time <= 60*24*365*2){
+            $time = (int)($time/(60*24*365));
+            $result = $time.' year ago';
+        }
+        elseif($time >= 60*24*365*2){
+            $time = (int)($time/(60*24*365));
+            $result = $time.' years ago';
+        }
+        return $result;
+    }
 }

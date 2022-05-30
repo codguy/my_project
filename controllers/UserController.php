@@ -15,6 +15,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use app\models\Message;
+use yii\web\Response;
 
 /**
  * UserController implements the CRUD actions for Users model.
@@ -36,29 +37,31 @@ class UserController extends Controller
                         'post'
                     ]
                 ]
-            ],
-            /* 'access' => [
-                'class' => \yii\filters\AccessControl::className(),
-                'ruleConfig' => [
-                    'class' => \app\models\AcessRuules::className()
-                ],
-                'only' => [
-                    'index',
-                    'create',
-                    'update',
-                    'view'
-                ],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => [
-                            Users::isAdmin(),
-                            Users::isManager(),
-                            Users::isTrainer()
-                        ]
-                    ]
-                ]
-            ] */
+            ]
+            /*
+         * 'access' => [
+         * 'class' => \yii\filters\AccessControl::className(),
+         * 'ruleConfig' => [
+         * 'class' => \app\models\AcessRuules::className()
+         * ],
+         * 'only' => [
+         * 'index',
+         * 'create',
+         * 'update',
+         * 'view'
+         * ],
+         * 'rules' => [
+         * [
+         * 'allow' => true,
+         * 'roles' => [
+         * Users::isAdmin(),
+         * Users::isManager(),
+         * Users::isTrainer()
+         * ]
+         * ]
+         * ]
+         * ]
+         */
         ];
     }
 
@@ -67,16 +70,16 @@ class UserController extends Controller
      *
      * @return string
      */
-public function actionIndex()
-{
-    $searchModel = new UsersSearch();
-    $dataProvider = $searchModel->search($this->request->queryParams);
+    public function actionIndex()
+    {
+        $searchModel = new UsersSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
-    return $this->render('index', [
-        'searchModel' => $searchModel,
-        'dataProvider' => $dataProvider
-    ]);
-}
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider
+        ]);
+    }
 
     /**
      * Displays a single Users model.
@@ -86,12 +89,12 @@ public function actionIndex()
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-public function actionView($id)
-{
-    return $this->render('view', [
-        'model' => $this->findModel($id)
-    ]);
-}
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id)
+        ]);
+    }
 
     /**
      * Creates a new Users model.
@@ -111,7 +114,7 @@ public function actionView($id)
                 $model->state_id = Users::STATE_ACTIVE;
                 $model->authKey = 'test' . $obj;
                 $model->accessToken = $obj . '-token';
-                if(UploadedFile::getInstance($model, 'profile_picture') != null){
+                if (UploadedFile::getInstance($model, 'profile_picture') != null) {
                     $model->profile_picture = UploadedFile::getInstance($model, 'profile_picture');
                     $model->profile_picture = $model->upload();
                 }
@@ -133,7 +136,7 @@ public function actionView($id)
                             'view',
                             'id' => $model->id
                         ]);
-                    }else{
+                    } else {
                         print_r($model->getErrors());
                     }
                     $transaction->commit();
@@ -165,11 +168,10 @@ public function actionView($id)
         $model = $this->findModel($id);
         $image = $model->profile_picture;
         if ($this->request->isPost && $model->load($this->request->post())) {
-            if(UploadedFile::getInstance($model, 'profile_picture') != null){
+            if (UploadedFile::getInstance($model, 'profile_picture') != null) {
                 $model->profile_picture = UploadedFile::getInstance($model, 'profile_picture');
                 $model->profile_picture = $model->upload();
-            }
-            else{
+            } else {
                 $model->profile_picture = $image;
             }
             $model->updated_on = date('Y-m-d H:i:s');
@@ -358,13 +360,14 @@ public function actionView($id)
         $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
     }
-    
-    public function actionCreateFeed(){
+
+    public function actionCreateFeed()
+    {
         $model = new Feed();
         $post = $this->request->post();
-        if (!empty($post)) {
+        if (! empty($post)) {
             $model->load($post);
-            if(UploadedFile::getInstance($model, 'image') != null){
+            if (UploadedFile::getInstance($model, 'image') != null) {
                 $model->image = UploadedFile::getInstance($model, 'image');
                 $model->image = $model->upload();
             }
@@ -372,7 +375,7 @@ public function actionView($id)
             $model->created_by_id = \Yii::$app->user->id;
             $model->created_on = date('Y-m-d H:i:s');
             $model->updated_on = date('Y-m-d H:i:s');
-            if($model->save()){
+            if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Your message to display.");
                 $title = 'New Post';
                 $type = Notification::TYPE_NEW;
@@ -380,24 +383,27 @@ public function actionView($id)
                     'model_id' => $model->created_by_id,
                     'model' => get_class(new Users())
                 ]);
-                foreach ($followers->each() as $follower){
+                foreach ($followers->each() as $follower) {
                     Notification::createNofication($title, $type, $model, $follower->user_id, 'feed');
                 }
-                return $this->redirect(['site/index']);
+                return $this->redirect([
+                    'site/index'
+                ]);
             }
         }
     }
-    
-    public function actionLikeFeed(){
+
+    public function actionLikeFeed()
+    {
         $model = new Like();
         $post = $this->request->post();
-        if (!empty($post)) {
+        if (! empty($post)) {
             $another = Like::findOne([
                 'model' => $post['model'],
                 'model_id' => $post['id'],
                 'user_id' => \Yii::$app->user->id
             ]);
-            if(!empty($another)){
+            if (! empty($another)) {
                 $another->delete();
                 return true;
             }
@@ -427,19 +433,47 @@ public function actionView($id)
             'site/index'
         ]);
     }
-    
-    public function actionAddMsg(){
+
+    public function actionAddMsg()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = 'NOK';
         $msg = new Message();
         $post = $this->request->post();
-        if(!empty($post['msg'])){
+        if (! empty($post['msg'])) {
             $msg->message = $post['msg'];
             $msg->created_by = \Yii::$app->user->id;
             $msg->created_on = date('Y-m-d H:i:s');
             $msg->updated_on = date('Y-m-d H:i:s');
             $msg->user_id = 3;
-            if($msg->save()){
-                \Yii::$app->session->setFlash('success', 'Msg sent');
+            if ($msg->save()) {
+                $data = "OK";
             }
         }
+        return $data;
+    }
+
+    public function actionChat()
+    {
+        $message = new Message();
+        return $this->render('_chat');
+    }
+    
+    public function actionChatBox($id)
+    {
+        $message = Message::find()->where(['created_by' => $id])->orWhere(['user_id' => $id])->all();
+        return $this->renderAjax('_chat_area',[
+            'model' => $message,
+            'id' => $id
+        ]);
+    }
+    
+    public function actionSendMail(){
+        Yii::$app->mailer->compose('@app/mail/layouts/html'/*,  ['imageFileName' => '/path/to/image.jpg'] */)
+        ->setFrom('sanjaykabir23@gmail.com')
+        ->setTo('satnam9762@gmail.com')
+        ->setSubject('Hey There')
+        ->setTextBody('Plain text content')
+        ->send();
     }
 }
