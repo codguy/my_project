@@ -26,8 +26,8 @@ $this->beginPage()?>
 <html lang="<?=Yii::$app->language?>">
 <head>
 <?php 
-$this->registerJsFile('@web/js/jquery2.js');?>
- <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --> 
+    $this->registerJsFile('@web/js/jquery.min.js', ['depends' => [\yii\web\JqueryAsset::class]]);?>
+ 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
     <meta charset="<?=Yii::$app->charset?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,8 +35,8 @@ $this->registerJsFile('@web/js/jquery2.js');?>
     
     $this->registerCssFile('@web/css/bootstrap.css');
     $this->registerCssFile('@web/css/site.css');
-    $this->registerJsFile('@web/js/jquery.js');
-    $this->registerJsFile('@web/js/bootstrap.js');
+    $this->registerJsFile('@web/js/jquery.js', ['depends' => [\yii\web\JqueryAsset::class]]);
+    $this->registerJsFile('@web/js/bootstrap.js', ['depends' => [\yii\web\JqueryAsset::class]]);
     $this->registerCsrfMetaTags()?>
     <title><?=Html::encode($this->title)?></title>
     <?php
