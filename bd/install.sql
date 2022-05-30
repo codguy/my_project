@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 27, 2022 at 03:30 AM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 8.1.2
+-- Generation Time: May 30, 2022 at 08:10 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,8 +18,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `newproject`
+-- Database: `academy`
 --
+CREATE DATABASE IF NOT EXISTS `academy` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `academy`;
 
 -- --------------------------------------------------------
 
@@ -27,10 +29,9 @@ SET time_zone = "+00:00";
 -- Table structure for table `migration`
 --
 
-CREATE TABLE IF NOT EXISTS `migration` (
+CREATE TABLE `migration` (
   `version` varchar(180) NOT NULL,
-  `apply_time` int(11) DEFAULT NULL,
-  PRIMARY KEY (`version`)
+  `apply_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -51,7 +52,9 @@ INSERT INTO `migration` (`version`, `apply_time`) VALUES
 ('m220421_160759_create_tbl_follow', 1650558870),
 ('m220421_161110_create_tbl_social_link', 1650558870),
 ('m220421_161515_create_tbl_like', 1650558870),
-('m220421_161721_create_tbl_skill', 1650558870);
+('m220421_161721_create_tbl_skill', 1650558870),
+('m220527_214327_create_tbl_message', 1653798827),
+('m220530_165007_create_tbl_email_template', 1653929699);
 
 -- --------------------------------------------------------
 
@@ -59,18 +62,16 @@ INSERT INTO `migration` (`version`, `apply_time`) VALUES
 -- Table structure for table `tbl_chapter`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_chapter` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_chapter` (
+  `id` int(11) NOT NULL,
   `title` varchar(50) NOT NULL,
   `desciption` text DEFAULT NULL,
   `dificulty` tinyint(3) DEFAULT NULL,
   `course_id` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `created_by_id` int(11) DEFAULT 1,
-  `updated_on` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx-dept-created_by_id` (`created_by_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+  `updated_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_chapter`
@@ -85,8 +86,8 @@ INSERT INTO `tbl_chapter` (`id`, `title`, `desciption`, `dificulty`, `course_id`
 -- Table structure for table `tbl_course`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_course` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_course` (
+  `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `desciption` text DEFAULT NULL,
   `dificulty` tinyint(3) DEFAULT NULL,
@@ -94,10 +95,8 @@ CREATE TABLE IF NOT EXISTS `tbl_course` (
   `created_on` datetime DEFAULT NULL,
   `created_by_id` int(11) DEFAULT 1,
   `updated_on` datetime DEFAULT NULL,
-  `image` varchar(150) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx-dept-created_by_id` (`created_by_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
+  `image` varchar(150) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_course`
@@ -113,8 +112,8 @@ INSERT INTO `tbl_course` (`id`, `name`, `desciption`, `dificulty`, `trainer_id`,
 -- Table structure for table `tbl_discussion`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_discussion` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_discussion` (
+  `id` int(11) NOT NULL,
   `model` varchar(255) DEFAULT NULL,
   `model_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT 1,
@@ -122,10 +121,8 @@ CREATE TABLE IF NOT EXISTS `tbl_discussion` (
   `message` varchar(255) NOT NULL,
   `created_on` datetime DEFAULT NULL,
   `created_by_id` int(11) DEFAULT 1,
-  `updated_on` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx-dept-created_by_id` (`created_by_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4;
+  `updated_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_discussion`
@@ -138,21 +135,42 @@ INSERT INTO `tbl_discussion` (`id`, `model`, `model_id`, `user_id`, `replied_to`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_email_tempalte`
+--
+
+CREATE TABLE `tbl_email_tempalte` (
+  `id` int(11) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `html` text NOT NULL,
+  `json` text NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `updated_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_email_tempalte`
+--
+
+INSERT INTO `tbl_email_tempalte` (`id`, `type_id`, `html`, `json`, `created_by`, `created_on`, `updated_on`) VALUES
+(1, 4, '<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional //EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\n<head>\n<!--[if gte mso 9]>\n<xml>\n  <o:OfficeDocumentSettings>\n    <o:AllowPNG/>\n    <o:PixelsPerInch>96</o:PixelsPerInch>\n  </o:OfficeDocumentSettings>\n</xml>\n<![endif]-->\n  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <meta name=\"x-apple-disable-message-reformatting\">\n  <!--[if !mso]><!--><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><!--<![endif]-->\n  <title></title>\n  \n    <style type=\"text/css\">\n      @media only screen and (min-width: 520px) {\n  .u-row {\n    width: 500px !important;\n  }\n  .u-row .u-col {\n    vertical-align: top;\n  }\n\n  .u-row .u-col-100 {\n    width: 500px !important;\n  }\n\n}\n\n@media (max-width: 520px) {\n  .u-row-container {\n    max-width: 100% !important;\n    padding-left: 0px !important;\n    padding-right: 0px !important;\n  }\n  .u-row .u-col {\n    min-width: 320px !important;\n    max-width: 100% !important;\n    display: block !important;\n  }\n  .u-row {\n    width: calc(100% - 40px) !important;\n  }\n  .u-col {\n    width: 100% !important;\n  }\n  .u-col > div {\n    margin: 0 auto;\n  }\n}\nbody {\n  margin: 0;\n  padding: 0;\n}\n\ntable,\ntr,\ntd {\n  vertical-align: top;\n  border-collapse: collapse;\n}\n\np {\n  margin: 0;\n}\n\n.ie-container table,\n.mso-container table {\n  table-layout: fixed;\n}\n\n* {\n  line-height: inherit;\n}\n\na[x-apple-data-detectors=\'true\'] {\n  color: inherit !important;\n  text-decoration: none !important;\n}\n\ntable, td { color: #000000; } </style>\n  \n  \n\n</head>\n\n<body class=\"clean-body u_body\" style=\"margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #e7e7e7;color: #000000\">\n  <!--[if IE]><div class=\"ie-container\"><![endif]-->\n  <!--[if mso]><div class=\"mso-container\"><![endif]-->\n  <table style=\"border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #e7e7e7;width:100%\" cellpadding=\"0\" cellspacing=\"0\">\n  <tbody>\n  <tr style=\"vertical-align: top\">\n    <td style=\"word-break: break-word;border-collapse: collapse !important;vertical-align: top\">\n    <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td align=\"center\" style=\"background-color: #e7e7e7;\"><![endif]-->\n    \n\n<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 500px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n    <div style=\"border-collapse: collapse;display: table;width: 100%;background-color: transparent;\">\n      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:500px;\"><tr style=\"background-color: transparent;\"><![endif]-->\n      \n<!--[if (mso)|(IE)]><td align=\"center\" width=\"500\" style=\"width: 500px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n<div class=\"u-col u-col-100\" style=\"max-width: 320px;min-width: 500px;display: table-cell;vertical-align: top;\">\n  <div style=\"width: 100% !important;\">\n  <!--[if (!mso)&(!IE)]><!--><div style=\"padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n  \n<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n  <tbody>\n    <tr>\n      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n        \n  <h1 style=\"margin: 0px; line-height: 140%; text-align: left; word-wrap: break-word; font-weight: normal; font-family: arial,helvetica,sans-serif; font-size: 22px;\">\n    Heading\n  </h1>\n\n      </td>\n    </tr>\n  </tbody>\n</table>\n\n<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n  <tbody>\n    <tr>\n      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n        \n  <div style=\"line-height: 140%; text-align: left; word-wrap: break-word;\">\n    <p style=\"font-size: 14px; line-height: 140%;\">This is a new Text block. Change the text.</p>\n  </div>\n\n      </td>\n    </tr>\n  </tbody>\n</table>\n\n<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n  <tbody>\n    <tr>\n      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n        \n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n  <tr>\n    <td style=\"padding-right: 0px;padding-left: 0px;\" align=\"center\">\n      \n      <img align=\"center\" border=\"0\" src=\"https://cdn.tools.unlayer.com/image/placeholder.png\" alt=\"\" title=\"\" style=\"outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 480px;\" width=\"480\"/>\n      \n    </td>\n  </tr>\n</table>\n\n      </td>\n    </tr>\n  </tbody>\n</table>\n\n  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n  </div>\n</div>\n<!--[if (mso)|(IE)]></td><![endif]-->\n      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n    </div>\n  </div>\n</div>\n\n\n    <!--[if (mso)|(IE)]></td></tr></table><![endif]-->\n    </td>\n  </tr>\n  </tbody>\n  </table>\n  <!--[if mso]></div><![endif]-->\n  <!--[if IE]></div><![endif]-->\n</body>\n\n</html>\n', '{\"counters\":{\"u_column\":1,\"u_row\":1,\"u_content_heading\":1,\"u_content_text\":1,\"u_content_image\":1},\"body\":{\"id\":\"O34DlNe4nJ\",\"rows\":[{\"id\":\"wVFH6YfLFv\",\"cells\":[1],\"columns\":[{\"id\":\"sU81YpEToX\",\"contents\":[{\"id\":\"407AZNTk_U\",\"type\":\"heading\",\"values\":{\"containerPadding\":\"10px\",\"anchor\":\"\",\"headingType\":\"h1\",\"fontFamily\":{\"label\":\"Arial\",\"value\":\"arial,helvetica,sans-serif\"},\"fontSize\":\"22px\",\"textAlign\":\"left\",\"lineHeight\":\"140%\",\"linkStyle\":{\"inherit\":true,\"linkColor\":\"#0000ee\",\"linkHoverColor\":\"#0000ee\",\"linkUnderline\":true,\"linkHoverUnderline\":true},\"displayCondition\":null,\"_meta\":{\"htmlID\":\"u_content_heading_1\",\"htmlClassNames\":\"u_content_heading\"},\"selectable\":true,\"draggable\":true,\"duplicatable\":true,\"deletable\":true,\"hideable\":true,\"text\":\"Heading\"}},{\"id\":\"df8aPvVw2b\",\"type\":\"text\",\"values\":{\"containerPadding\":\"10px\",\"anchor\":\"\",\"textAlign\":\"left\",\"lineHeight\":\"140%\",\"linkStyle\":{\"inherit\":true,\"linkColor\":\"#0000ee\",\"linkHoverColor\":\"#0000ee\",\"linkUnderline\":true,\"linkHoverUnderline\":true},\"displayCondition\":null,\"_meta\":{\"htmlID\":\"u_content_text_1\",\"htmlClassNames\":\"u_content_text\"},\"selectable\":true,\"draggable\":true,\"duplicatable\":true,\"deletable\":true,\"hideable\":true,\"text\":\"<p style=\\\"font-size: 14px; line-height: 140%;\\\">This is a new Text block. Change the text.</p>\"}},{\"id\":\"yjdsd4KzmR\",\"type\":\"image\",\"values\":{\"containerPadding\":\"10px\",\"anchor\":\"\",\"src\":{\"url\":\"https://cdn.tools.unlayer.com/image/placeholder.png\",\"width\":800,\"height\":200},\"textAlign\":\"center\",\"altText\":\"\",\"action\":{\"name\":\"web\",\"values\":{\"href\":\"\",\"target\":\"_blank\"}},\"displayCondition\":null,\"_meta\":{\"htmlID\":\"u_content_image_1\",\"htmlClassNames\":\"u_content_image\"},\"selectable\":true,\"draggable\":true,\"duplicatable\":true,\"deletable\":true,\"hideable\":true}}],\"values\":{\"backgroundColor\":\"\",\"padding\":\"0px\",\"border\":{},\"_meta\":{\"htmlID\":\"u_column_1\",\"htmlClassNames\":\"u_column\"}}}],\"values\":{\"displayCondition\":null,\"columns\":false,\"backgroundColor\":\"\",\"columnsBackgroundColor\":\"\",\"backgroundImage\":{\"url\":\"\",\"fullWidth\":true,\"repeat\":false,\"center\":true,\"cover\":false},\"padding\":\"0px\",\"anchor\":\"\",\"hideDesktop\":false,\"_meta\":{\"htmlID\":\"u_row_1\",\"htmlClassNames\":\"u_row\"},\"selectable\":true,\"draggable\":true,\"duplicatable\":true,\"deletable\":true,\"hideable\":true}}],\"values\":{\"popupPosition\":\"center\",\"popupWidth\":\"600px\",\"popupHeight\":\"auto\",\"borderRadius\":\"10px\",\"contentAlign\":\"center\",\"contentVerticalAlign\":\"center\",\"contentWidth\":\"500px\",\"fontFamily\":{\"label\":\"Arial\",\"value\":\"arial,helvetica,sans-serif\"},\"textColor\":\"#000000\",\"popupBackgroundColor\":\"#FFFFFF\",\"popupBackgroundImage\":{\"url\":\"\",\"fullWidth\":true,\"repeat\":false,\"center\":true,\"cover\":true},\"popupOverlay_backgroundColor\":\"rgba(0, 0, 0, 0.1)\",\"popupCloseButton_position\":\"top-right\",\"popupCloseButton_backgroundColor\":\"#DDDDDD\",\"popupCloseButton_iconColor\":\"#000000\",\"popupCloseButton_borderRadius\":\"0px\",\"popupCloseButton_margin\":\"0px\",\"popupCloseButton_action\":{\"name\":\"close_popup\",\"attrs\":{\"onClick\":\"document.querySelector(\'.u-popup-container\').style.display = \'none\';\"}},\"backgroundColor\":\"#e7e7e7\",\"backgroundImage\":{\"url\":\"\",\"fullWidth\":true,\"repeat\":false,\"center\":true,\"cover\":false},\"preheaderText\":\"\",\"linkStyle\":{\"body\":true,\"linkColor\":\"#0000ee\",\"linkHoverColor\":\"#0000ee\",\"linkUnderline\":true,\"linkHoverUnderline\":true},\"_meta\":{\"htmlID\":\"u_body\",\"htmlClassNames\":\"u_body\"}}},\"schemaVersion\":8}', 1, '2022-05-30 23:28:34', '2022-05-30 23:28:34');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_feed`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_feed` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_feed` (
+  `id` int(11) NOT NULL,
   `title` varchar(50) NOT NULL,
   `desciption` varchar(255) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `created_by_id` int(11) DEFAULT 1,
   `updated_on` datetime DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `state_id` tinyint(4) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`),
-  KEY `idx-dept-created_by_id` (`created_by_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4;
+  `state_id` tinyint(4) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_feed`
@@ -168,16 +186,14 @@ INSERT INTO `tbl_feed` (`id`, `title`, `desciption`, `created_on`, `created_by_i
 -- Table structure for table `tbl_follow`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_follow` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_follow` (
+  `id` int(11) NOT NULL,
   `model` varchar(255) DEFAULT NULL,
   `model_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `created_on` datetime DEFAULT NULL,
-  `updated_on` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `model` (`model`,`model_id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
+  `updated_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_follow`
@@ -206,16 +222,14 @@ INSERT INTO `tbl_follow` (`id`, `model`, `model_id`, `user_id`, `created_on`, `u
 -- Table structure for table `tbl_image`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_image` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_image` (
+  `id` int(11) NOT NULL,
   `image` varchar(255) NOT NULL,
   `model` varchar(255) DEFAULT NULL,
   `model_id` int(11) NOT NULL,
   `created_on` datetime DEFAULT NULL,
   `created_by_id` int(11) DEFAULT 1,
-  `updated_on` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx-dept-created_by_id` (`created_by_id`)
+  `updated_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -224,16 +238,14 @@ CREATE TABLE IF NOT EXISTS `tbl_image` (
 -- Table structure for table `tbl_like`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_like` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_like` (
+  `id` int(11) NOT NULL,
   `model` varchar(255) DEFAULT NULL,
   `model_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `created_on` datetime DEFAULT NULL,
-  `updated_on` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`,`model`,`model_id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+  `updated_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_like`
@@ -247,11 +259,36 @@ INSERT INTO `tbl_like` (`id`, `model`, `model_id`, `user_id`, `created_on`, `upd
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_message`
+--
+
+CREATE TABLE `tbl_message` (
+  `id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `updated_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_message`
+--
+
+INSERT INTO `tbl_message` (`id`, `message`, `user_id`, `created_by`, `created_on`, `updated_on`) VALUES
+(9, 'yo', 1, 3, '2022-05-29 11:07:07', '2022-05-29 11:07:07'),
+(10, 'Hii', 1, 3, '2022-05-29 15:32:23', '2022-05-29 15:32:23'),
+(11, 'erer', 3, 1, '2022-05-29 15:43:45', '2022-05-29 15:43:45'),
+(12, 'hiii', 1, 35, '2022-05-29 15:43:55', '2022-05-29 15:43:55');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_notification`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_notification` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_notification` (
+  `id` int(11) NOT NULL,
   `title` varchar(25) NOT NULL,
   `type_id` tinyint(4) NOT NULL,
   `state_id` tinyint(3) NOT NULL,
@@ -260,10 +297,8 @@ CREATE TABLE IF NOT EXISTS `tbl_notification` (
   `model_id` int(10) NOT NULL,
   `icon` varchar(50) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
-  `created_by_id` int(11) DEFAULT 1,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`,`to_user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4;
+  `created_by_id` int(11) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_notification`
@@ -309,16 +344,15 @@ INSERT INTO `tbl_notification` (`id`, `title`, `type_id`, `state_id`, `to_user_i
 -- Table structure for table `tbl_skill`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_skill` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_skill` (
+  `id` int(11) NOT NULL,
   `model` varchar(255) DEFAULT NULL,
   `model_id` int(11) NOT NULL,
   `skill` varchar(25) NOT NULL,
   `created_on` datetime DEFAULT NULL,
   `updated_on` datetime DEFAULT NULL,
-  `level` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+  `level` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_skill`
@@ -338,16 +372,14 @@ INSERT INTO `tbl_skill` (`id`, `model`, `model_id`, `skill`, `created_on`, `upda
 -- Table structure for table `tbl_social_link`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_social_link` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_social_link` (
+  `id` int(11) NOT NULL,
   `platform` varchar(255) NOT NULL,
   `link` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
   `created_on` datetime DEFAULT NULL,
-  `updated_on` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id` (`id`,`platform`,`link`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+  `updated_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_social_link`
@@ -364,8 +396,8 @@ INSERT INTO `tbl_social_link` (`id`, `platform`, `link`, `user_id`, `created_on`
 -- Table structure for table `tbl_user`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_user` (
+  `id` int(11) NOT NULL,
   `username` varchar(25) NOT NULL,
   `email` varchar(25) NOT NULL,
   `password` varchar(30) NOT NULL,
@@ -378,10 +410,8 @@ CREATE TABLE IF NOT EXISTS `tbl_user` (
   `profile_picture` varchar(50) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `created_by_id` int(25) DEFAULT 1,
-  `updated_on` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id` (`id`,`username`,`email`,`roll_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4;
+  `updated_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_user`
@@ -397,8 +427,187 @@ INSERT INTO `tbl_user` (`id`, `username`, `email`, `password`, `roll_id`, `state
 (50, 'Trainer', 'trainer@gmail.com', 'admin@123', 3, 1, '1989-07-27', 'test828.ke', '828-token', 'Male', 'pexels-photo-774909.jpeg', '2022-05-09 17:59:09', 47, '2022-05-09 17:59:09'),
 (51, 'Student', 'student@gmail.com', 'admin@123', 4, 1, '2004-01-23', 'test482.ke', '482-token', 'Male', 'hp5A03.tmp.jpg', '2022-05-09 17:59:38', 47, '2022-05-10 09:48:18'),
 (54, 'pedakado', 'pedakado@gmail.com', 'admin@123', 4, 1, '2016-06-17', 'test733.ke', '733-token', 'Female', 'avatar-3.jpg', '2022-05-22 08:22:43', 1, '2022-05-22 08:22:43'),
-(89, 'cixyxirilo', 'cixyxirilo@gmail.com', 'admin@123', 1, 1, '1976-10-20', 'test174', '174-token', NULL, 'hpF8A1.tmp.gif', '2022-05-22 21:28:37', 47, '2022-05-22 21:28:52'),
 (90, 'Sanjay Kabir', 'sanjay@gmail.com', 'admin@123', 2, 1, '2022-05-03', 'test424', '424-token', 'Male', '', '2022-05-26 06:01:20', 1, '2022-05-26 06:01:20');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `migration`
+--
+ALTER TABLE `migration`
+  ADD PRIMARY KEY (`version`);
+
+--
+-- Indexes for table `tbl_chapter`
+--
+ALTER TABLE `tbl_chapter`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx-dept-created_by_id` (`created_by_id`);
+
+--
+-- Indexes for table `tbl_course`
+--
+ALTER TABLE `tbl_course`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx-dept-created_by_id` (`created_by_id`);
+
+--
+-- Indexes for table `tbl_discussion`
+--
+ALTER TABLE `tbl_discussion`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx-dept-created_by_id` (`created_by_id`);
+
+--
+-- Indexes for table `tbl_email_tempalte`
+--
+ALTER TABLE `tbl_email_tempalte`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_feed`
+--
+ALTER TABLE `tbl_feed`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx-dept-created_by_id` (`created_by_id`);
+
+--
+-- Indexes for table `tbl_follow`
+--
+ALTER TABLE `tbl_follow`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `model` (`model`,`model_id`,`user_id`);
+
+--
+-- Indexes for table `tbl_image`
+--
+ALTER TABLE `tbl_image`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx-dept-created_by_id` (`created_by_id`);
+
+--
+-- Indexes for table `tbl_like`
+--
+ALTER TABLE `tbl_like`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`,`model`,`model_id`,`user_id`);
+
+--
+-- Indexes for table `tbl_message`
+--
+ALTER TABLE `tbl_message`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_notification`
+--
+ALTER TABLE `tbl_notification`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`,`to_user_id`);
+
+--
+-- Indexes for table `tbl_skill`
+--
+ALTER TABLE `tbl_skill`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_social_link`
+--
+ALTER TABLE `tbl_social_link`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`,`platform`,`link`,`user_id`);
+
+--
+-- Indexes for table `tbl_user`
+--
+ALTER TABLE `tbl_user`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`,`username`,`email`,`roll_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tbl_chapter`
+--
+ALTER TABLE `tbl_chapter`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `tbl_course`
+--
+ALTER TABLE `tbl_course`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `tbl_discussion`
+--
+ALTER TABLE `tbl_discussion`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- AUTO_INCREMENT for table `tbl_email_tempalte`
+--
+ALTER TABLE `tbl_email_tempalte`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `tbl_feed`
+--
+ALTER TABLE `tbl_feed`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT for table `tbl_follow`
+--
+ALTER TABLE `tbl_follow`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `tbl_image`
+--
+ALTER TABLE `tbl_image`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_like`
+--
+ALTER TABLE `tbl_like`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `tbl_message`
+--
+ALTER TABLE `tbl_message`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `tbl_notification`
+--
+ALTER TABLE `tbl_notification`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `tbl_skill`
+--
+ALTER TABLE `tbl_skill`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `tbl_social_link`
+--
+ALTER TABLE `tbl_social_link`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `tbl_user`
+--
+ALTER TABLE `tbl_user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- Constraints for dumped tables
