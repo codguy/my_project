@@ -16,6 +16,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use app\models\Message;
 use yii\web\Response;
+use app\models\EmailTemplate;
 
 /**
  * UserController implements the CRUD actions for Users model.
@@ -469,11 +470,11 @@ class UserController extends Controller
     }
     
     public function actionSendMail(){
-        Yii::$app->mailer->compose('@app/mail/layouts/html'/*,  ['imageFileName' => '/path/to/image.jpg'] */)
+        $template = str_replace("{user_name}","Satnam",EmailTemplate::findOne(3)->html);
+        Yii::$app->mailer->compose('@app/mail/layouts/html',  ['content' => $template])
         ->setFrom('sanjaykabir23@gmail.com')
         ->setTo('satnam9762@gmail.com')
         ->setSubject('Hey There')
-        ->setTextBody('Plain text content')
         ->send();
     }
 }
