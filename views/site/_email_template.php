@@ -79,7 +79,7 @@ $(document).on('click', '#save-btn', function(){
         	},
             type: "POST",
             success: function () {
-                console.log("success");
+                window.reload();
             },
             error: function () {
                 console.log("failure");

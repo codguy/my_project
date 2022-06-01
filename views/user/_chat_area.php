@@ -4,19 +4,20 @@
 use app\models\Message;
     $id = !empty($id) ? $id : Message::find()->orderBy(['id' => SORT_DESC])->one()->created_by;
     $messanger = Users::findOne($id);
-    $self = Yii::$app->user->identity;
+    $self = Users::findOne(Yii::$app->user->identity->id);
+    
 ?>
 
 <div class="col-12 col-lg-7 col-xl-9">
 	<div class="py-2 px-4 border-bottom d-none d-lg-block">
 		<div class="d-flex align-items-center py-1">
 			<div class="position-relative">
-				<img src="https://bootdey.com/img/Content/avatar/avatar3.png"
-					class="rounded-circle mr-1" alt="Sharon Lessman" width="40"
+				<img src="<?php echo $messanger->getImageUrl()?>"
+					class="rounded-circle mr-1 profile_pic" alt="<?php echo $messanger->username?>" width="40"
 					height="40">
 			</div>
 			<div class="flex-grow-1 pl-3">
-				<strong>Sharon Lessman</strong>
+				<strong><?php echo $messanger->username?></strong>
 				<div class="text-muted small">
 					<em>Typing...</em>
 				</div>
@@ -54,10 +55,10 @@ use app\models\Message;
 
 	<div class="position-relative">
 		<div class="chat-messages p-4">
-
+			<?php if(false){ ?>
 			<div class="chat-message-right pb-4">
 				<div>
-					<img src="https://bootdey.com/img/Content/avatar/avatar1.png"
+					<img src="<?php echo $self->getImageUrl()?>"
 						class="rounded-circle mr-1" alt="Chris Wood" width="40"
 						height="40">
 					<div class="text-muted small text-nowrap mt-2">2:33 am</div>
@@ -68,21 +69,21 @@ use app\models\Message;
 					te vix.
 				</div>
 			</div>
-
+<?php } else { ?>
 			<div class="chat-message-left pb-4">
 				<div>
-					<img src="https://bootdey.com/img/Content/avatar/avatar3.png"
+					<img src="<?php echo $messanger->getImageUrl()?>"
 						class="rounded-circle mr-1" alt="Sharon Lessman" width="40"
 						height="40">
 					<div class="text-muted small text-nowrap mt-2">2:34 am</div>
 				</div>
 				<div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
-					<div class="font-weight-bold mb-1">Sharon Lessman</div>
+					<div class="font-weight-bold mb-1"><?php echo $messanger->username?></div>
 					Sit meis deleniti eu, pri vidit meliore docendi ut, an eum erat
 					animal commodo.
 				</div>
 			</div>
-
+<?php } ?>
 			<div class="chat-message-right mb-4">
 				<div>
 					<img src="https://bootdey.com/img/Content/avatar/avatar1.png"

@@ -5,6 +5,7 @@
 /** @var string $message */
 /** @var Exception$exception */
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = $name;
 ?>
@@ -56,7 +57,7 @@ $this->title = $name;
 }
 
 .col-sm-10.col-sm-offset-1.text-center {
-	top: 40%;
+	top: calc(50% - 200px);
 }
 </style>
 
@@ -76,7 +77,7 @@ $this->title = $name;
 
 						<p></p>
 
-						<a href="<?php Yii::$app->homeUrl?>" class="link_404">Go to Home</a>
+						<a href="<?php echo Yii::$app->homeUrl?>" class="link_404">Go to Home</a>
 					</div>
 				</div>
 			</div>

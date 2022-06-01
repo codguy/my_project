@@ -72,14 +72,15 @@ class SiteController extends Controller
             ]
         ];
     }
-    
-    public function beforeAction( $action ) {
-        if ( parent::beforeAction ( $action ) ) {
-            
-            //change layout for error action after
-            //checking for the error action name
-            //so that the layout is set for errors only
-            if ( $action->id == 'error' ) {
+
+    public function beforeAction($action)
+    {
+        if (parent::beforeAction($action)) {
+
+            // change layout for error action after
+            // checking for the error action name
+            // so that the layout is set for errors only
+            if ($action->id == 'error') {
                 $this->layout = 'blank2';
             }
             return true;
@@ -233,7 +234,7 @@ class SiteController extends Controller
             $email_template->created_on = date('Y-m-d H:i:s');
             $email_template->updated_on = date('Y-m-d H:i:s');
             if ($email_template->save()) {
-                return $this->redirect('site/create-email-template');
+                return $status = 'OK';            
             }
         }
         $query = EmailTemplate::find();
@@ -242,6 +243,20 @@ class SiteController extends Controller
         ]);
         return $this->render('_email_template', [
             'dataProvider' => $dataProvder
+        ]);
+    }
+
+    public function actionUpdateEmailTemplate()
+    {}
+
+    public function actionDeleteEmailTemplate($id)
+    {
+        $model = EmailTemplate::findOne($id);
+        
+        $model->delete();
+        
+        return $this->redirect([
+            'create-email-template'
         ]);
     }
 }
