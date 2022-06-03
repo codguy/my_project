@@ -19,7 +19,7 @@ use yii\helpers\Html;
     
   
 
-<?php echo $this->render("@app/mail/layouts/index.php");?>
+<?= $content ?>
 
     
     

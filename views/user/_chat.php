@@ -86,11 +86,10 @@ foreach ($msgs->groupBy('created_by')->each() as $msg){
 
 					<hr class="d-block d-lg-none mt-1 mb-0">
 				</div>
-				<div class="chat-area">
-					<?php //echo ListView::widget([
-					    
-// 					]); ?>
-				</div>
+<!-- 				<div class="chat-area"> -->
+				<?php echo $this->render('_chat_area')?>
+					
+<!-- 				</div> -->
 			</div>
 		</div>
 	</div>

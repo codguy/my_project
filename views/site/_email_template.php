@@ -4,8 +4,8 @@ use yii\grid\GridView;
 ?>
 
 <nav class="nav nav-tabs nav-justified col-4">
-	<a class="active" data-toggle="tab" href="#home">Home</a> <a
-		data-toggle="tab" href="#design">Design</a>
+	<a class="nav-link active" data-toggle="tab" href="#home">Home</a> 
+	<a class="nav-link" data-toggle="tab" href="#design">Design</a>
 </nav>
 
 <div class="tab-content">
@@ -24,12 +24,13 @@ echo GridView::widget([
             'value' => function ($data) {
                 return $data->html;
             }
-        ]
+        ],
+         [
+         'class' => 'yii\grid\ActionColumn'
+         ] 
     ],  
  
-  /* [
-  'class' => 'yii\grid\ActionColumn'
-  ] */
+  
 
 ]);
 ?>
@@ -78,7 +79,7 @@ $(document).on('click', '#save-btn', function(){
         	},
             type: "POST",
             success: function () {
-                console.log("success");
+                window.reload();
             },
             error: function () {
                 console.log("failure");
