@@ -769,6 +769,7 @@ body{margin-top:20px;}
 	flex-direction: column;
 	max-height: 70vh;
 	overflow-y: scroll;
+	min-height: 70vh;
 }
 
 .chat-message-left,
@@ -798,4 +799,8 @@ body{margin-top:20px;}
 }
 .border-top {
     border-top: 1px solid #dee2e6!important;
+}
+
+.chat-messages.p-4 {
+	scrollbar-width: none;
 }

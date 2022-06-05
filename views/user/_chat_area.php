@@ -2,7 +2,7 @@
 
     use app\models\Users;
 use app\models\Message;
-    $id = !empty($id) ? $id : Message::find()->orderBy(['id' => SORT_DESC])->one()->created_by;
+    $id = 1/* !empty($id) ? $id : Message::find()->orderBy(['id' => SORT_DESC])->one()->created_by */;
     $messanger = Users::findOne($id);
     $self = Users::findOne(Yii::$app->user->identity->id);
     
@@ -11,7 +11,7 @@ use app\models\Message;
     ])->orWhere(['user_id' => $self->id])->all();
 ?>
 
-<div class="col-12 col-lg-7 col-xl-9">
+<div class="col-12 col-lg-7 col-xl-9 " style=" scrollbar-width: none; ">
 	<div class="py-2 px-4 border-bottom d-none d-lg-block">
 		<div class="d-flex align-items-center py-1">
 			<div class="position-relative">
@@ -22,10 +22,10 @@ use app\models\Message;
 			<div class="flex-grow-1 pl-3">
 				<strong><?php echo $messanger->username?></strong>
 				<div class="text-muted small">
-					<em>Typing...</em>
+					<em>Online</em>
 				</div>
 			</div>
-			<div>
+			<div class="d-none">
 				<button class="btn btn-primary btn-lg mr-1 px-3">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
