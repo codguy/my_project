@@ -2,6 +2,7 @@
 
     use app\models\Users;
 use app\models\Message;
+use yii\helpers\Url;
     $id = !empty($id) ? $id : Message::find()->orderBy(['id' => SORT_DESC])->one()->created_by;
     $messanger = Users::findOne($id);
     $self = Users::findOne(Yii::$app->user->identity->id);
@@ -11,7 +12,7 @@ use app\models\Message;
     ])->orWhere(['user_id' => $self->id])->all();
 ?>
 
-<div class="col-12 col-lg-7 col-xl-9">
+<div class="">
 	<div class="py-2 px-4 border-bottom d-none d-lg-block">
 		<div class="d-flex align-items-center py-1">
 			<div class="position-relative">
@@ -94,9 +95,29 @@ use app\models\Message;
 	<div class="flex-grow-0 py-3 px-4 border-top">
 		<div class="input-group">
 			<input type="text" class="form-control"
-				placeholder="Type your message">
-			<button class="btn btn-primary">Send</button>
+				placeholder="Type your message" id="chat-msg">
+			<button class="btn btn-primary" id="send-msg">Send</button>
 		</div>
 	</div>
 
 </div>
+
+<script>
+$(document).on('click', '#send-msg', function(){
+	var msg = $('#chat-msg').val();
+	$.ajax({
+	    type: 'POST',
+        dataType: 'json',
+	    data: {
+	    	msg	: msg 
+	    },
+		url: '<?= Url::toRoute(['user/add-msg'])?>',
+		success: function(response) {
+			if(response == 'OK'){
+				location.reload();
+				/* $.pjax.reload({container: '#chat'}); */
+			}
+		}
+	});
+});
+</script>

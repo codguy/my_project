@@ -2,9 +2,10 @@
 use app\models\Message;
 use app\models\Users;
 use yii\widgets\ListView;
+use yii\helpers\Url;
 ?>
 <main class="content">
-    <div class="container-fluid m-2 p-0">
+    <div class="container-fluid mt-2 p-0">
 
 		<div class="card">
 			<div class="row g-0">
@@ -27,8 +28,8 @@ foreach ($msgs->groupBy('created_by')->each() as $msg){
     
     $messenger = Users::findOne([$msg->created_by]);
 ?>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="badge bg-success float-right"><?php echo Message::find()->where(['created_by' => $msg->created_by])->count()?></div>
+					<a href="#" id="chat-person" data-id="<?php echo $msg->created_by ?>" class="list-group-item list-group-item-action border-0">
+						<div class="badge bg-success float-right"><?php echo Message::find()->where(['created_by' => $messenger->id])->count()?></div>
 						<div class="d-flex align-items-start">
 							<img src="<?php echo $messenger->getImageUrl()?>" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
 							<div class="flex-grow-1 ml-3">
@@ -38,59 +39,31 @@ foreach ($msgs->groupBy('created_by')->each() as $msg){
 						</div>
 					</a>
 <?php } ?>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar4.png" class="rounded-circle mr-1" alt="Christina Mason" width="40" height="40">
-							<div class="flex-grow-1 ml-3">
-								Christina Mason
-								<div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-							</div>
-						</div>
-					</a>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar5.png" class="rounded-circle mr-1" alt="Fiona Green" width="40" height="40">
-							<div class="flex-grow-1 ml-3">
-								Fiona Green
-								<div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-							</div>
-						</div>
-					</a>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="rounded-circle mr-1" alt="Doris Wilder" width="40" height="40">
-							<div class="flex-grow-1 ml-3">
-								Doris Wilder
-								<div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-							</div>
-						</div>
-					</a>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar4.png" class="rounded-circle mr-1" alt="Haley Kennedy" width="40" height="40">
-							<div class="flex-grow-1 ml-3">
-								Haley Kennedy
-								<div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-							</div>
-						</div>
-					</a>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Jennifer Chang" width="40" height="40">
-							<div class="flex-grow-1 ml-3">
-								Jennifer Chang
-								<div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-							</div>
-						</div>
-					</a>
+					
 
 					<hr class="d-block d-lg-none mt-1 mb-0">
 				</div>
-<!-- 				<div class="chat-area"> -->
-				<?php echo $this->render('_chat_area')?>
+				<div id="chat-area" class="col-12 col-lg-7 col-xl-9">
+				<?php echo $this->render('_chat_area', ['id' => 3])?>
 					
-<!-- 				</div> -->
+				</div>
 			</div>
 		</div>
 	</div>
 </main>
+
+<script>
+$(document).on('click', '#chat-person', function(){
+	var user = $(this).attr('data-id');
+	$.ajax({
+	    type: 'GET',
+	    data: {
+	    	id	: user 
+	    },
+		url: '<?= Url::toRoute(['user/chat-box'])?>',
+		success: function(response) {
+			$('#chat-area').html(response);
+		}
+	});
+});
+</script>
