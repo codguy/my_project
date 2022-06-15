@@ -2,6 +2,8 @@
 use app\models\Message;
 use app\models\Users;
 use yii\widgets\ListView;
+use yii\helpers\Url;
+$self_id = Yii::$app->user->id;
 ?>
 <main class="content">
 	<div class="container-fluid m-2 p-0">
@@ -18,44 +20,33 @@ use yii\widgets\ListView;
 							</div>
 						</div>
 					</div>
+
 <?php
-$msgs = Message::find()->where([
-    'user_id' => Yii::$app->user->id
+
+$users = Users::find()->where([
+    '!=',
+    'id',
+    $self_id
 ]);
-
-foreach ($msgs->groupBy('created_by')->each() as $msg) {
-
-    $messenger = Users::findOne([
-        $msg->created_by
+foreach ($users->each() as $user) {
+    $msg = Message::find()->where([
+        'user_id' => $self_id,
+        'created_by' => $user->id
+    ])->orWhere([
+        'user_id' => $user->id,
+        'created_by' => $self_id
     ]);
     ?>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="badge bg-success float-right"><?php echo Message::find()->where(['created_by' => $msg->created_by])->count()?></div>
-						<div class="d-flex align-items-start">
-							<img src="<?php echo $messenger->getImageUrl()?>"
-								class="rounded-circle mr-1" alt="Vanessa Tucker" width="40"
-								height="40">
-							<div class="flex-grow-1 ml-3">
-								<?php echo $messenger->username?>
-								<div class="small">
-									<span class="fas fa-circle chat-online mr-1"></span><?php echo $msg->message?></div>
-							</div>
-						</div>
-					</a>
-<?php } ?>
+					<a href="#" id="chat-person"
+						class="list-group-item list-group-item-action border-0"
+						data-id="<?php echo $user->id ?>">
+						<div class="badge bg-success float-right"><?php
 
-<?php
-
-$users = Users::find();
-foreach ($users->each() as $user) {
-
-    ?>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="badge bg-success float-right"><?php //echo Message::find()->where(['created_by' => $user->id])->count()?></div>
+    echo $msg->count()?></div>
 						<div class="d-flex align-items-start">
 							<img src="<?php echo $user->getImageUrl()?>"
-								class="rounded-circle mr-1" alt="Vanessa Tucker" width="40"
-								height="40">
+								class="rounded-circle mr-1 profile_pic" alt="Vanessa Tucker"
+								width="40" height="40">
 							<div class="flex-grow-1 ml-3">
 								<?php echo $user->username?>
 								<div class="small">
@@ -65,79 +56,41 @@ foreach ($users->each() as $user) {
 						</div>
 					</a>
 <?php } ?>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar4.png"
-								class="rounded-circle mr-1" alt="Christina Mason" width="40"
-								height="40">
-							<div class="flex-grow-1 ml-3">
-								Christina Mason
-								<div class="small">
-									<span class="fas fa-circle chat-offline"></span> Offline
-								</div>
-							</div>
-						</div>
-					</a> <a href="#"
-						class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar5.png"
-								class="rounded-circle mr-1" alt="Fiona Green" width="40"
-								height="40">
-							<div class="flex-grow-1 ml-3">
-								Fiona Green
-								<div class="small">
-									<span class="fas fa-circle chat-offline"></span> Offline
-								</div>
-							</div>
-						</div>
-					</a> <a href="#"
-						class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar2.png"
-								class="rounded-circle mr-1" alt="Doris Wilder" width="40"
-								height="40">
-							<div class="flex-grow-1 ml-3">
-								Doris Wilder
-								<div class="small">
-									<span class="fas fa-circle chat-offline"></span> Offline
-								</div>
-							</div>
-						</div>
-					</a> <a href="#"
-						class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar4.png"
-								class="rounded-circle mr-1" alt="Haley Kennedy" width="40"
-								height="40">
-							<div class="flex-grow-1 ml-3">
-								Haley Kennedy
-								<div class="small">
-									<span class="fas fa-circle chat-offline"></span> Offline
-								</div>
-							</div>
-						</div>
-					</a> <a href="#"
-						class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar3.png"
-								class="rounded-circle mr-1" alt="Jennifer Chang" width="40"
-								height="40">
-							<div class="flex-grow-1 ml-3">
-								Jennifer Chang
-								<div class="small">
-									<span class="fas fa-circle chat-offline"></span> Offline
-								</div>
-							</div>
-						</div>
-					</a>
+					
 
 					<hr class="d-block d-lg-none mt-1 mb-0">
 				</div>
-				<!-- 				<div class="chat-area"> -->
-				<?php echo $this->render('_chat_area')?>
+				<div id="chat-area" class="col-12 col-lg-7 col-xl-9">
+				<?php
+    $first_msg = Message::find()->where([
+        'user_id' => Yii::$app->user->id
+    ])
+        ->orderBy([
+        'id' => SORT_DESC
+    ])
+        ->one();
+    echo $this->render('_chat_area', [
+        'id' => $first_msg->created_by
+    ])?>
 					
-<!-- 				</div> -->
+				</div>
 			</div>
 		</div>
 	</div>
 </main>
+
+<script>
+$(document).on('click', '#chat-person', function(){
+	var user = $(this).attr('data-id');
+	$.ajax({
+	    type: 'GET',
+	    data: {
+	    	id	: user 
+	    },
+		url: '<?= Url::toRoute(['user/chat-box'])?>',
+		success: function(response) {
+			$('#chat-area').html(response);
+		}
+	});
+});
+</script>

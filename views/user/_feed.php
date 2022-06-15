@@ -1,5 +1,7 @@
 
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+	rel="stylesheet">
 <?php
 use app\models\Users;
 use yii\helpers\Url;
@@ -24,29 +26,28 @@ use yii\helpers\Html;
 <div class="social-feed-box card">
     <?php
 
-if (strtotime($model->created_on) >= strtotime('now') - 3600) {
+    if (strtotime($model->created_on) >= strtotime('now') - 3600) {
         ?>
     	<div class="ribbon-wrapper ribbon-lg">
-    		<div class="ribbon bg-primary">New post</div>
-    	</div>
+		<div class="ribbon bg-primary">New post</div>
+	</div>
 	<?php
-
-}
+    }
     ?>
         <div class="social-avatar">
 		<a href="" class="pull-left">
                 <?php
 
-echo $user->getImage()?>
+                echo $user->getImage()?>
             </a>
 		<div class="media-body">
 			<a href="#">
                     <?php
 
-echo $user->username?>
+                    echo $user->username?>
                 </a> <small class="text-muted"><?php
 
-echo date('M d, Y H:i A', strtotime($model->created_on))?></small>
+                echo date('M d, Y H:i A', strtotime($model->created_on))?></small>
 		</div>
 	</div>
 	<div class="social-body">
@@ -56,49 +57,43 @@ echo $model->title?></h2>
 		<p class="ml-4">
                 <?php
 
-echo $model->desciption?>
+                echo $model->desciption?>
             </p>
             <?php
 
-if ($model->image) {
+            if ($model->image) {
                 ?>
             <img src="<?php
 
-echo $model->getImageUrl()?>"
+                echo $model->getImageUrl()?>"
 			class="img-responsive col-11 m-4">
             <?php
-
-}
+            }
+            
+            $comments = Discussion::find()->where([
+                'model' => get_class($model),
+                'model_id' => $model->id
+            ]);
             ?>
-            <div class="btn-group">
-			<button class="btn btn-white btn-xs like-btn"
-				data-id="<?php
+			<p>
+				<a href="#" class="link-black text-sm mr-2"><i 
+					class="fas fa-share mr-1"></i> Share</a> 
+					<a href="#" class="link-black text-sm  like-btn" data-id="<?= $model->id?>" data-key="<?= get_class($model)?>">
+					<i class="far fa-thumbs-up mr-1 text-<?php
 
-echo $model->id?>"
-				data-key="<?php
+    echo $liked?>"></i>
+					Like</a> <span class="float-right"> <a href="#"
+					class="link-black text-sm"> <i class="far fa-comments mr-1"></i>
+						Comments (<?=$comments->count()?>)
+				</a>
+				</span>
+			</p>
 
-echo get_class($model)?>">
-				<i class="fa fa-thumbs-up text-<?php
-
-echo $liked?> mr-2"></i><?php
-
-echo $like_count?></button>
-			<button class="btn btn-white btn-xs">
-				<i class="fa fa-comments"></i> Comment
-			</button>
-			<button class="btn btn-white btn-xs">
-				<i class="fa fa-share"></i> Share
-			</button>
-		</div>
 	</div>
 	<div class="social-footer" style="overflow: hidden">
 		<div class="social-comment">
         		<?php
-        $comments = Discussion::find()->where([
-            'model' => get_class($model),
-            'model_id' => $model->id
-        ]);
-
+       
         if (! empty($comments)) {
             foreach ($comments->each() as $comment) {
                 $person = Users::findOne($comment->user_id);
@@ -108,7 +103,7 @@ echo $like_count?></button>
 					<img class="rounded-circle"
 						src="<?php
 
-echo $person->getImageUrl()?>" height="50px"
+                echo $person->getImageUrl()?>" height="50px"
 						width="50px" alt="..."
 						style="overflow: hidden; object-fit: cover;" />
 				</div>
@@ -116,14 +111,13 @@ echo $person->getImageUrl()?>" height="50px"
 					<div class="fw-bold">
 						<span class="font-weight-bold"><?php
 
-echo $person->username?></span><small
-							class="font-weight-light ml-2"><?php
+                echo $person->username?></span><small class="font-weight-light ml-2"><?php
 
-echo date('M d, Y h:i A', strtotime($comment->created_on))?></small>
+                echo date('M d, Y h:i A', strtotime($comment->created_on))?></small>
 					</div>
 						<?php
 
-echo $comment->message?>
+                echo $comment->message?>
 					</div>
 			</div>
 				<?php
@@ -135,16 +129,16 @@ echo $comment->message?>
 					<a href="" class="pull-left">
                     <?php
 
-echo $self->image?>
+                    echo $self->image?>
                 </a>
 					<div class="media-body pull-left col-11">
 						<textarea class="form-control" placeholder="Write comment..."
 							id="discuss<?php
 
-echo $model->id?>"></textarea>
+    echo $model->id?>"></textarea>
                     <?php
 
-echo Html::button('send', [
+                    echo Html::button('send', [
                         "id" => "discuss-btn",
                         "class" => "btn btn-secondary float-right discuss-btn",
                         'data-id' => $model->id,

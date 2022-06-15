@@ -120,76 +120,50 @@ $form = ActiveForm::begin([
         'itemView' => '_feed'
     ])?>
 </div>
-		<div class="col-md-3" style="position: relative; bottom: 0; right: 0">
-			<div class="card card-primary card-outline direct-chat direct-chat-primary">
-				<div class="card-header">
-					<h3 class="card-title">Direct Chat</h3>
-					<div class="card-tools">
-						<span data-toggle="tooltip" title="3 New Messages"
-							class="badge badge-light">3</span>
-						<button type="button" class="btn btn-tool"
-							data-card-widget="collapse">
-							<i class="fas fa-minus"></i>
-						</button>
-						<button type="button" class="btn btn-tool" data-toggle="tooltip"
-							title="Contacts" data-widget="chat-pane-toggle">
-							<i class="fas fa-comments"></i>
-						</button>
-						<button type="button" class="btn btn-tool"
-							data-card-widget="remove">
-							<i class="fas fa-times"></i>
-						</button>
-					</div>
-				</div>
-				<!-- /.card-header -->
-				
-				<div class="card-body">
-				
-	<div class="direct-chat-messages">
-	<?php Pjax::begin(['id' => 'chat']) ?>
-				<?php 
-    				$msg = Message::find()->where([
-    				    'created_by' => Yii::$app->user->id
-    				])->orWhere([
-    				    'user_id' => Yii::$app->user->id
-    				]);
-    				$msgProvider = new ActiveDataProvider([
-    				    'query' => $msg,
-    				    'sort' => [
-    				        'defaultOrder' => [
-    				            'created_on' => SORT_ASC
-    				        ]
-    				    ]
-    				]);
-				    echo ListView::widget([
-				        'dataProvider' => $msgProvider,
-				        'layout' => '{items}',
-				        'itemView' => '_msg'
-				    ]);
-				?>
-				
-				<?php Pjax::end() ?>
-				</div>
-			
-<?php //echo $this->render('_msg',['model' => msg])?>
-  </div>
-				<!-- /.card-body -->
-				<div class="card-footer">
-					<form action="#" method="post">
-						<div class="input-group">
-							<input type="text" name="message" placeholder="Type Message ..."
-								id="chat-msg" class="form-control"> <span
-								class="input-group-append">
-								<button type="button" id="send-msg" class="btn btn-primary">Send</button>
-							</span>
-						</div>
-					</form>
-				</div>
-				<!-- /.card-footer-->
-			</div>
-			<!--/.direct-chat -->
-		</div>
+		
 	</div>
+	<div class="card bg-gradient-primary">
+              <div class="card-header border-0">
+                <h3 class="card-title">
+                  <i class="fas fa-map-marker-alt mr-1"></i>
+                  Visitors
+                </h3>
+                <!-- card tools -->
+                <div class="card-tools">
+                  <button type="button" class="btn btn-primary btn-sm daterange" title="Date range">
+                    <i class="far fa-calendar-alt"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <div class="card-body">
+                <div id="world-map" style="height: 250px; width: 100%;"></div>
+              </div>
+              <!-- /.card-body-->
+              <div class="card-footer bg-transparent">
+                <div class="row">
+                  <div class="col-4 text-center">
+                    <div id="sparkline-1"></div>
+                    <div class="text-white">Visitors</div>
+                  </div>
+                  <!-- ./col -->
+                  <div class="col-4 text-center">
+                    <div id="sparkline-2"></div>
+                    <div class="text-white">Online</div>
+                  </div>
+                  <!-- ./col -->
+                  <div class="col-4 text-center">
+                    <div id="sparkline-3"></div>
+                    <div class="text-white">Sales</div>
+                  </div>
+                  <!-- ./col -->
+                </div>
+                <!-- /.row -->
+              </div>
+            </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>

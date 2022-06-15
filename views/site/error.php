@@ -77,7 +77,7 @@ $this->title = $name;
 
 						<p></p>
 
-						<a href="<?php echo Yii::$app->homeUrl?>" class="link_404">Go to Home</a>
+						<a href="<?php echo Yii::$app->homeUrl?>" class="link_404 btn">Go to Home</a>
 					</div>
 				</div>
 			</div>

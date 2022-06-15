@@ -17,6 +17,7 @@ use yii\web\UploadedFile;
 use app\models\Message;
 use yii\web\Response;
 use app\models\EmailTemplate;
+use yii\filters\AccessControl;
 
 /**
  * UserController implements the CRUD actions for Users model.
@@ -31,6 +32,45 @@ class UserController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => [
+                    'login',
+                    'logout',
+                    'signup'
+                ],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [
+                            'login',
+                            'signup'
+                        ],
+                        'roles' => [
+                            '?'
+                        ]
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => [
+                            'logout'
+                        ],
+                        'roles' => [
+                            '@'
+                        ]
+                    ],
+                    [
+                        'actions' => [
+                            'create-feed',
+                            'like-feed'
+                        ],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return Users::isAdmin();
+                        }
+                    ]
+                ]
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -39,30 +79,6 @@ class UserController extends Controller
                     ]
                 ]
             ]
-            /*
-         * 'access' => [
-         * 'class' => \yii\filters\AccessControl::className(),
-         * 'ruleConfig' => [
-         * 'class' => \app\models\AcessRuules::className()
-         * ],
-         * 'only' => [
-         * 'index',
-         * 'create',
-         * 'update',
-         * 'view'
-         * ],
-         * 'rules' => [
-         * [
-         * 'allow' => true,
-         * 'roles' => [
-         * Users::isAdmin(),
-         * Users::isManager(),
-         * Users::isTrainer()
-         * ]
-         * ]
-         * ]
-         * ]
-         */
         ];
     }
 
@@ -446,7 +462,7 @@ class UserController extends Controller
             $msg->created_by = \Yii::$app->user->id;
             $msg->created_on = date('Y-m-d H:i:s');
             $msg->updated_on = date('Y-m-d H:i:s');
-            $msg->user_id = 3;
+            $msg->user_id = $post['id'];
             if ($msg->save()) {
                 $data = "OK";
             }
@@ -459,22 +475,37 @@ class UserController extends Controller
         $message = new Message();
         return $this->render('_chat');
     }
-    
+
     public function actionChatBox($id)
     {
-        $message = Message::find()->where(['created_by' => $id])->orWhere(['user_id' => $id])->all();
-        return $this->renderAjax('_chat_area',[
+        $message = Message::find()->where([
+            'created_by' => $id
+        ])
+            ->orWhere([
+            'user_id' => $id
+        ])
+            ->all();
+        return $this->renderAjax('_chat_area', [
             'model' => $message,
             'id' => $id
         ]);
     }
-    
-    public function actionSendMail(){
-        $template = str_replace("{user_name}","Satnam",EmailTemplate::findOne(3)->html);
-        Yii::$app->mailer->compose('@app/mail/layouts/html',  ['content' => $template])
-        ->setFrom('sanjaykabir23@gmail.com')
-        ->setTo('satnam9762@gmail.com')
-        ->setSubject('Hey There')
-        ->send();
+
+    public function actionSendMail()
+    {
+        $template = str_replace("{user_name}", "Satnam", EmailTemplate::findOne(3)->html);
+        Yii::$app->mailer->compose('@app/mail/layouts/html', [
+            'content' => $template
+        ])
+            ->setFrom('sanjaykabir23@gmail.com')
+            ->setTo('satnam9762@gmail.com')
+            ->setSubject('Hey There')
+            ->send();
+    }
+
+    public function actionSeeTemplate($temp)
+    {
+        $template = EmailTemplate::findOne($temp);
+        return $template->html;
     }
 }

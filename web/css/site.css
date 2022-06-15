@@ -804,3 +804,9 @@ body{margin-top:20px;}
 .chat-messages.p-4 {
 	scrollbar-width: none;
 }
+
+.col-12.col-lg-5.col-xl-3.border-right {
+	max-height: 87vh;
+	overflow: auto;
+	scrollbar-width: none;
+}

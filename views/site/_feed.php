@@ -17,6 +17,12 @@ use yii\helpers\Html;
         'model' => get_class($model),
         'model_id' => $model->id
     ])->count();
+    
+    $comments = Discussion::find()->where([
+        'model' => get_class($model),
+        'model_id' => $model->id
+    ]);
+    
     ?>
 
 <div class="social-feed-box card">
@@ -44,27 +50,24 @@ use yii\helpers\Html;
             <img src="<?php echo $model->getImageUrl()?>"
 			class="img-responsive col-11 m-4">
             <?php } ?>
-            <div class="btn-group">
-			<button class="btn btn-white btn like-btn"
-				data-id="<?php echo $model->id?>"
-				data-key="<?php echo get_class($model)?>">
-				<i class="fa fa-thumbs-up text-<?php echo $liked?> mr-2"></i><?php echo $like_count?></button>
-			<button class="btn btn-white btn">
-				<i class="fa fa-comments"></i> Comment
-			</button>
-			<button class="btn btn-white btn">
-				<i class="fa fa-share"></i> Share
-			</button>
-		</div>
+
+			<p>
+				<a href="#" class="link-black text-sm mr-2"><i 
+					class="fas fa-share mr-1"></i> Share</a> 
+					<a href="#" class="link-black text-sm  like-btn" data-id="<?= $model->id?>" data-key="<?= get_class($model)?>">
+					<i class="far fa-thumbs-up mr-1 text-<?php
+
+    echo $liked?>"></i>
+					Like</a> <span class="float-right"> <a href="#"
+					class="link-black text-sm"> <i class="far fa-comments mr-1"></i>
+						Comments (<?=$comments->count()?>)
+				</a>
+				</span>
+			</p>
 	</div>
 	<div class="social-footer" style="overflow: hidden">
 		<div class="social-comment">
         		<?php
-        $comments = Discussion::find()->where([
-            'model' => get_class($model),
-            'model_id' => $model->id
-        ]);
-
         if (! empty($comments)) {
             foreach ($comments->each() as $comment) {
                 $person = Users::findOne($comment->user_id);
@@ -93,6 +96,14 @@ use yii\helpers\Html;
 					<a href="" class="pull-left">
                     <?php echo $self->image?>
                 </a>
+                <form class="form-horizontal">
+                    <div class="input-group input-group-sm mb-0">
+                      <input class="form-control form-control-sm" placeholder="Response">
+                      <div class="input-group-append">
+                        <button type="submit" class="btn btn-danger">Send</button>
+                      </div>
+                    </div>
+                  </form>
 					<div class="media-body pull-left col-11">
 						<textarea class="form-control" placeholder="Write comment..."
 							id="discuss<?php echo $model->id?>"></textarea>

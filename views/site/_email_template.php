@@ -3,13 +3,18 @@ use yii\helpers\Url;
 use yii\grid\GridView;
 ?>
 
-<nav class="nav nav-tabs nav-justified col-4">
-	<a class="nav-link active" data-toggle="tab" href="#home">Home</a> 
-	<a class="nav-link" data-toggle="tab" href="#design">Design</a>
-</nav>
+<ul class="nav nav-tabs maintabs" id="myTab" role="tablist">
+	<li class="nav-item"><a class="nav-link active" id="home-tab"
+		data-toggle="tab" href="#home" role="tab" aria-controls="home"
+		aria-selected="true">Templates</a></li>
+	<li class="nav-item"><a class="nav-link" id="create-template-tab"
+		data-toggle="tab" href="#create-template" role="tab"
+		aria-controls="feed" aria-selected="false">Design Template</a></li>
+</ul>
 
-<div class="tab-content">
-	<div id="home" class="tab-pane active fade in">
+<div class="tab-content" id="myTabContent">
+	<div class="tab-pane fade show active" id="home" role="tabpanel"
+		aria-labelledby="home-tab">
 		<?php
 
 echo GridView::widget([
@@ -22,20 +27,19 @@ echo GridView::widget([
             'format' => 'raw',
             'class' => 'yii\grid\DataColumn', // can be omitted, as it is the default
             'value' => function ($data) {
-                return $data->html;
+            return "<iframe src=".Yii::$app->urlManager->createAbsoluteUrl(['user/see-template', 'temp' => $data->id])." width='100%' height='250px;'></iframe>";
             }
         ],
-         [
-         'class' => 'yii\grid\ActionColumn'
-         ] 
-    ],  
- 
-  
-
+        [
+            'class' => 'yii\grid\ActionColumn'
+        ]
+    ]
 ]);
-?>
+?>		
 	</div>
-	<div id="design" class="tab-pane fade">
+
+	<div class="tab-pane fade" id="create-template" role="tabpanel"
+		aria-labelledby="create-template-tab">
 		<div class="row">
 			<div class="col-md-6">
 				<label for="template-name">Template Number</label> <input
@@ -52,11 +56,9 @@ echo GridView::widget([
 
 
 		<script src="//editor.unlayer.com/embed.js"></script>
+
 	</div>
 </div>
-
-
-
 
 <script>
 unlayer.init({
