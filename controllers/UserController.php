@@ -221,9 +221,7 @@ class UserController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Users::findOne([
-            'id' => $id
-        ])) !== null) {
+        if (($model = Users::find()->cache()->where(['id' =>$id])->one()) !== null) {
             return $model;
         }
 
@@ -237,10 +235,10 @@ class UserController extends Controller
         if (! empty($post)) {
             foreach ($post as $key => $value) {
                 if (! empty($value)) {
-                    $prev = SocialLink::findOne([
+                    $prev = SocialLink::find()->cache()->where([
                         'user_id' => $user_id,
                         'platform' => $key
-                    ]);
+                    ])->one();
                     if (! empty($prev)) {
                         $prev->link = $value;
                         $prev->updated_on = date('Y-m-d H:i:s');
@@ -422,7 +420,7 @@ class UserController extends Controller
 
     public function actionDeleteFeed($id)
     {
-        $feed = Feed::findOne($id);
+        $feed = Feed::find()->cache()->where(['id' =>$id])->one();
         $like = Like::find()->where([
             'model' => get_class($feed),
             'model_id' => $feed->id
@@ -470,7 +468,7 @@ class UserController extends Controller
     }
     
     public function actionSendMail(){
-        $template = str_replace("{user_name}","Satnam",EmailTemplate::findOne(3)->html);
+        $template = str_replace("{user_name}","Satnam",EmailTemplate::find()->cache()->where(['id' =>3])->one()->html);
         Yii::$app->mailer->compose('@app/mail/layouts/html',  ['content' => $template])
         ->setFrom('sanjaykabir23@gmail.com')
         ->setTo('satnam9762@gmail.com')

@@ -8,6 +8,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->title = $name;
+$url = 'https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif';
 ?>
 <style>
 
@@ -28,12 +29,12 @@ $this->title = $name;
 
 .four_zero_four_bg {
 	background-image:
-		url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+		url(<?= $url ?>);
 	display: flex;
 	flex-direction: column;
 	min-height: 400px;
 	background-position: center;
-	top:200px;
+	top: 200px;
 }
 
 .four_zero_four_bg h1 {
@@ -65,21 +66,21 @@ $this->title = $name;
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 ">
-				<div class="col-sm-10 col-sm-offset-1  text-center">
-					<div class="four_zero_four_bg">
+				<center>
+					<div class="col-sm-10 col-sm-offset-1">
+						<div class="four_zero_four_bg"></div>
 
+						<div class="contant_box_404">
+							<h1 class="text-center "><?= (int) filter_var(Html::encode($this->title), FILTER_SANITIZE_NUMBER_INT) ?></h1>
+							<h3 class="h2"><?= nl2br(Html::encode($message)) ?></h3>
 
+							<p></p>
+
+							<a href="<?php echo Yii::$app->homeUrl?>" class="link_404">Go to
+								Home</a>
+						</div>
 					</div>
-
-					<div class="contant_box_404">
-						<h1 class="text-center "><?= (int) filter_var(Html::encode($this->title), FILTER_SANITIZE_NUMBER_INT) ?></h1>
-						<h3 class="h2"><?= nl2br(Html::encode($message)) ?></h3>
-
-						<p></p>
-
-						<a href="<?php echo Yii::$app->homeUrl?>" class="link_404">Go to Home</a>
-					</div>
-				</div>
+				</center>
 			</div>
 		</div>
 	</div>

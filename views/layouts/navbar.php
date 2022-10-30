@@ -131,7 +131,7 @@ use app\models\Message;
 		<!-- Notifications Dropdown Menu -->
 		<li class="nav-item dropdown">
 		<?php if (!Yii::$app->user->isGuest) {?>
-		<?php $notifications = Notification::find()->where(['!=','state_id', Notification::STATE_DELETED])->andWhere(['to_user_id'=>Yii::$app->user->identity->id])->orderBy(['id'=>SORT_DESC])?>
+		<?php $notifications = Notification::find()->cache(10)->where(['!=','state_id', Notification::STATE_DELETED])->andWhere(['to_user_id'=>Yii::$app->user->identity->id])->orderBy(['id'=>SORT_DESC])?>
 		<a class="nav-link" data-toggle="dropdown" href="notification/index">
 				<i class="far fa-bell"></i> <span
 				class="badge badge-warning navbar-badge"><?= $notifications->count() ?></span>

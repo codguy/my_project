@@ -3,7 +3,7 @@
     use app\models\Users;
 use app\models\Message;
     $id = !empty($id) ? $id : Message::find()->orderBy(['id' => SORT_DESC])->one()->created_by;
-    $messanger = Users::findOne($id);
+    $messanger = Users::find()->cache()->where(['id' =>$id])->one();
     $self = Users::findOne(Yii::$app->user->identity->id);
     
     $chat = Message::find()->where([

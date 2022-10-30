@@ -151,7 +151,7 @@ class DeptController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Dept::findOne(['id' => $id])) !== null) {
+        if (($model = Dept::find()->cache()->where(['id' =>$id])->one()) !== null) {
             return $model;
         }
 

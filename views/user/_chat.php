@@ -25,7 +25,7 @@ $msgs = Message::find()->where([
 
 foreach ($msgs->groupBy('created_by')->each() as $msg){
     
-    $messenger = Users::findOne([$msg->created_by]);
+    $messenger = Users::find()->cache()->where(['id' =>$msg->created_by])->one();
 ?>
 					<a href="#" class="list-group-item list-group-item-action border-0">
 						<div class="badge bg-success float-right"><?php echo Message::find()->where(['created_by' => $msg->created_by])->count()?></div>
