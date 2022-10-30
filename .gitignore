@@ -31,3 +31,8 @@ tests/_support/_generated
 
 #vagrant folder
 /.vagrant
+
+# web assets
+web/assets
+web/css/assets
+web/js/assets
