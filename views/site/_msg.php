@@ -1,7 +1,7 @@
 <?php
 use app\models\Users;
 
-$user = Users::findOne($model->created_by);
+$user = Users::find()->where(['id' => $model->created_by])->one();
 
 ?>
 

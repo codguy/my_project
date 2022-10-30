@@ -14,25 +14,25 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=5.6.0",
-        "yiisoft/yii2": "~2.0.14",
-        "yiisoft/yii2-bootstrap4": "~2.0.0",
-        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
-        "hail812/yii2-adminlte3": "~1.1",
+        "php": "^8.0",
+        "yiisoft/yii2": "*",
+        "yiisoft/yii2-bootstrap4": "*",
+        "yiisoft/yii2-symfonymailer": "*",
+        "hail812/yii2-adminlte3": "*",
         "kartik-v/yii2-icons": "@dev",
-        "2amigos/yii2-ckeditor-widget" : "~2"
+        "2amigos/yii2-ckeditor-widget" : "*"
     },
     "require-dev": {
-        "yiisoft/yii2-debug": "~2.1.0",
-        "yiisoft/yii2-gii": "~2.2.0",
-        "yiisoft/yii2-faker": "~2.0.0",
-        "codeception/codeception": "^4.0",
-        "codeception/verify": "~0.5.0 || ~1.1.0",
-        "codeception/specify": "~0.4.6",
-        "symfony/browser-kit": ">=2.7 <=4.2.4",
-        "codeception/module-filesystem": "^1.0.0",
-        "codeception/module-yii2": "^1.0.0",
-        "codeception/module-asserts": "^1.0.0"
+        "yiisoft/yii2-debug": "*",
+        "yiisoft/yii2-gii": "*",
+        "yiisoft/yii2-faker": "*",
+        "codeception/codeception": "*",
+        "codeception/verify": "*",
+        "codeception/specify": "*",
+        "symfony/browser-kit": "*",
+        "codeception/module-filesystem": "*",
+        "codeception/module-yii2": "*",
+        "codeception/module-asserts": "*"
     },
     "config": {
         "process-timeout": 1800,

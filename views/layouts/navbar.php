@@ -72,7 +72,7 @@ use app\models\Message;
 				<?php 
 				foreach ($msgs->each() as $msg){
 				    
-				    $messenger = Users::findOne([$msg->created_by]);
+				    $messenger = Users::find()->cache()->where(['id' => $msg->created_by])->one();
 				?>
 				<a href="#" class="dropdown-item" data-widget="chat-pane-toggle"> <!-- Message Start -->
 					<div class="media">

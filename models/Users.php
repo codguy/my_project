@@ -172,7 +172,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        $user = self::find()->where([
+        $user = self::find()->cache()->where([
             "id" => $id
         ])->one();
         // if (!count($user)) {
