@@ -1,13 +1,13 @@
 <?php
-use yii\helpers\Html;
+use app\models\Message;
 use app\models\Notification;
 use app\models\Users;
-use app\models\User;
-use app\models\Message;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 ?>
 <!-- Navbar -->
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand navbar-dark navbar-dark">
 	<!-- Left navbar links -->
 	<ul class="navbar-nav">
 		<li class="nav-item"><a class="nav-link" data-widget="pushmenu"
@@ -58,25 +58,40 @@ use app\models\Message;
 			</div></li>
 
 		<!-- Messages Dropdown Menu -->
-		<?php if(true){
-		      $msgs = Message::find()->where([
-		          'user_id' => Yii::$app->user->id
-		      ])->groupBy(['created_by'])->orderBy(['id' => SORT_ASC]);
-		      
-		    ?>
+		<?php
+
+if (true) {
+    $msgs = Message::find()->where([
+        'user_id' => Yii::$app->user->id
+    ])
+        ->groupBy([
+        'created_by'
+    ])
+        ->orderBy([
+        'id' => SORT_ASC
+    ]);
+
+    ?>
 			<li class="nav-item dropdown"><a class="nav-link"
 			data-toggle="dropdown" href="#"> <i class="far fa-comments"></i> <span
 				class="badge badge-danger navbar-badge"><?php echo $msgs->count()?></span>
 		</a>
 			<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-				<?php 
-				foreach ($msgs->each() as $msg){
-				    
-				    $messenger = Users::find()->cache()->where(['id' => $msg->created_by])->one();
-				?>
+				<?php
+    foreach ($msgs->each() as $msg) {
+
+        $messenger = Users::find()->cache()
+            ->where([
+            'id' => $msg->created_by
+        ])
+            ->one();
+
+        if (! empty($messenger)) {
+            ?>
 				<a href="#" class="dropdown-item" data-widget="chat-pane-toggle"> <!-- Message Start -->
 					<div class="media">
-						<img src="<?=$messenger->getImageUrl()?>" class="profile_pic mr-4" height="50px" width="50px" alt="User Avatar"
+						<img src="<?=$messenger->getImageUrl()?>" class="profile_pic mr-4"
+							height="50px" width="50px" alt="User Avatar"
 							class="img-size-50 mr-3 img-circle">
 						<div class="media-body">
 							<h3 class="dropdown-item-title">
@@ -90,42 +105,10 @@ use app\models\Message;
 					</div> <!-- Message End -->
 				</a>
 				<div class="dropdown-divider"></div>	
-				<?php } ?>
-				<a href="#" class="dropdown-item"> <!-- Message Start -->
-					<div class="media">
-						<img src="<?=$assetDir?>/img/user8-128x128.jpg" alt="User Avatar"
-							class="img-size-50 img-circle mr-3">
-						<div class="media-body">
-							<h3 class="dropdown-item-title">
-								John Pierce <span class="float-right text-sm text-muted"><i
-									class="fas fa-star"></i></span>
-							</h3>
-							<p class="text-sm">I got your message bro</p>
-							<p class="text-sm text-muted">
-								<i class="far fa-clock mr-1"></i> 4 Hours Ago
-							</p>
-						</div>
-					</div> <!-- Message End -->
-				</a>
-				<div class="dropdown-divider"></div>
-				<a href="#" class="dropdown-item"> <!-- Message Start -->
-					<div class="media">
-						<img src="<?=$assetDir?>/img/user3-128x128.jpg" alt="User Avatar"
-							class="img-size-50 img-circle mr-3">
-						<div class="media-body">
-							<h3 class="dropdown-item-title">
-								Nora Silvester <span class="float-right text-sm text-warning"><i
-									class="fas fa-star"></i></span>
-							</h3>
-							<p class="text-sm">The subject goes here</p>
-							<p class="text-sm text-muted">
-								<i class="far fa-clock mr-1"></i> 4 Hours Ago
-							</p>
-						</div>
-					</div> <!-- Message End -->
-				</a>
-				<div class="dropdown-divider"></div>
-				<a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+				<?php } }?>
+				
+				<a href="<?= Url::toRoute(['user/chat'])?>"
+					class="dropdown-item dropdown-footer">See All Messages</a>
 			</div></li>
 			<?php }?>
 		<!-- Notifications Dropdown Menu -->
@@ -136,16 +119,21 @@ use app\models\Message;
 				<i class="far fa-bell"></i> <span
 				class="badge badge-warning navbar-badge"><?= $notifications->count() ?></span>
 		</a>
-			<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="width: 400px;">
+			<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right"
+				style="width: 400px;">
 				<span class="dropdown-header"><?= $notifications->count() ?> Notifications</span>
-				<div class="dropdown-item dropdown-body overflow-auto" style="scrollbar-width: none;"> 
-              <?php foreach ($notifications->each() as $notification) {
-                    $color = $notification->getColor($notification->type_id);
-                ?>
+				<div class="dropdown-item dropdown-body overflow-auto"
+					style="scrollbar-width: none;"> 
+              <?php
+
+    foreach ($notifications->each() as $notification) {
+        $color = $notification->getColor($notification->type_id);
+        ?>
               <div class="dropdown-divider"></div>
 					<a href="#" class="dropdown-item"> <i
 						class="fa fa-<?=$notification->icon ?> mr-1 ml-n2 text-<?=$color?>"></i> <?= $notification->title ?>  
-                  <span class="float-right text-muted text-sm" style="font-size: 0.6rem"><?= $notification->getTime() ?></span>
+                  <span class="float-right text-muted text-sm"
+						style="font-size: 0.6rem"><?= $notification->getTime() ?></span>
 					</a>
               <?php } ?>
               </div>

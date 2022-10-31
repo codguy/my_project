@@ -1,31 +1,44 @@
-<?php 
-
-    use app\models\Users;
+<?php
 use app\models\Message;
-    $id = !empty($id) ? $id : Message::find()->orderBy(['id' => SORT_DESC])->one()->created_by;
-    $messanger = Users::find()->cache()->where(['id' =>$id])->one();
-    $self = Users::findOne(Yii::$app->user->identity->id);
-    
-    $chat = Message::find()->where([
-        'user_id' => $id
-    ])->orWhere(['user_id' => $self->id])->all();
+use app\models\Users;
+use yii\helpers\Url;
+use app\models\Message
+
+
+$id = ! empty($id) ? $id : Message::find()->orderBy([
+    'id' => SORT_DESC
+])->one()->created_by;
+$messanger = Users::find()->cache()
+    ->where([
+    'id' => $id
+])
+    ->one();
+$self = Users::findOne(Yii::$app->user->identity->id);
+
+$chat = Message::find()->where([
+    'user_id' => $id,
+    'created_by' => $self->id
+])->orWhere([
+    'user_id' => $self->id,
+    'created_by' => $id
+]);
 ?>
 
-<div class="col-12 col-lg-7 col-xl-9">
+<div class="" style="scrollbar-width: none;">
 	<div class="py-2 px-4 border-bottom d-none d-lg-block">
 		<div class="d-flex align-items-center py-1">
 			<div class="position-relative">
 				<img src="<?php echo $messanger->getImageUrl()?>"
-					class="rounded-circle mr-1 profile_pic" alt="<?php echo $messanger->username?>" width="40"
-					height="40">
+					class="rounded-circle mr-1 profile_pic"
+					alt="<?php echo $messanger->username?>" width="40" height="40">
 			</div>
 			<div class="flex-grow-1 pl-3">
 				<strong><?php echo $messanger->username?></strong>
 				<div class="text-muted small">
-					<em>Typing...</em>
+					<em>Online</em>
 				</div>
 			</div>
-			<div>
+			<div class="d-none">
 				<button class="btn btn-primary btn-lg mr-1 px-3">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -58,13 +71,17 @@ use app\models\Message;
 
 	<div class="position-relative">
 		<div class="chat-messages p-4">
-		<?php foreach ($chat as $msg) { ?>
-			<?php if($msg->created_by == $self->id){ ?>
+		<?php
+
+foreach ($chat->each() as $msg) {
+    if (! empty($msg)) {
+        if ($msg->created_by == $self->id) {
+            ?>
 			<div class="chat-message-right pb-4">
 				<div>
 					<img src="<?php echo $self->getImageUrl()?>"
-						class="rounded-circle mr-1" alt="Chris Wood" width="40"
-						height="40">
+						class="rounded-circle mr-1 profile_pic" alt="Chris Wood"
+						width="40" height="40">
 					<div class="text-muted small text-nowrap mt-2">2:33 am</div>
 				</div>
 				<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
@@ -76,8 +93,8 @@ use app\models\Message;
 			<div class="chat-message-left pb-4">
 				<div>
 					<img src="<?php echo $messanger->getImageUrl()?>"
-						class="rounded-circle mr-1 profile_pic" alt="Sharon Lessman" width="40"
-						height="40">
+						class="rounded-circle mr-1 profile_pic" alt="Sharon Lessman"
+						width="40" height="40">
 					<div class="text-muted small text-nowrap mt-2"><?php echo date('H:i a', strtotime($msg->created_on))?></div>
 				</div>
 				<div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
@@ -85,7 +102,7 @@ use app\models\Message;
 					<?= $msg->message ?>
 				</div>
 			</div>
-<?php } }?>
+<?php } } }?>
 				
 
 		</div>
@@ -94,9 +111,34 @@ use app\models\Message;
 	<div class="flex-grow-0 py-3 px-4 border-top">
 		<div class="input-group">
 			<input type="text" class="form-control"
-				placeholder="Type your message">
-			<button class="btn btn-primary">Send</button>
+				placeholder="Type your message" id="chat-msg">
+			<button class="btn btn-primary" data-id="<?php echo $id ?>"
+				id="send-msg">Send</button>
 		</div>
 	</div>
 
 </div>
+
+<script>
+$(document).on('click', '#send-msg', function(e){
+	var msg = $('#chat-msg').val();
+	var id = $(this).attr('data-id');
+	console.log();
+	$.ajax({
+	    type: 'POST',
+        dataType: 'json',
+	    data: {
+	    	msg	: msg,
+	    	id : id 
+	    },
+		url: '<?= Url::toRoute(['user/add-msg'])?>',
+		success: function(response) {
+			if(response == 'OK'){
+				location.reload();
+				/* $.pjax.reload({container: '#chat'}); */
+			}
+		}
+	});
+	e.stopImmediatePropagation();
+});
+</script>
