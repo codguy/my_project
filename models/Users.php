@@ -1,4 +1,5 @@
 <?php
+
 namespace app\models;
 
 use Yii;
@@ -41,7 +42,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     const ROLE_TRAINER = 3;
 
     const ROLE_STUDENT = 4;
-    
+
     const STATE_ZERO = 0;
 
     const STATE_ACTIVE = 1;
@@ -190,7 +191,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         $user = self::find()->where([
             "accessToken" => $token
         ])->one();
-        if (! count($user)) {
+        if (!count($user)) {
             return null;
         }
         return new static($user);
@@ -254,7 +255,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function getImageUrl()
     {
-        if (! empty($this->profile_picture)) {
+        if (!empty($this->profile_picture)) {
             return Yii::$app->request->baseUrl . '/../uploads/' . $this->profile_picture;
         } else {
             return Yii::$app->request->baseUrl . '/images/user-icon.png';
@@ -274,7 +275,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     public function upload()
     {
         if ($this->validate(false)) {
-            if (! empty($this->profile_picture)) {
+            if (!empty($this->profile_picture)) {
                 $name = substr($this->profile_picture->tempName, 16) . '.' . $this->profile_picture->extension;
                 $this->profile_picture->saveAs('../uploads/' . $name);
                 return $name;
@@ -291,8 +292,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
                 Users::ROLE_TRAINER => 'Trainer',
                 Users::ROLE_STUDENT => 'Student'
             );
-        }
-        else{
+        } else {
             $list = array(
                 Users::ROLE_ADMIN => 'Admin',
                 Users::ROLE_MANAGER => 'Manager',
@@ -362,33 +362,33 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
 
     public static function isAdmin($id = false)
     {
-        $user = self::findOne([
-            'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
-        ]);
+        $user = self::find()->cache()->where([
+            'id' => !empty($id) ? $id : \Yii::$app->user->identity->id
+        ])->one();
         return ($user->roll_id == self::ROLE_ADMIN) ? true : false;
     }
 
     public static function isManager($id = false)
     {
-        $user = self::findOne([
-            'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
-        ]);
+        $user = self::find()->cache()->where([
+            'id' => !empty($id) ? $id : \Yii::$app->user->identity->id
+        ])->one();
         return ($user->roll_id == self::ROLE_MANAGER) ? true : false;
     }
 
     public static function isTrainer($id = false)
     {
-        $user = self::findOne([
-            'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
-        ]);
+        $user = self::find()->cache()->where([
+            'id' => !empty($id) ? $id : \Yii::$app->user->identity->id
+        ])->one();
         return ($user->roll_id == self::ROLE_TRAINER) ? true : false;
     }
 
     public static function isStudent($id = false)
     {
-        $user = self::findOne([
-            'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
-        ]);
+        $user = self::find()->cache()->where([
+            'id' => !empty($id) ? $id : \Yii::$app->user->identity->id
+        ])->one();
         return ($user->roll_id == self::ROLE_STUDENT) ? true : false;
     }
 
@@ -396,51 +396,43 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return ($id == \Yii::$app->user->identity->getId()) ? true : false;
     }
-    
-    public static function getTime($date) {
+
+    public static function getTime($date)
+    {
         $start = strtotime($date);
         $end = strtotime('now');
         $time = ($end - $start) / 60;
         $result = (int)($time) . ' mins ago';
-        if($time <= 1){
-            $time = (int)($time/60);
+        if ($time <= 1) {
+            $time = (int)($time / 60);
             $result = 'Just now';
-        }
-        elseif($time >= 60 && $time <= 60*24){
-            $time = (int)($time/60);
-            $result = $time.' hrs ago';
-        }
-        elseif($time >= 60*24 && $time <= 60*24*2){
-            $time = (int)($time/60);
-            $result = $time.' day ago';
-        }
-        elseif($time >= 60*24*2 && $time <= 60*24*7){
-            $time = (int)($time/(60*24));
-            $result = $time.' days ago';
-        }
-        elseif($time >= 60*24*7 && $time <= 60*24*7*2){
-            $time = (int)($time/(60*24*7));
-            $result = $time.' week ago';
-        }
-        elseif($time >= 60*24*7*2 && $time <= 60*24*30){
-            $time = (int)($time/(60*24*7));
-            $result = $time.' weeks ago';
-        }
-        elseif($time >= 60*24*30 && $time <= 60*24*30*2){
-            $time = (int)($time/(60*24*30));
-            $result = $time.' month ago';
-        }
-        elseif($time >= 60*24*30*2 && $time <= 60*24*365){
-            $time = (int)($time/(60*24*30));
-            $result = $time.' months ago';
-        }
-        elseif($time >= 60*24*365 && $time <= 60*24*365*2){
-            $time = (int)($time/(60*24*365));
-            $result = $time.' year ago';
-        }
-        elseif($time >= 60*24*365*2){
-            $time = (int)($time/(60*24*365));
-            $result = $time.' years ago';
+        } elseif ($time >= 60 && $time <= 60 * 24) {
+            $time = (int)($time / 60);
+            $result = $time . ' hrs ago';
+        } elseif ($time >= 60 * 24 && $time <= 60 * 24 * 2) {
+            $time = (int)($time / 60);
+            $result = $time . ' day ago';
+        } elseif ($time >= 60 * 24 * 2 && $time <= 60 * 24 * 7) {
+            $time = (int)($time / (60 * 24));
+            $result = $time . ' days ago';
+        } elseif ($time >= 60 * 24 * 7 && $time <= 60 * 24 * 7 * 2) {
+            $time = (int)($time / (60 * 24 * 7));
+            $result = $time . ' week ago';
+        } elseif ($time >= 60 * 24 * 7 * 2 && $time <= 60 * 24 * 30) {
+            $time = (int)($time / (60 * 24 * 7));
+            $result = $time . ' weeks ago';
+        } elseif ($time >= 60 * 24 * 30 && $time <= 60 * 24 * 30 * 2) {
+            $time = (int)($time / (60 * 24 * 30));
+            $result = $time . ' month ago';
+        } elseif ($time >= 60 * 24 * 30 * 2 && $time <= 60 * 24 * 365) {
+            $time = (int)($time / (60 * 24 * 30));
+            $result = $time . ' months ago';
+        } elseif ($time >= 60 * 24 * 365 && $time <= 60 * 24 * 365 * 2) {
+            $time = (int)($time / (60 * 24 * 365));
+            $result = $time . ' year ago';
+        } elseif ($time >= 60 * 24 * 365 * 2) {
+            $time = (int)($time / (60 * 24 * 365));
+            $result = $time . ' years ago';
         }
         return $result;
     }

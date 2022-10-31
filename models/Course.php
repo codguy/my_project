@@ -21,10 +21,11 @@ use yii\helpers\Html;
  */
 class Course extends \yii\db\ActiveRecord
 {
+
     const DIFF_EASY = 1;
-    
+
     const DIFF_NORMAL = 2;
-    
+
     const DIFF_HARD = 3;
 
     /**
@@ -192,13 +193,18 @@ class Course extends \yii\db\ActiveRecord
         $list = [
             self::DIFF_EASY => '<span class="badge badge-success">Easy</span>',
             self::DIFF_NORMAL => '<span class="badge badge-primary">Normal</span>',
-            self::DIFF_HARD => '<span class="badge badge-danger">Hard</span>',
+            self::DIFF_HARD => '<span class="badge badge-danger">Hard</span>'
         ];
-        return !empty($diff) ? $list[$diff] : $list;
+        return ! empty($diff) ? $list[$diff] : $list;
     }
-    
-    public function getTrainer(){
-        $trainer = Users::findOne($this->trainer_id);
+
+    public function getTrainer()
+    {
+        $trainer = Users::find()->cache()
+            ->where([
+            'id' => $this->trainer_id
+        ])
+            ->one();
         return $trainer->username;
     }
 }

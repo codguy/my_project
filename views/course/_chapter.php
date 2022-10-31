@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					<!-- Post title-->
 					<h1 class="fw-bolder mb-1"><?php echo $model->title ?></h1>
 					<!-- Post meta content-->
-					<div class="text-muted fst-italic mb-2">Posted on <?php echo date("M d, Y", strtotime($model->created_on)) ?> by <?php echo (Course::findOne([$model->course_id]))->name?></div>
+					<div class="text-muted fst-italic mb-2">Posted on <?php echo date("M d, Y", strtotime($model->created_on)) ?> by <?php echo (Course::find()->cache()->where(['id' =>$model->course_id])->one())->name?></div>
 					<!-- Post categories-->
 					<a class="badge bg-secondary text-decoration-none link-light"
 						href="#!">Web Design</a> <a

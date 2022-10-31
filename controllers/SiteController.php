@@ -251,7 +251,7 @@ class SiteController extends Controller
 
     public function actionDeleteEmailTemplate($id)
     {
-        $model = EmailTemplate::findOne($id);
+        $model = EmailTemplate::find()->cache()->where(['id' =>$id])->one();
         
         $model->delete();
         
