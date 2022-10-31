@@ -2,10 +2,9 @@
 use app\models\Message;
 use app\models\Users;
 use yii\helpers\Url;
-use app\models\Message
 
 
-$id = ! empty($id) ? $id : Message::find()->orderBy([
+$id = isset($id) ? $id : Message::find()->orderBy([
     'id' => SORT_DESC
 ])->one()->created_by;
 $messanger = Users::find()->cache()

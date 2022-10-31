@@ -16,7 +16,7 @@ use yii\helpers\Html;
                 <img
 					src="<?=! empty(Yii::$app->user->identity->profile_picture) ? Yii::$app->request->baseUrl . '/../uploads/' . Yii::$app->user->identity->profile_picture : $model->getImageUrl()?>"
 					class="elevation-2 profile_pic" alt="User Image" height="40px"
-					width="40px">
+					width="40px" style="height: 40px !important;width: 40px !important;border: 1px solid white;">
 			</div>
 			<div class="info">
                 <?php
