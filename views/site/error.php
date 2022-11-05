@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->title = $name;
-$url = 'https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif';
+$url = WEB_PATH.'/images/lost.gif';
 ?>
 <style>
 
@@ -24,17 +24,8 @@ $url = 'https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif
 }
 
 .page_404  img {
-	width: 100%;
-}
-
-.four_zero_four_bg {
-	background-image:
-		url(<?= $url ?>);
-	display: flex;
-	flex-direction: column;
-	min-height: 400px;
-	background-position: center;
-	top: 200px;
+	height: 400px;
+	width: auto;
 }
 
 .four_zero_four_bg h1 {
@@ -53,10 +44,6 @@ $url = 'https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif
 	display: inline-block;
 }
 
-.contant_box_404 {
-	margin-top: -50px;
-}
-
 .col-sm-10.col-sm-offset-1.text-center {
 	top: calc(50% - 200px);
 }
@@ -68,7 +55,9 @@ $url = 'https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif
 			<div class="col-sm-12 ">
 				<center>
 					<div class="col-sm-10 col-sm-offset-1">
-						<div class="four_zero_four_bg"></div>
+						<div class="four_zero_four_bg">
+							<img src="<?= $url ?>" alt="">
+						</div>
 
 						<div class="contant_box_404">
 							<h1 class="text-center "><?= (int) filter_var(Html::encode($this->title), FILTER_SANITIZE_NUMBER_INT) ?></h1>

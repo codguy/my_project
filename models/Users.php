@@ -256,22 +256,18 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     public function getImageUrl()
     {
         if (!empty($this->profile_picture)) {
-            return Yii::$app->request->baseUrl . '/../uploads/' . $this->profile_picture;
+            return BASE_PATH . '/../uploads/' . $this->profile_picture;
         } else {
-            return Yii::$app->request->baseUrl . '/images/user-icon.png';
+            return WEB_PATH . '/images/user-icon.png';
         }
     }
 
-    public function getImage()
+    public function getImage($size = '60px')
     {
-        $img = '<img src=' . $this->getImageUrl() . ' height="60px" width="60px" class="profile_pic">';
+        $img = '<img src=' . $this->getImageUrl() . ' height="' . $size . '" width="' . $size . '" class="profile_pic">';
         return $img;
     }
 
-    // public function imageName()
-    // {
-    // return str_replace(" ", "_", $this->profile_picture->baseName) . '.' . $this->profile_picture->extension;
-    // }
     public function upload()
     {
         if ($this->validate(false)) {
