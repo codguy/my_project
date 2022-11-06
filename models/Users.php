@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\NewActiveRecord;
 use Yii;
 use yii\web\IdentityInterface;
 use phpDocumentor\Reflection\PseudoTypes\True_;
@@ -26,7 +27,7 @@ use phpDocumentor\Reflection\PseudoTypes\True_;
  *
  * @property TblDept[] $tblDepts
  */
-class Users extends \yii\db\ActiveRecord implements IdentityInterface
+class Users extends NewActiveRecord implements IdentityInterface
 {
 
     const BEGINER = 0;
@@ -54,6 +55,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     const STATE_DELETED = 4;
 
     const STATE_UPCOMING = 5;
+
 
     /**
      *
@@ -208,9 +210,6 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         $user = self::find()->where([
             "email" => $email
         ])->one();
-        // if (empty($user)) {
-        // return null;
-        // }
         return new static($user);
     }
 
@@ -251,38 +250,6 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     public function validatePassword($password)
     {
         return $this->password === $password;
-    }
-
-    public function getImageUrl()
-    {
-        if (!empty($this->profile_picture)) {
-            return Yii::$app->request->baseUrl . '/../uploads/' . $this->profile_picture;
-        } else {
-            return Yii::$app->request->baseUrl . '/images/user-icon.png';
-        }
-    }
-
-    public function getImage()
-    {
-        $img = '<img src=' . $this->getImageUrl() . ' height="60px" width="60px" class="profile_pic">';
-        return $img;
-    }
-
-    // public function imageName()
-    // {
-    // return str_replace(" ", "_", $this->profile_picture->baseName) . '.' . $this->profile_picture->extension;
-    // }
-    public function upload()
-    {
-        if ($this->validate(false)) {
-            if (!empty($this->profile_picture)) {
-                $name = substr($this->profile_picture->tempName, 16) . '.' . $this->profile_picture->extension;
-                $this->profile_picture->saveAs('../uploads/' . $name);
-                return $name;
-            }
-        } else {
-            return false;
-        }
     }
 
     public function getRoleOption()
@@ -395,45 +362,5 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     public static function isSelf($id = false)
     {
         return ($id == \Yii::$app->user->identity->getId()) ? true : false;
-    }
-
-    public static function getTime($date)
-    {
-        $start = strtotime($date);
-        $end = strtotime('now');
-        $time = ($end - $start) / 60;
-        $result = (int)($time) . ' mins ago';
-        if ($time <= 1) {
-            $time = (int)($time / 60);
-            $result = 'Just now';
-        } elseif ($time >= 60 && $time <= 60 * 24) {
-            $time = (int)($time / 60);
-            $result = $time . ' hrs ago';
-        } elseif ($time >= 60 * 24 && $time <= 60 * 24 * 2) {
-            $time = (int)($time / 60);
-            $result = $time . ' day ago';
-        } elseif ($time >= 60 * 24 * 2 && $time <= 60 * 24 * 7) {
-            $time = (int)($time / (60 * 24));
-            $result = $time . ' days ago';
-        } elseif ($time >= 60 * 24 * 7 && $time <= 60 * 24 * 7 * 2) {
-            $time = (int)($time / (60 * 24 * 7));
-            $result = $time . ' week ago';
-        } elseif ($time >= 60 * 24 * 7 * 2 && $time <= 60 * 24 * 30) {
-            $time = (int)($time / (60 * 24 * 7));
-            $result = $time . ' weeks ago';
-        } elseif ($time >= 60 * 24 * 30 && $time <= 60 * 24 * 30 * 2) {
-            $time = (int)($time / (60 * 24 * 30));
-            $result = $time . ' month ago';
-        } elseif ($time >= 60 * 24 * 30 * 2 && $time <= 60 * 24 * 365) {
-            $time = (int)($time / (60 * 24 * 30));
-            $result = $time . ' months ago';
-        } elseif ($time >= 60 * 24 * 365 && $time <= 60 * 24 * 365 * 2) {
-            $time = (int)($time / (60 * 24 * 365));
-            $result = $time . ' year ago';
-        } elseif ($time >= 60 * 24 * 365 * 2) {
-            $time = (int)($time / (60 * 24 * 365));
-            $result = $time . ' years ago';
-        }
-        return $result;
     }
 }

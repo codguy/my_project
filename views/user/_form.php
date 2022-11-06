@@ -75,7 +75,7 @@ use yii\widgets\ActiveForm;
 								<div class="mb-3">
 									<img style="display: none" class="profile_pic" width="150"
 										height="150">
-                                    <?= $form->field($model, 'profile_picture', ['template' => '{input}'])->fileInput(['onchange'=>"showPreview(event);", 'id'=>"file-ip-1", 'class'=>'form-input d-none' ])?>
+                                    <?= $form->field($model, 'image', ['template' => '{input}'])->fileInput(['onchange'=>"showPreview(event);", 'id'=>"file-ip-1", 'class'=>'form-input d-none' ])?>
 <!--                                     <label id='upload-img'>Upload Image</label> -->
 								</div>
 							</div>

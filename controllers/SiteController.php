@@ -227,14 +227,17 @@ class SiteController extends Controller
         $email_template = new EmailTemplate();
         $post = \Yii::$app->request->post();
         if (! empty($post)) {
-            $email_template->type_id = $post['type'];
+            $email_template->title = $post['title'];
             $email_template->html = $post['html'];
             $email_template->json = $post['json'];
-            $email_template->created_by = \Yii::$app->user->id;
+            $email_template->created_by_id = \Yii::$app->user->id;
             $email_template->created_on = date('Y-m-d H:i:s');
             $email_template->updated_on = date('Y-m-d H:i:s');
             if ($email_template->save()) {
                 return $status = 'OK';            
+            }else{
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return $email_template->getErrors();
             }
         }
         $query = EmailTemplate::find();

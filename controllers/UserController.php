@@ -131,13 +131,13 @@ class UserController extends Controller
                 $model->state_id = Users::STATE_ACTIVE;
                 $model->authKey = 'test' . $obj;
                 $model->accessToken = $obj . '-token';
-                if (UploadedFile::getInstance($model, 'profile_picture') != null) {
-                    $model->profile_picture = UploadedFile::getInstance($model, 'profile_picture');
-                    $model->profile_picture = $model->upload();
-                }
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
                     if ($model->save()) {
+                        if (UploadedFile::getInstance($model, 'image') != null) {
+                            $model->image = UploadedFile::getInstance($model, 'image');
+                            $model->image = $model->upload();
+                        }
                         $title = 'New ' . $model->getRole($model->roll_id);
                         $type = Notification::TYPE_NEW;
                         $users = Users::find()->where([
@@ -185,9 +185,9 @@ class UserController extends Controller
         $model = $this->findModel($id);
         $image = $model->profile_picture;
         if ($this->request->isPost && $model->load($this->request->post())) {
-            if (UploadedFile::getInstance($model, 'profile_picture') != null) {
-                $model->profile_picture = UploadedFile::getInstance($model, 'profile_picture');
-                $model->profile_picture = $model->upload();
+            if (UploadedFile::getInstance($model, 'image') != null) {
+                $model->image = UploadedFile::getInstance($model, 'image');
+                $model->image = $model->upload();
             } else {
                 $model->profile_picture = $image;
             }
@@ -392,7 +392,7 @@ class UserController extends Controller
                 $model->image = UploadedFile::getInstance($model, 'image');
                 $model->image = $model->upload();
             }
-            $model->state_id = Users::STATE_ACTIVE;
+            // $model->state_id = Users::STATE_ACTIVE;
             $model->created_by_id = \Yii::$app->user->id;
             $model->created_on = date('Y-m-d H:i:s');
             $model->updated_on = date('Y-m-d H:i:s');
@@ -467,12 +467,15 @@ class UserController extends Controller
         $post = $this->request->post();
         if (! empty($post['msg'])) {
             $msg->message = $post['msg'];
-            $msg->created_by = \Yii::$app->user->id;
+            $msg->created_by_id = \Yii::$app->user->id;
             $msg->created_on = date('Y-m-d H:i:s');
             $msg->updated_on = date('Y-m-d H:i:s');
             $msg->user_id = $post['id'];
             if ($msg->save()) {
                 $data = "OK";
+            }else{
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return $msg->getErrors();
             }
         }
         return $data;
@@ -487,7 +490,7 @@ class UserController extends Controller
     public function actionChatBox($id)
     {
         $message = Message::find()->where([
-            'created_by' => $id
+            'created_by_id' => $id
         ])
             ->orWhere([
             'user_id' => $id

@@ -53,7 +53,7 @@ use app\models\Course;
                   'model_id' => $model->id
                 ])
                   ->andWhere([
-                    'user_id' => Yii::$app->user->identity->id
+                    'created_by_id' => Yii::$app->user->identity->id
                   ])
                   ->one();
                 $msg = !empty($following) ? 'Unfollow' : 'Follow';
@@ -79,14 +79,14 @@ use app\models\Course;
 
               echo Html::a('<i class="fa fa-plus"></i>', [
                 'user/add-social',
-                'user_id' => $model->id
+                'created_by_id' => $model->id
               ], [
                 'class' => 'btn btn-primary'
               ]) ?>
             </li>
             <?php
             $socials = SocialLink::find()->cache(10)->where([
-              'user_id' => $model->id
+              'created_by_id' => $model->id
             ]);
             $list = [];
             foreach ($socials->each() as $social) {

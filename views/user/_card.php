@@ -14,7 +14,7 @@ $following = Follow::find()->where([
     'model_id' => $model->id
 ])
 ->andWhere([
-    'user_id' => Yii::$app->user->identity->id
+    'created_by_id' => Yii::$app->user->identity->id
 ])
 ->one();
 $msg = ! empty($following) ? 'Unfollow' : 'Follow';

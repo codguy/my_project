@@ -9,9 +9,11 @@ class m221101_025801_create_tbl_about extends Migration
 {
     public function up()
     {
+        if(Yii::$app->db->schema->getTableSchema('tbl_about')){
+            $this->dropTable('tbl_about');   
+        }
         $this->createTable('tbl_about', [
             'id' => $this->primaryKey(),
-            'state_id' => $this->integer()->notNull(),
             'intro' => $this->text()->notNull(),
             'address' => $this->text()->notNull(),
             'education' => $this->text()->notNull(),
@@ -29,7 +31,6 @@ class m221101_025801_create_tbl_about extends Migration
             'created_by_id'
         );
 
-        // add foreign key for table `user`
         $this->addForeignKey(
             'fk-about-created_by_id',
             'tbl_about',
@@ -48,7 +49,6 @@ class m221101_025801_create_tbl_about extends Migration
             'tbl_about'
         );
 
-        // drops index for column `category_id`
         $this->dropIndex(
             'idx-about-created_by_id',
             'tbl_about'

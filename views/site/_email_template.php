@@ -21,7 +21,7 @@ echo GridView::widget([
     'dataProvider' => $dataProvider,
     'columns' => [
         'id',
-        'type_id',
+        'title',
         [
             'attribute' => 'html',
             'format' => 'raw',
@@ -42,8 +42,8 @@ echo GridView::widget([
 		aria-labelledby="create-template-tab">
 		<div class="row">
 			<div class="col-md-6">
-				<label for="template-name">Template Number</label> <input
-					type="number" id="template-name" class="form-control">
+				<label for="template-name">Template Name</label> <input
+					type="text" id="template-name" class="form-control">
 			</div>
 			<div class="col-md-6">
 				<button class="btn btn-success float-right m-4" id="save-btn"
@@ -69,13 +69,13 @@ unlayer.init({
 
 $(document).on('click', '#save-btn', function(){
 	unlayer.exportHtml(function(data) {
-		var type = $('#template-name').val();
+		var title = $('#template-name').val();
         var json = JSON.stringify(data.design);
         var html = data.html;
         $.ajax({
             url: '<?php echo Url::toRoute('site/create-email-template') ?>',
             data: {
-            	type: type,
+            	title: title,
             	html: html,
             	json: json	
         	},

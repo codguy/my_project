@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\NewActiveRecord;
 use Yii;
 
 /**
@@ -15,7 +16,7 @@ use Yii;
  * @property int|null $created_by_id
  * @property string|null $updated_on
  */
-class image extends \yii\db\ActiveRecord
+class image extends NewActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -31,10 +32,10 @@ class image extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['image', 'model_id'], 'required'],
+            [['name', 'model_id'], 'required'],
             [['model_id', 'created_by_id'], 'integer'],
             [['created_on', 'updated_on'], 'safe'],
-            [['image', 'model'], 'string', 'max' => 255],
+            [['name', 'model'], 'string', 'max' => 255],
         ];
     }
 
@@ -45,7 +46,7 @@ class image extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'image' => Yii::t('app', 'Image'),
+            'name' => Yii::t('app', 'Name'),
             'model' => Yii::t('app', 'Model'),
             'model_id' => Yii::t('app', 'Model ID'),
             'created_on' => Yii::t('app', 'Created On'),

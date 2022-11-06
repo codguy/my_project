@@ -5,14 +5,16 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "tbl_social_link".
+ * This is the model class for table "{{%tbl_social_link}}".
  *
  * @property int $id
  * @property string $platform
  * @property string $link
- * @property int $user_id
  * @property string|null $created_on
+ * @property int|null $created_by_id
  * @property string|null $updated_on
+ *
+ * @property TblUser $createdBy
  */
 class SocialLink extends \yii\db\ActiveRecord
 {
@@ -21,7 +23,7 @@ class SocialLink extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'tbl_social_link';
+        return '{{%tbl_social_link}}';
     }
 
     /**
@@ -30,10 +32,12 @@ class SocialLink extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['platform', 'link', 'user_id'], 'required'],
-            [['user_id'], 'integer'],
+            [['platform', 'link'], 'required'],
+            [['link'], 'string'],
             [['created_on', 'updated_on'], 'safe'],
-            [['platform', 'link'], 'string', 'max' => 255],
+            [['created_by_id'], 'integer'],
+            [['platform'], 'string', 'max' => 255],
+            [['created_by_id'], 'exist', 'skipOnError' => true, 'targetClass' => TblUser::class, 'targetAttribute' => ['created_by_id' => 'id']],
         ];
     }
 
@@ -43,12 +47,22 @@ class SocialLink extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'platform' => Yii::t('app', 'Platform'),
-            'link' => Yii::t('app', 'Link'),
-            'user_id' => Yii::t('app', 'User ID'),
-            'created_on' => Yii::t('app', 'Created On'),
-            'updated_on' => Yii::t('app', 'Updated On'),
+            'id' => 'ID',
+            'platform' => 'Platform',
+            'link' => 'Link',
+            'created_on' => 'Created On',
+            'created_by_id' => 'Created By ID',
+            'updated_on' => 'Updated On',
         ];
+    }
+
+    /**
+     * Gets query for [[CreatedBy]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(Users::class, ['id' => 'created_by_id']);
     }
 }

@@ -65,7 +65,7 @@ if (true) {
         'user_id' => Yii::$app->user->id
     ])
         ->groupBy([
-        'created_by'
+        'created_by_id'
     ])
         ->orderBy([
         'id' => SORT_ASC

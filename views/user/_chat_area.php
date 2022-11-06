@@ -1,5 +1,4 @@
 <?php
-
 use app\models\Message;
 use app\models\Users;
 use yii\helpers\Url;
@@ -7,7 +6,7 @@ use yii\helpers\Url;
 
 $id = isset($id) ? $id : Message::find()->orderBy([
 	'id' => SORT_DESC
-])->one()->created_by;
+])->one()->created_by_id;
 $messanger = Users::find()->cache()
 	->where([
 		'id' => $id
@@ -17,10 +16,10 @@ $self = Users::findOne(Yii::$app->user->identity->id);
 
 $chat = Message::find()->where([
 	'user_id' => $id,
-	'created_by' => $self->id
+	'created_by_id' => $self->id
 ])->orWhere([
 	'user_id' => $self->id,
-	'created_by' => $id
+	'created_by_id' => $id
 ]);
 ?>
 
@@ -65,7 +64,7 @@ $chat = Message::find()->where([
 
 			foreach ($chat->each() as $msg) {
 				if (!empty($msg)) {
-					if ($msg->created_by == $self->id) {
+					if ($msg->created_by_id == $self->id) {
 			?>
 						<div class="chat-message-right pb-4">
 							<div>

@@ -30,9 +30,9 @@ class Message extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['message', 'user_id', 'created_by'], 'required'],
+            [['message', 'user_id', 'created_by_id'], 'required'],
             [['message'], 'string'],
-            [['user_id', 'created_by'], 'integer'],
+            [['user_id', 'created_by_id'], 'integer'],
             [['created_on', 'updated_on'], 'safe'],
         ];
     }
@@ -46,7 +46,7 @@ class Message extends \yii\db\ActiveRecord
             'id' => 'ID',
             'message' => 'Message',
             'user_id' => 'User ID',
-            'created_by' => 'Created By',
+            'created_by_id' => 'Created By',
             'created_on' => 'Created On',
             'updated_on' => 'Updated On',
         ];
