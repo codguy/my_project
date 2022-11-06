@@ -44,11 +44,11 @@ use app\models\Course;
               <div class="mt-3">
                 <h4><?= $model->username ?></h4>
                 <?php
-                $followers = Follow::find()->where([
+                $followers = Follow::find()->cache(10)->where([
                   'model' => get_class($model),
                   'model_id' => $model->id
                 ])->count();
-                $following = Follow::find()->where([
+                $following = Follow::find()->cache(10)->where([
                   'model' => get_class($model),
                   'model_id' => $model->id
                 ])
@@ -85,7 +85,7 @@ use app\models\Course;
               ]) ?>
             </li>
             <?php
-            $socials = SocialLink::find()->where([
+            $socials = SocialLink::find()->cache(10)->where([
               'user_id' => $model->id
             ]);
             $list = [];

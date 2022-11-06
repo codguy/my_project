@@ -127,4 +127,5 @@ $chat = Message::find()->where([
 		});
 		e.stopImmediatePropagation();
 	});
+	$('.chat-messages').scrollTop($('.chat-messages').height())
 </script>

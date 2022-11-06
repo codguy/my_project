@@ -237,7 +237,7 @@ class UserController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Users::find()->cache()
+        if (($model = Users::find()->cache(10)
             ->where([
             'id' => $id
         ])

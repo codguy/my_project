@@ -120,7 +120,7 @@ use yii\widgets\ListView;
 		</div>
 		<!-- left wrapper end -->
 		<!-- middle wrapper start -->
-		<div class="col-md-8 col-xl-6 middle-wrapper">
+		<div class="col-md-8 col-xl-5 middle-wrapper">
 
 
 			<div class="row">
@@ -235,7 +235,7 @@ use yii\widgets\ListView;
 		</div>
 	<!-- middle wrapper end -->
 	<!-- right wrapper start -->
-	<div class="d-none d-xl-block col-xl-3 right-wrapper">
+	<div class="d-none d-xl-block col-xl-4 right-wrapper">
 		<div class="row">
 				<?php echo UserPhotos::widget() ?>
 				<?= FeedSuggestion::widget() ?>

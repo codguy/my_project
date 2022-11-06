@@ -28,16 +28,17 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
+            'class' => yii\symfonymailer\Mailer::class,
             'useFileTransport' => false,
             'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'encryption' => 'tls',
-                'host' => 'smtp.gmail.com',     //localhost
-                'port' => '587',
+                'scheme' => 'smtps',
+                'host' => 'smtp.gmail.com',
                 'username' => 'sanjaykabir23@gmail.com',
-                'password' => 'codeguy9762',
+                'password' => 'cxrufwqfimnkhjbb',
+                'port' => 465,
+                'dsn' => 'native://default',
             ],
+            'viewPath' => '@app/mail',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -49,21 +50,12 @@ $config = [
             ],
         ],
         'db' => $db,
-        
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-            ],
+            'rules' => [],
         ],
-        
-//         'view' => [
-//             'theme' => [
-//                 'pathMap' => [
-//                     '@app/views' => '@vendor/hail812/yii2-adminlte3/src/views'
-//                 ],
-//             ],
-//         ],
     ],
     'params' => $params,
 ];
@@ -74,7 +66,7 @@ if (YII_ENV_DEV) {
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
         //'allowedIPs' => ['127.0.0.1', '::1'],
-    ]; 
+    ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
