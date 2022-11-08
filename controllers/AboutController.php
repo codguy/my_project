@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\NewBaseController;
 use app\models\About;
 use app\models\search\About as AboutSearch;
 use yii\web\Controller;
@@ -11,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * AboutController implements the CRUD actions for About model.
  */
-class AboutController extends Controller
+class AboutController extends NewBaseController
 {
     /**
      * @inheritDoc

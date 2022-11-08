@@ -412,16 +412,7 @@ CREATE TABLE `tbl_user` (
 --
 
 INSERT INTO `tbl_user` (`id`, `username`, `email`, `password`, `roll_id`, `state_id`, `dob`, `authKey`, `accessToken`, `gender`, `profile_picture`, `created_on`, `created_by_id`, `updated_on`) VALUES
-(1, 'Admin', 'admin@gmail.com', 'admin@123', 1, 1, '2000-01-01', 'admin99', '99tokens', 'Male', '', '2022-04-03 05:50:08', 1, '2022-05-10 09:47:31'),
-(3, 'Satnam Dass', 'satnam@gmail.com', 'satnam@123', 1, 1, '1999-09-11', 'sat99', '99tokens', 'Male', 'hpA067.tmp.jpg', '2022-04-03 05:50:08', 1, '2022-05-10 09:47:31'),
-(35, 'Bobby Singh', 'bobby@gmail.com', 'bobby@123', 2, 1, '2001-03-15', 'test866.ke', '866-token', 'Male', 'hpA416.tmp.jpg', '2022-04-03 14:51:05', 1, '2022-05-10 09:45:21'),
-(46, 'harish', 'harish@gmail.com', 'admin@123', 4, 1, '2019-12-24', 'test102.ke', '102-token', 'Female', 'hp5F97.tmp.jpg', '2022-04-27 18:54:20', 35, '2022-05-10 09:46:08'),
-(47, 'admin', 'admin@gmail.com', 'admin@123', 1, 1, '2000-01-01', 'test335.ke', '335-token', 'Male', 'hp994.tmp.jpg', '2022-04-30 14:29:35', 3, '2022-05-10 09:46:52'),
-(48, 'Harish kumar', 'harish@gmil.com', 'admin@123', 1, 1, '2022-04-29', 'test482.ke', '482-token', 'Male', 'hpC45D.tmp.jpg', '2022-04-30 15:22:28', 3, '2022-05-10 09:46:34'),
-(50, 'Trainer', 'trainer@gmail.com', 'admin@123', 3, 1, '1989-07-27', 'test828.ke', '828-token', 'Male', 'pexels-photo-774909.jpeg', '2022-05-09 17:59:09', 47, '2022-05-09 17:59:09'),
-(51, 'Student', 'student@gmail.com', 'admin@123', 4, 1, '2004-01-23', 'test482.ke', '482-token', 'Male', 'hp5A03.tmp.jpg', '2022-05-09 17:59:38', 47, '2022-05-10 09:48:18'),
-(54, 'pedakado', 'pedakado@gmail.com', 'admin@123', 4, 1, '2016-06-17', 'test733.ke', '733-token', 'Female', 'avatar-3.jpg', '2022-05-22 08:22:43', 1, '2022-05-22 08:22:43'),
-(90, 'Sanjay Kabir', 'sanjay@gmail.com', 'admin@123', 2, 1, '2022-05-03', 'test424', '424-token', 'Male', '', '2022-05-26 06:01:20', 1, '2022-05-26 06:01:20');
+(1, 'Admin', 'admin@gmail.com', 'admin@123', 1, 1, '2000-01-01', 'admin99', '99tokens', 'Male', '', '2022-04-03 05:50:08', 1, '2022-05-10 09:47:31');
 
 --
 -- Indexes for dumped tables

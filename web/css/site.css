@@ -808,3 +808,9 @@ body{margin-top:20px;}
 	overflow: auto;
 	scrollbar-width: none;
 }
+
+img.photos-widget {
+	width: 8vw;
+	height: 8vw;
+	object-fit: cover;
+}

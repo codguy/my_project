@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\components\NewBaseController;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -18,7 +19,7 @@ use yii\log\EmailTarget;
 use app\models\EmailTemplate;
 use yii\data\ActiveDataProvider;
 
-class SiteController extends Controller
+class SiteController extends NewBaseController
 {
 
     /**

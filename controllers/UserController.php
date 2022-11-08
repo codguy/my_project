@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\components\NewBaseController;
 use app\models\Feed;
 use app\models\Follow;
 use app\models\Like;
@@ -22,7 +23,7 @@ use yii\filters\AccessControl;
 /**
  * UserController implements the CRUD actions for Users model.
  */
-class UserController extends Controller
+class UserController extends NewBaseController
 {
 
     /**
@@ -388,15 +389,14 @@ class UserController extends Controller
         $post = $this->request->post();
         if (! empty($post)) {
             $model->load($post);
-            if (UploadedFile::getInstance($model, 'image') != null) {
-                $model->image = UploadedFile::getInstance($model, 'image');
-                $model->image = $model->upload();
-            }
-            // $model->state_id = Users::STATE_ACTIVE;
             $model->created_by_id = \Yii::$app->user->id;
             $model->created_on = date('Y-m-d H:i:s');
             $model->updated_on = date('Y-m-d H:i:s');
             if ($model->save()) {
+                if (UploadedFile::getInstance($model, 'image') != null) {
+                    $model->image = UploadedFile::getInstance($model, 'image');
+                    $model->image = $model->upload();
+                }
                 \Yii::$app->session->setFlash('success', "Your message to display.");
                 $title = 'New Post';
                 $type = Notification::TYPE_NEW;
@@ -422,7 +422,7 @@ class UserController extends Controller
             $another = Like::findOne([
                 'model' => $post['model'],
                 'model_id' => $post['id'],
-                'user_id' => \Yii::$app->user->id
+                'created_by_id' => \Yii::$app->user->id
             ]);
             if (! empty($another)) {
                 $another->delete();
@@ -430,12 +430,14 @@ class UserController extends Controller
             }
             $model->model = $post['model'];
             $model->model_id = $post['id'];
-            $model->user_id = \Yii::$app->user->id;
+            $model->created_by_id = \Yii::$app->user->identity->id;
             $model->created_on = date('Y-m-d H:i:s');
             $model->updated_on = date('Y-m-d H:i:s');
             if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Your message to display.");
                 return true;
+            }else{
+                return \Yii::$app->session->setFlash('success', $model->getErrorMessage());
             }
         }
     }

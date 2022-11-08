@@ -10,7 +10,6 @@ use yii\helpers\Html;
 $user = Users::find()->cache()->where($model->created_by_id)->one();
 $self = Users::find()->cache()->where(Yii::$app->user->id)->one();
 $liked = !empty(Like::findOne([
-	'user_id' => Yii::$app->user->id,
 	'model' => get_class($model),
 	'model_id' => $model->id
 ])) ? 'primary' : '';
@@ -47,7 +46,7 @@ $comments = Discussion::find()->where([
 		<p class="ml-4">
 			<?php echo $model->desciption ?>
 		</p>
-		<?php if ($model->image) { ?>
+		<?php if (!empty($model->hasImage())) { ?>
 			<img src="<?php echo $model->getImageUrl() ?>" class="img-responsive col-11 m-4">
 		<?php } ?>
 

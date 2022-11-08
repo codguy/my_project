@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\NewBaseController;
 use app\models\Dept;
 use app\models\search\Dept as DeptSearch;
 use yii\web\Controller;
@@ -13,7 +14,7 @@ use app\models\Notification;
 /**
  * DeptController implements the CRUD actions for Dept model.
  */
-class DeptController extends Controller
+class DeptController extends NewBaseController
 {
     /**
      * @inheritDoc

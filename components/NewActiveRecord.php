@@ -30,8 +30,8 @@ class NewActiveRecord extends \yii\db\ActiveRecord
     {
         if ($insert) {
             $this->created_by_id = \Yii::$app->user->identity->id;
-            $this->created_on = date('Y-m-d H:i:s a');
-            $this->updated_on = date('Y-m-d H:i:s a');
+            $this->created_on = date('Y-m-d H:i:s');
+            $this->updated_on = date('Y-m-d H:i:s');
         } else {
             $this->updated_on = date('Y-m-d H:i:s a');
         }
@@ -159,12 +159,18 @@ class NewActiveRecord extends \yii\db\ActiveRecord
         return ($return && is_writable($prev_path)) ? mkdir($path, 0777, true) : false;
     }
 
-    public function getImageUrl()
+    public function hasImage()
     {
         $image = image::findLast([
             'model' => get_class($this),
             'model_id' => $this->id
         ], 5);
+        return !empty($image) ? $image : false;
+    }
+
+    public function getImageUrl()
+    {
+        $image = $this->hasImage();
         if (!empty($image)) {
             return Yii::$app->request->baseUrl . '/../uploads/' . $image->folder . '/' . $image->name;
         } else {
@@ -200,5 +206,11 @@ class NewActiveRecord extends \yii\db\ActiveRecord
         } else {
             return false;
         }
+    }
+
+    public function getErrorMessage()
+    {
+        Yii::$app->response->format = 'json';
+        return $this->getErrors();
     }
 }

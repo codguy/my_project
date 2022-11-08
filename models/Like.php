@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\NewActiveRecord;
 use Yii;
 
 /**
@@ -14,7 +15,7 @@ use Yii;
  * @property string|null $created_on
  * @property string|null $updated_on
  */
-class Like extends \yii\db\ActiveRecord
+class Like extends NewActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -30,8 +31,8 @@ class Like extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['model_id', 'user_id'], 'required'],
-            [['model_id', 'user_id'], 'integer'],
+            [['model_id', 'created_by_id'], 'required'],
+            [['model_id', 'created_by_id'], 'integer'],
             [['created_on', 'updated_on'], 'safe'],
             [['model'], 'string', 'max' => 255],
         ];

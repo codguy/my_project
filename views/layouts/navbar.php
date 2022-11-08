@@ -82,7 +82,7 @@ if (true) {
 
         $messenger = Users::find()->cache()
             ->where([
-            'id' => $msg->created_by
+            'id' => $msg->created_by_id
         ])
             ->one();
 
@@ -99,7 +99,7 @@ if (true) {
 							</h3>
 							<p class="text-sm badge btn-outline-secondary"><?=$msg->message?></p>
 							<p class="text-sm text-muted">
-								<i class="far fa-clock mr-1"></i><?php echo Users::getTime($msg->created_on)?>
+								<i class="far fa-clock mr-1"></i><?php echo $msg->getTime() ?>
 							</p>
 						</div>
 					</div> <!-- Message End -->

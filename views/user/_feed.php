@@ -8,12 +8,14 @@ use app\models\Discussion;
 use yii\helpers\Html;
 ?>
 <?php
-$user = Users::find()->cache()->where(['id' => $model->created_by_id])->one();
-$self = Users::find()->cache()->where(['id' => Yii::$app->user->identity->getId()])->one();
-$liked = !empty(Like::findOne([
+
+Yii::$app->cache->flush();
+$user = Users::find()->where(['id' => $model->created_by_id])->one();
+$self = Users::find()->where(['id' => Yii::$app->user->identity->getId()])->one();
+$liked = !empty(Like::find()->where([
 	'model' => get_class($model),
 	'model_id' => $model->id
-])) ? 'primary' : '';
+])->one()) ? 'primary' : '';
 $like_count = Like::find()->where([
 	'model' => get_class($model),
 	'model_id' => $model->id
