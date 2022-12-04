@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\components\NewBaseController;
 use app\models\Course;
 use app\models\search\Course as CourseSearch;
 use yii\web\Controller;
@@ -15,7 +16,7 @@ use app\models\Discussion;
 /**
  * CourseController implements the CRUD actions for Course model.
  */
-class CourseController extends Controller
+class CourseController extends NewBaseController
 {
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace app\models;
 
+use app\components\NewActiveRecord;
 use Yii;
 use yii\helpers\Html;
 
@@ -19,7 +20,7 @@ use yii\helpers\Html;
  *
  * @property TblUser $createdBy
  */
-class Course extends \yii\db\ActiveRecord
+class Course extends NewActiveRecord
 {
 
     const DIFF_EASY = 1;
@@ -162,29 +163,6 @@ class Course extends \yii\db\ActiveRecord
             return Yii::$app->request->baseUrl . '/../uploads/' . $this->image;
         } else {
             return 'https://dummyimage.com/900x400/ced4da/6c757d.jpg';
-        }
-    }
-
-    public function getImage()
-    {
-        if (! empty($this->image)) {
-            $img = '<img src=' . $this->getImageUrl() . ' height="400" width="900" class="img-fluid rounded">';
-        } else {
-            $img = '<img src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" height="400px" width="900px" class="img-fluid rounded">';
-        }
-        return $img;
-    }
-
-    public function upload()
-    {
-        if ($this->validate(false)) {
-            if (! empty($this->image)) {
-                $name = substr($this->image->tempName, 16) . '.' . $this->image->extension;
-                $this->image->saveAs('../uploads/' . $name);
-                return $name;
-            }
-        } else {
-            return false;
         }
     }
 

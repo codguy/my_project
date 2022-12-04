@@ -2,6 +2,8 @@
 
 namespace app\widgets;
 
+use app\models\Feed;
+use app\models\image;
 use yii\helpers\Html;
 
 class UserPhotos extends \yii\bootstrap4\Widget
@@ -20,6 +22,9 @@ class UserPhotos extends \yii\bootstrap4\Widget
 
     public function run()
     {
-        return $this->render('user_photos_view', ['user' => $this->user]);
+        $images = image::find()->cache(30)->where([
+            'model' => Feed::class
+        ])->limit(9);
+        return $this->render('user_photos_view', ['user' => $this->user, 'images' => $images]);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\components\NewBaseController;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -18,7 +19,7 @@ use yii\log\EmailTarget;
 use app\models\EmailTemplate;
 use yii\data\ActiveDataProvider;
 
-class SiteController extends Controller
+class SiteController extends NewBaseController
 {
 
     /**
@@ -172,7 +173,7 @@ class SiteController extends Controller
     {
         $this->layout = 'blank';
         $model = new Users();
-        $obj = rand(100, 999);
+        $obj = rand(10, 99);
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
                 $model->created_on = date('Y-m-d H:i:s');
@@ -187,7 +188,7 @@ class SiteController extends Controller
                 }
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
-                    if ($model->save(false)) {
+                    if ($model->save()) {
                         $title = 'New ' . $model->getRole($model->roll_id);
                         $type = Notification::TYPE_NEW;
                         $users = Users::find()->where([
@@ -207,10 +208,13 @@ class SiteController extends Controller
                             'id' => $model->id
                         ]);
                     }
+                    else{
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        return $model->getErrors();
+                    }
                     $transaction->commit();
                 } catch (\Exception $e) {
                     $transaction->rollBack();
-                    print $e;
                 }
             }
         } else {
@@ -227,14 +231,17 @@ class SiteController extends Controller
         $email_template = new EmailTemplate();
         $post = \Yii::$app->request->post();
         if (! empty($post)) {
-            $email_template->type_id = $post['type'];
+            $email_template->title = $post['title'];
             $email_template->html = $post['html'];
             $email_template->json = $post['json'];
-            $email_template->created_by = \Yii::$app->user->id;
+            $email_template->created_by_id = \Yii::$app->user->id;
             $email_template->created_on = date('Y-m-d H:i:s');
             $email_template->updated_on = date('Y-m-d H:i:s');
             if ($email_template->save()) {
                 return $status = 'OK';            
+            }else{
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return $email_template->getErrors();
             }
         }
         $query = EmailTemplate::find();

@@ -2,6 +2,7 @@
 
 namespace app\widgets;
 
+use app\models\Users;
 use yii\helpers\Html;
 
 class FeedSuggestion extends \yii\bootstrap4\Widget
@@ -11,15 +12,11 @@ class FeedSuggestion extends \yii\bootstrap4\Widget
     public function init()
     {
         parent::init();
-        if ($this->user === null) {
-            $this->user = 'Welcome User';
-        } else {
-            $this->message = 'Welcome ' . $this->user;
-        }
+        $this->user = Users::find()->cache(60)->limit(10);
     }
 
     public function run()
     {
-        return $this->render('user_feed_suggestion', ['user' => $this->user]);
+        return $this->render('user_feed_suggestion', ['users' => $this->user]);
     }
 }

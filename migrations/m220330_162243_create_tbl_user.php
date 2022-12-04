@@ -12,6 +12,9 @@ class m220330_162243_create_tbl_user extends Migration
      */
     public function up()
     {
+        if(Yii::$app->db->schema->getTableSchema('tbl_user')){
+            $this->dropTable('tbl_user');   
+        }
         $this->createTable('tbl_user', [
             'id' => $this->primaryKey(),
             'username' => $this->string(25)->notNull(),
@@ -23,7 +26,6 @@ class m220330_162243_create_tbl_user extends Migration
             'authKey' => $this->string(10)->notNull(),
             'accessToken' => $this->string(10)->notNull(),
             'gender' => $this->string(10),
-            'profile_picture' => $this->string(50)->defaultValue(null),
             'created_on' => $this->dateTime(),
             'created_by_id' => $this->integer()->defaultValue(1),
             'updated_on' => $this->dateTime(),

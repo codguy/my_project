@@ -11,6 +11,9 @@ class m220403_083451_create_tbl_notification extends Migration
     */
     public function up()
     {
+        if(Yii::$app->db->schema->getTableSchema('tbl_notification')){
+            $this->dropTable('tbl_notification');   
+        }
         $this->createTable('tbl_notification', [
             'id' => $this->primaryKey(),
             'title' => $this->string(25)->notNull(),
@@ -23,6 +26,36 @@ class m220403_083451_create_tbl_notification extends Migration
             'created_on' => $this->dateTime(),
             'created_by_id' => $this->integer()->defaultValue(1),
         ]);
+
+        $this->createIndex(
+            'idx-notification-created_by_id',
+            'tbl_notification',
+            'created_by_id'
+        );
+
+        $this->addForeignKey(
+            'fk-notification-created_by_id',
+            'tbl_notification',
+            'created_by_id',
+            'tbl_user',
+            'id',
+            'CASCADE'
+        );
+
+        $this->createIndex(
+            'idx-notification-to_user_id',
+            'tbl_notification',
+            'to_user_id'
+        );
+
+        $this->addForeignKey(
+            'fk-notification-to_user_id',
+            'tbl_notification',
+            'to_user_id',
+            'tbl_user',
+            'id',
+            'CASCADE'
+        );
     }
     
     /**

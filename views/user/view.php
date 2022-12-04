@@ -11,6 +11,8 @@ use yii\helpers\Url;
 use yii\widgets\ListView;
 use yii\bootstrap4\ActiveForm;
 use app\models\Course;
+use app\widgets\CreateFeed;
+use app\widgets\LoadFeed;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Users */
@@ -44,16 +46,16 @@ use app\models\Course;
               <div class="mt-3">
                 <h4><?= $model->username ?></h4>
                 <?php
-                $followers = Follow::find()->where([
+                $followers = Follow::find()->cache(10)->where([
                   'model' => get_class($model),
                   'model_id' => $model->id
                 ])->count();
-                $following = Follow::find()->where([
+                $following = Follow::find()->cache(10)->where([
                   'model' => get_class($model),
                   'model_id' => $model->id
                 ])
                   ->andWhere([
-                    'user_id' => Yii::$app->user->identity->id
+                    'created_by_id' => Yii::$app->user->identity->id
                   ])
                   ->one();
                 $msg = !empty($following) ? 'Unfollow' : 'Follow';
@@ -79,14 +81,14 @@ use app\models\Course;
 
               echo Html::a('<i class="fa fa-plus"></i>', [
                 'user/add-social',
-                'user_id' => $model->id
+                'created_by_id' => $model->id
               ], [
                 'class' => 'btn btn-primary'
               ]) ?>
             </li>
             <?php
-            $socials = SocialLink::find()->where([
-              'user_id' => $model->id
+            $socials = SocialLink::find()->cache(10)->where([
+              'created_by_id' => $model->id
             ]);
             $list = [];
             foreach ($socials->each() as $social) {
@@ -319,117 +321,12 @@ use app\models\Course;
           <?php
 
           if ($model->id == Yii::$app->user->id) {
-          ?>
-
-            <?php
-            $form = ActiveForm::begin([
-              'id' => 'signup-form',
-              'options' => [
-                'enctype' => 'multipart/form-data',
-                'class' => "comment-area-box mb-3 card",
-                'style' => "border-radius:10px;border:2px solid silver;"
-              ],
-              'action' => [
-                'user/create-feed'
-              ],
-              'method' => 'POST',
-              'fieldConfig' => [
-                'template' => "{input}\n{error}",
-                'labelOptions' => [
-                  'class' => 'col-form-label mr-lg-3'
-                ],
-                'inputOptions' => [
-                  'class' => 'form-control'
-                ],
-                'errorOptions' => [
-                  'class' => 'invalid-feedback'
-                ]
-              ]
-            ]);
-            $feed = new Feed();
-            ?>
-            <!-- comment box -->
-            <h3 class="m-3">Create feed</h3>
-            <span class="input-icon m-2">
-              <!-- <input type="text" class="form-control feed-title" placeholder="Add title..."> -->
-              <?= $form->field($feed, 'title')->textInput(['maxlength' => true, 'class' => 'form-control feed-title', 'placeholder' => "Add title..."]) ?>
-            </span>
-            <span class="input-icon m-2">
-              <!-- <textarea rows="3" class="form-control feed-text" placeholder="Write something..."></textarea> -->
-              <?= $form->field($feed, 'desciption')->textarea(['rows' => "3", 'class' => "form-control feed-text", 'placeholder' => "Write something..."]) ?>
-              <div class="comment-area-btn">
-                <div class="float-end">
-                  <?= Html::submitButton(Yii::t('app', 'Post'), ['class' => 'btn btn-sm btn-dark waves-effect waves-light float-right']) ?>
-                </div>
-                <div>
-                  <a href="#" class="btn btn-sm btn-light text-black-50"><i class="far fa-user"></i></a>
-                  <a href="#" class="btn btn-sm btn-light text-black-50"><i class="fa fa-map-marker"></i></a>
-                  <a href="#" class="btn btn-sm btn-light text-black-50" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-camera"></i></a>
-                  <a href="#" class="btn btn-sm btn-light text-black-50"><i class="far fa-smile"></i></a>
-                </div>
-              </div>
-            </span>
-            <!-- end comment box -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">
-                      Uploading a new photo</h5> <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <p class="body-desc">
-                      It will be easier for your friends to recognize you if you upload your real photo. You can upload the image in JPG, GIF or PNG format. </p>
-                    <div class="photo-input">
-                      <center>
-                        <img src='' alt="Charles Hall" id="file-ip-1-preview" style="display:none; max-height:450px; max-width:80%;" />
-                        <?= $form->field($feed, 'image')->fileInput(['onchange' => "showPreview(event);", 'id' => "file-ip-1", 'class' => 'form-input d-none']) ?>
-                        <label class="btn btn-sm btn-primary text-center" for="file-ip-1">
-                          Select a file
-                        </label>
-                      </center>
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Upload</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <?php
-
-            ActiveForm::end();
-            ?>
-          <?php
+            echo CreateFeed::widget(); //if user opens his own 
           }
           ?>
           <?php
 
-          $query = Feed::find()->where([
-            'created_by_id' => $model->id
-          ]);
-
-          // add conditions that should always apply here
-
-          $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'sort' => [
-              'defaultOrder' => [
-                'created_on' => SORT_DESC
-              ]
-            ]
-          ]);
-
-          if ($query->count() > Users::STATE_ZERO) {
-            echo ListView::widget([
-              'dataProvider' => $dataProvider,
-              'layout' => '{items}',
-              'itemView' => '_feed'
-            ]);
-          }
+          echo LoadFeed::widget(['id' => $model->id]);
 
           ?>
         </div>
@@ -440,6 +337,14 @@ use app\models\Course;
 
 </div>
 <script>
+  function showPreview(event) {
+    if (event.target.files.length > 0) {
+      var src = URL.createObjectURL(event.target.files[0]);
+      var preview = document.getElementById("file-ip-1-preview");
+      preview.src = src;
+      preview.style.display = "block";
+    }
+  }
   // jQuery.noConflict();
   $(document).on('click', '#follow', function() {
     var id = $(this).attr('data-id');

@@ -5,15 +5,17 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "tbl_skill".
+ * This is the model class for table "{{%tbl_skill}}".
  *
  * @property int $id
  * @property string|null $model
  * @property int $model_id
  * @property string $skill
  * @property string|null $created_on
+ * @property int|null $created_by_id
  * @property string|null $updated_on
- * @property int $level
+ *
+ * @property TblUser $createdBy
  */
 class Skill extends \yii\db\ActiveRecord
 {
@@ -22,7 +24,7 @@ class Skill extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'tbl_skill';
+        return '{{%tbl_skill}}';
     }
 
     /**
@@ -32,11 +34,11 @@ class Skill extends \yii\db\ActiveRecord
     {
         return [
             [['model_id', 'skill'], 'required'],
-            [['model_id', 'level'], 'integer'],
+            [['model_id', 'created_by_id'], 'integer'],
             [['created_on', 'updated_on'], 'safe'],
             [['model'], 'string', 'max' => 255],
             [['skill'], 'string', 'max' => 25],
-            ['skill', 'unique']
+            [['created_by_id'], 'exist', 'skipOnError' => true, 'targetClass' => TblUser::class, 'targetAttribute' => ['created_by_id' => 'id']],
         ];
     }
 
@@ -46,13 +48,23 @@ class Skill extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'model' => Yii::t('app', 'Model'),
-            'model_id' => Yii::t('app', 'Model ID'),
-            'skill' => Yii::t('app', 'Skill'),
-            'created_on' => Yii::t('app', 'Created On'),
-            'updated_on' => Yii::t('app', 'Updated On'),
-            'level' => Yii::t('app', 'Level'),
+            'id' => 'ID',
+            'model' => 'Model',
+            'model_id' => 'Model ID',
+            'skill' => 'Skill',
+            'created_on' => 'Created On',
+            'created_by_id' => 'Created By ID',
+            'updated_on' => 'Updated On',
         ];
+    }
+
+    /**
+     * Gets query for [[CreatedBy]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(users::class, ['id' => 'created_by_id']);
     }
 }

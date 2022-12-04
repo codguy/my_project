@@ -31,10 +31,10 @@ $users = Users::find()->where([
 foreach ($users->each() as $user) {
     $msg = Message::find()->where([
         'user_id' => $self_id,
-        'created_by' => $user->id
+        'created_by_id' => $user->id
     ])->orWhere([
         'user_id' => $user->id,
-        'created_by' => $self_id
+        'created_by_id' => $self_id
     ]);
     ?>
 					<a href="#" id="chat-person"
@@ -60,7 +60,7 @@ foreach ($users->each() as $user) {
 
 					<hr class="d-block d-lg-none mt-1 mb-0">
 				</div>
-				<div id="chat-area" class="col-12 col-lg-7 col-xl-9">
+				<div id="chat-area" class="col-12 col-lg-7 col-xl-9 cover-height">
 				<?php
     $first_msg = Message::find()->where([
         'user_id' => Yii::$app->user->id
@@ -71,7 +71,7 @@ foreach ($users->each() as $user) {
         ->one();
     if (! empty($first_msg)) {
         echo $this->render('_chat_area', [
-            'id' => $first_msg->created_by
+            'id' => $first_msg->created_by_id
         ]);
     }
     ?>
@@ -95,5 +95,11 @@ $(document).on('click', '#chat-person', function(){
 			$('#chat-area').html(response);
 		}
 	});
+});
+
+$(document).on('keypress', '#chat-msg', function(e){
+    if(e.which == 13) {
+        $('#send-msg').click();
+    }
 });
 </script>

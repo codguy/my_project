@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use dosamigos\ckeditor\CKEditor;
@@ -16,6 +17,8 @@ use dosamigos\ckeditor\CKEditor;
         'options' => [
             'enctype' => 'multipart/form-data'
         ],
+        'id' => 'create-course',
+        'action' => ['course/create'],
         'fieldConfig' => [
             'template' => "{label}\n{input}\n{error}",
             'labelOptions' => [
@@ -32,16 +35,17 @@ use dosamigos\ckeditor\CKEditor;
     ?>
 
     <div class="col-4 float-left">
-		<img id="file-ip-1-preview" height="150px;" /><br /> 
-		<label for="file-ip-1" class="btn btn-primary">Upload Image</label>
-    	<?= $form->field($model, 'image', ['template' => '{input}'])->fileInput(['onchange'=>"showPreview(event);", 'id'=>"file-ip-1", 'class'=>'form-input d-none' ])?>
+        <img id="file-ip-1-preview" height="150px;" /><br />
+        <label for="file-ip-1" class="btn btn-primary">Upload Image</label>
+        <?= $form->field($model, 'image', ['template' => '{input}'])->fileInput(['onchange' => "showPreview(event);", 'id' => "file-ip-1", 'class' => 'form-input d-none']) ?>
     </div>
-	<div class="col-8 float-left">
+    <div class="col-8 float-left">
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-        <?= $form->field($model, 'dificulty')->textInput(['type'=>'range', 'min' => 1, 'max' => 3]) ?>
+        <?= $form->field($model, 'dificulty')->textInput(['type' => 'range', 'min' => 1, 'max' => 3]) ?>
     </div>
 
-    <?=$form->field($model, 'desciption')->widget(CKEditor::className(), ['options' => ['rows' => 6,'class' => 'from-control'],'preset' => 'advanced',
+    <?= $form->field($model, 'desciption')->widget(CKEditor::class, [
+        'options' => ['rows' => 6, 'class' => 'from-control'], 'preset' => 'advanced',
         'clientOptions' => [
             # 'extraPlugins' => 'pbckcode', *//Download already and in the plugins folder...*
             'toolbar' => [
@@ -73,22 +77,26 @@ use dosamigos\ckeditor\CKEditor;
                 ],
             ],
         ],
-    ]);?>
+    ]); ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success', 'id' => 'submit-form']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
-function showPreview(event){
-  if(event.target.files.length > 0){
-    var src = URL.createObjectURL(event.target.files[0]);
-    var preview = document.getElementById("file-ip-1-preview");
-    preview.src = src;
-  }
-}
+    function showPreview(event) {
+        if (event.target.files.length > 0) {
+            var src = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById("file-ip-1-preview");
+            preview.src = src;
+        }
+    }
+
+    $(document).on('click', '#submit-form', function(){
+        var form = $("#create-course");
+        var data = $(form).serializeArray();
+    });
 </script>

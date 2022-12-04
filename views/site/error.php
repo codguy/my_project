@@ -4,55 +4,55 @@
 /** @var string $name */
 /** @var string $message */
 /** @var Exception$exception */
+
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->title = $name;
-$url = WEB_PATH.'/images/lost.gif';
+$url = Yii::$app->urlManager->getBaseUrl() . '/images/lost.gif';
 ?>
 <style>
-
-/*======================
+	/*======================
     404 page
 =======================*/
-.page_404 {
-	padding: 0;
-	background: #fff;
-	font-family: 'Arvo', serif;
-	height: 100vh;
-	top: 200px;
-}
+	.page_404 {
+		padding: 0;
+		background: #fff;
+		font-family: 'Arvo', serif;
+		height: 100vh;
+		top: 200px;
+	}
 
-.page_404  img {
-	height: 400px;
-	width: auto;
-}
+	.page_404 img {
+		height: 400px;
+		width: auto;
+	}
 
-.four_zero_four_bg h1 {
-	font-size: 80px;
-}
+	.four_zero_four_bg h1 {
+		font-size: 80px;
+	}
 
-.four_zero_four_bg h3 {
-	font-size: 80px;
-}
+	.four_zero_four_bg h3 {
+		font-size: 80px;
+	}
 
-.link_404 {
-	color: #fff !important;
-	padding: 10px 20px;
-	background: #39ac31;
-	margin: 20px 0;
-	display: inline-block;
-}
+	.link_404 {
+		color: #fff !important;
+		padding: 10px 20px;
+		background: #39ac31;
+		margin: 20px 0;
+		display: inline-block;
+	}
 
-.col-sm-10.col-sm-offset-1.text-center {
-	top: calc(50% - 200px);
-}
+	.col-sm-10.col-sm-offset-1.text-center {
+		top: calc(50% - 200px);
+	}
 </style>
 
 <section class="content page_404 my-auto">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-12 ">
+			<div class="col-sm-12 " style="top: calc(50% - 297px);position: absolute;left: calc(50% - 250px);width: 500px;">
 				<center>
 					<div class="col-sm-10 col-sm-offset-1">
 						<div class="four_zero_four_bg">
@@ -65,7 +65,7 @@ $url = WEB_PATH.'/images/lost.gif';
 
 							<p></p>
 
-							<a href="<?php echo Yii::$app->homeUrl?>" class="link_404">Go to
+							<a href="<?php echo Yii::$app->homeUrl ?>" class="link_404">Go to
 								Home</a>
 						</div>
 					</div>
@@ -74,4 +74,3 @@ $url = WEB_PATH.'/images/lost.gif';
 		</div>
 	</div>
 </section>
-
