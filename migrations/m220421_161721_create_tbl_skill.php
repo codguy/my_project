@@ -18,6 +18,7 @@ class m220421_161721_create_tbl_skill extends Migration
             'model' => $this->string(255)->defaultValue(Null),
             'model_id' => $this->integer()->notNull(),
             'skill' => $this->string(25)->notNull(),
+            'level' => $this->tinyInteger()->defaultValue(1),
             'created_on' => $this->dateTime(),
             'created_by_id' => $this->integer()->defaultValue(1),
             'updated_on' => $this->dateTime(),

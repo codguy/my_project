@@ -5,6 +5,7 @@ namespace app\commands;
 use yii\console\Controller;
 use app\models\Notification;
 use app\models\Users;
+use Yii;
 
 class DataController extends Controller
 {
@@ -43,13 +44,15 @@ class DataController extends Controller
             $model->dob = date("Y-m-d",DataController::getRandomDate());
             $model->created_on = date("Y-m-d H:i:m");
             $model->updated_on = date("Y-m-d H:i:m");
-            if($model->save(false)){
+            
+            Yii::error($model->getErrors());
+            if($model->save()){
                 $title = 'New '.$model->getRole($model->roll_id);
                 $type = Notification::TYPE_NEW;
                 $users = Users::findAll([
                     '<=',
                     'roll_id',
-                    Users::ROLE_STAFF
+                    Users::ROLE_TRAINER
                 ]);
                 foreach ($users as $user){
                     $notification = new Notification();
@@ -65,6 +68,8 @@ class DataController extends Controller
                     $notification->save(false);
                 }
                 echo "New User ".$model->username."\n";
+            }else{
+                Yii::error($model->getErrors);
             }
         }
     }

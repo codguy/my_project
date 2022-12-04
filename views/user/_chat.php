@@ -60,7 +60,7 @@ foreach ($users->each() as $user) {
 
 					<hr class="d-block d-lg-none mt-1 mb-0">
 				</div>
-				<div id="chat-area" class="col-12 col-lg-7 col-xl-9">
+				<div id="chat-area" class="col-12 col-lg-7 col-xl-9 cover-height">
 				<?php
     $first_msg = Message::find()->where([
         'user_id' => Yii::$app->user->id
@@ -95,5 +95,11 @@ $(document).on('click', '#chat-person', function(){
 			$('#chat-area').html(response);
 		}
 	});
+});
+
+$(document).on('keypress', '#chat-msg', function(e){
+    if(e.which == 13) {
+        $('#send-msg').click();
+    }
 });
 </script>

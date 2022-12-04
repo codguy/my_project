@@ -17,6 +17,8 @@ use dosamigos\ckeditor\CKEditor;
         'options' => [
             'enctype' => 'multipart/form-data'
         ],
+        'id' => 'create-course',
+        'action' => ['course/create'],
         'fieldConfig' => [
             'template' => "{label}\n{input}\n{error}",
             'labelOptions' => [
@@ -78,13 +80,12 @@ use dosamigos\ckeditor\CKEditor;
     ]); ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success', 'id' => 'submit-form']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
     function showPreview(event) {
         if (event.target.files.length > 0) {
@@ -93,4 +94,9 @@ use dosamigos\ckeditor\CKEditor;
             preview.src = src;
         }
     }
+
+    $(document).on('click', '#submit-form', function(){
+        var form = $("#create-course");
+        var data = $(form).serializeArray();
+    });
 </script>

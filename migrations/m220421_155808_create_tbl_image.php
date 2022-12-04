@@ -14,7 +14,7 @@ class m220421_155808_create_tbl_image extends Migration
         }
         $this->createTable('tbl_image', [
             'id' => $this->primaryKey(),
-            'image' => $this->string()->notNull(),
+            'name' => $this->string()->notNull(),
             'folder' => $this->string()->notNull(),
             'model' => $this->string(255)->defaultValue(Null),
             'model_id' => $this->integer()->notNull(),

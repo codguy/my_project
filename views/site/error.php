@@ -52,7 +52,7 @@ $url = Yii::$app->urlManager->getBaseUrl() . '/images/lost.gif';
 <section class="content page_404 my-auto">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-12 ">
+			<div class="col-sm-12 " style="top: calc(50% - 297px);position: absolute;left: calc(50% - 250px);width: 500px;">
 				<center>
 					<div class="col-sm-10 col-sm-offset-1">
 						<div class="four_zero_four_bg">

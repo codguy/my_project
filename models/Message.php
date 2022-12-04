@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\NewActiveRecord;
 use Yii;
 
 /**
@@ -14,7 +15,7 @@ use Yii;
  * @property string|null $created_on
  * @property string|null $updated_on
  */
-class Message extends \yii\db\ActiveRecord
+class Message extends NewActiveRecord
 {
     /**
      * {@inheritdoc}

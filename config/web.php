@@ -40,12 +40,27 @@ $config = [
             ],
             'viewPath' => '@app/mail',
         ],
+        // 'log' => [
+        //     'traceLevel' => YII_DEBUG ? 3 : 0,
+        //     'targets' => [
+        //         [
+        //             'class' => 'yii\log\FileTarget',
+        //             'levels' => ['error', 'warning'],
+        //         ],
+        //     ],
+        // ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
+            'flushInterval' => 1, //test
             'targets' => [
                 [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'class' => 'app\components\LogDb',
+                    'levels' => ['error'],
+                    'exportInterval' => 1, //test
+                    //'categories' => ['application'],
+                    /*'except' => [
+                        'yii\db\*',
+                    ],*/
                 ],
             ],
         ],

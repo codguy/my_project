@@ -103,6 +103,13 @@ use yii\helpers\Url;
                             'site/create-email-template'
                         ],
                         'iconStyle' => 'fas fa-paint-brush'
+                    ],
+                    [
+                        'label' => 'Logs',
+                        'url' => [
+                            'log/index'
+                        ],
+                        'iconStyle' => 'fa fa-file-text'
                     ]
                 ]
             ]);

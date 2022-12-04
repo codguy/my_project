@@ -1,4 +1,5 @@
 <?php
+
 namespace app\controllers;
 
 use app\components\NewBaseController;
@@ -128,7 +129,7 @@ class UserController extends NewBaseController
             if ($model->load($this->request->post())) {
                 $model->created_on = date('Y-m-d H:i:s');
                 $model->updated_on = date('Y-m-d H:i:s');
-                $model->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
+                $model->created_by_id = !empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
                 $model->state_id = Users::STATE_ACTIVE;
                 $model->authKey = 'test' . $obj;
                 $model->accessToken = $obj . '-token';
@@ -184,13 +185,10 @@ class UserController extends NewBaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $image = $model->profile_picture;
         if ($this->request->isPost && $model->load($this->request->post())) {
             if (UploadedFile::getInstance($model, 'image') != null) {
                 $model->image = UploadedFile::getInstance($model, 'image');
                 $model->image = $model->upload();
-            } else {
-                $model->profile_picture = $image;
             }
             $model->updated_on = date('Y-m-d H:i:s');
             if ($model->save(false)) {
@@ -238,31 +236,27 @@ class UserController extends NewBaseController
      */
     protected function findModel($id)
     {
-        if (($model = Users::find()->cache(10)
-            ->where([
-            'id' => $id
-        ])
-            ->one()) !== null) {
+        if (($model = Users::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException(\Yii::t('app', 'The requested page does not exist.'));
     }
 
-    public function actionAddSocial($user_id = false)
+    public function actionAddSocial($id = false)
     {
         $newmodel = new SocialLink();
         $post = $this->request->post();
-        if (! empty($post)) {
+        if (!empty($post)) {
             foreach ($post as $key => $value) {
-                if (! empty($value)) {
-                    $prev = SocialLink::find()->cache()
+                if (!empty($value)) {
+                    $prev = SocialLink::find()
                         ->where([
-                        'user_id' => $user_id,
-                        'platform' => $key
-                    ])
+                            'created_by_id' => $id,
+                            'platform' => $key
+                        ])
                         ->one();
-                    if (! empty($prev)) {
+                    if (!empty($prev)) {
                         $prev->link = $value;
                         $prev->updated_on = date('Y-m-d H:i:s');
                         $prev->updateAttributes([
@@ -271,21 +265,21 @@ class UserController extends NewBaseController
                         ]);
                         $title = 'Updated social link';
                         $type = Notification::TYPE_UPDATED;
-                        Notification::createNofication($title, $type, $prev, $user_id, 'user-plus');
+                        Notification::createNofication($title, $type, $prev, $id, 'user-plus');
                         continue;
                     }
                     $model = new SocialLink();
-                    $model->user_id = $user_id;
+                    $model->created_by_id = $id;
                     $model->platform = $key;
                     $model->link = $value;
                     $model->created_on = date('Y-m-d H:i:s');
                     $model->updated_on = date('Y-m-d H:i:s');
                     $transaction = \Yii::$app->db->beginTransaction();
                     try {
-                        if ($model->save(false)) {
+                        if ($model->save()) {
                             $title = 'Updated social link';
                             $type = Notification::TYPE_UPDATED;
-                            Notification::createNofication($title, $type, $model, $user_id, 'share-alt');
+                            Notification::createNofication($title, $type, $model, $id, 'share-alt');
                         }
                         $transaction->commit();
                     } catch (\Exception $e) {
@@ -296,13 +290,13 @@ class UserController extends NewBaseController
             }
             return $this->redirect([
                 'user/view',
-                'id' => $user_id
+                'id' => $id
             ]);
         }
 
         return $this->render('add_social', [
             'model' => $newmodel,
-            'user_id' => $user_id
+            'id' => $id
         ]);
     }
 
@@ -311,19 +305,17 @@ class UserController extends NewBaseController
         $model = new Follow();
         $post = $this->request->post();
         $user_model = $post['model'];
-        $user = $user_model::findOne([
-            $post['id']
-        ]);
-        if (! empty($post)) {
+        $user = $user_model::findOne($post['id']);
+        if (!empty($post)) {
             $prev = Follow::findOne([
                 'model_id' => $post['id'],
                 'model' => $post['model'],
-                'user_id' => \Yii::$app->user->identity->id
+                'created_by_id' => \Yii::$app->user->identity->id
             ]);
-            if (! empty($prev)) {
+            if (!empty($prev)) {
                 $prev->delete();
             } else {
-                $model->user_id = \Yii::$app->user->identity->id;
+                $model->created_by_id = \Yii::$app->user->identity->id;
                 $model->model = $post['model'];
                 $model->model_id = $post['id'];
                 $model->created_on = date('Y-m-d H:i:s');
@@ -342,7 +334,7 @@ class UserController extends NewBaseController
                         $notification->state_id = Notification::STATE_UNREAD;
                         $notification->model = get_class($model);
                         $notification->created_on = date('Y-m-d H:i:s');
-                        $notification->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
+                        $notification->created_by_id = !empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
                         $notification->save(false);
                     }
                     $transaction->commit();
@@ -363,7 +355,7 @@ class UserController extends NewBaseController
     {
         $model = new Skill();
         $post = $this->request->post();
-        if (! empty($post)) {
+        if (!empty($post)) {
             $model->level = $post['level'];
             $model->skill = $post['skill'];
             $model->model = $post['model'];
@@ -373,7 +365,6 @@ class UserController extends NewBaseController
             $model->save();
         }
         $result = Users::getSkillBadge($model->skill, $model->level);
-        // print_r($result);die()
         return $result;
     }
 
@@ -387,7 +378,7 @@ class UserController extends NewBaseController
     {
         $model = new Feed();
         $post = $this->request->post();
-        if (! empty($post)) {
+        if (!empty($post)) {
             $model->load($post);
             $model->created_by_id = \Yii::$app->user->id;
             $model->created_on = date('Y-m-d H:i:s');
@@ -405,7 +396,7 @@ class UserController extends NewBaseController
                     'model' => get_class(new Users())
                 ]);
                 foreach ($followers->each() as $follower) {
-                    Notification::createNofication($title, $type, $model, $follower->user_id, 'feed');
+                    Notification::createNofication($title, $type, $model, $follower->created_by_id, 'feed');
                 }
                 return $this->redirect([
                     'site/index'
@@ -418,13 +409,13 @@ class UserController extends NewBaseController
     {
         $model = new Like();
         $post = $this->request->post();
-        if (! empty($post)) {
+        if (!empty($post)) {
             $another = Like::findOne([
                 'model' => $post['model'],
                 'model_id' => $post['id'],
                 'created_by_id' => \Yii::$app->user->id
             ]);
-            if (! empty($another)) {
+            if (!empty($another)) {
                 $another->delete();
                 return true;
             }
@@ -436,7 +427,7 @@ class UserController extends NewBaseController
             if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Your message to display.");
                 return true;
-            }else{
+            } else {
                 return \Yii::$app->session->setFlash('success', $model->getErrorMessage());
             }
         }
@@ -446,8 +437,8 @@ class UserController extends NewBaseController
     {
         $feed = Feed::find()->cache()
             ->where([
-            'id' => $id
-        ])
+                'id' => $id
+            ])
             ->one();
         $like = Like::find()->where([
             'model' => get_class($feed),
@@ -467,7 +458,7 @@ class UserController extends NewBaseController
         $data = 'NOK';
         $msg = new Message();
         $post = $this->request->post();
-        if (! empty($post['msg'])) {
+        if (!empty($post['msg'])) {
             $msg->message = $post['msg'];
             $msg->created_by_id = \Yii::$app->user->id;
             $msg->created_on = date('Y-m-d H:i:s');
@@ -475,7 +466,7 @@ class UserController extends NewBaseController
             $msg->user_id = $post['id'];
             if ($msg->save()) {
                 $data = "OK";
-            }else{
+            } else {
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return $msg->getErrors();
             }
@@ -495,8 +486,8 @@ class UserController extends NewBaseController
             'created_by_id' => $id
         ])
             ->orWhere([
-            'user_id' => $id
-        ])
+                'user_id' => $id
+            ])
             ->all();
         return $this->renderAjax('_chat_area', [
             'model' => $message,
@@ -508,8 +499,8 @@ class UserController extends NewBaseController
     {
         $template = str_replace("{user_name}", "Satnam", EmailTemplate::find()->cache()
             ->where([
-            'id' => 3
-        ])
+                'id' => 3
+            ])
             ->one()->html);
         Yii::$app->mailer->compose('@app/mail/layouts/html', [
             'content' => $template
@@ -524,5 +515,24 @@ class UserController extends NewBaseController
     {
         $template = EmailTemplate::findOne($temp);
         return $template->html;
+    }
+
+    public function actionShadow($id)
+    {
+        $model = $this->findModel($id);
+        $shadow_session = Yii::$app->session->set('shadow', Yii::$app->user->id);
+        if (Yii::$app->user->login($model, 3600)) {
+            return $this->redirect(['site/index']);
+        }
+    }
+
+    public function actionUnshadow()
+    {
+        $logged_in_user = Yii::$app->session->get('shadow');
+        $model = $this->findModel($logged_in_user);
+        Yii::$app->session->remove('shadow');
+        if (Yii::$app->user->login($model, 3600*24*30)) {
+            return $this->redirect(['user/index']);
+        }
     }
 }

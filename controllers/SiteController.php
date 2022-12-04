@@ -173,7 +173,7 @@ class SiteController extends NewBaseController
     {
         $this->layout = 'blank';
         $model = new Users();
-        $obj = rand(100, 999);
+        $obj = rand(10, 99);
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
                 $model->created_on = date('Y-m-d H:i:s');
@@ -188,7 +188,7 @@ class SiteController extends NewBaseController
                 }
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
-                    if ($model->save(false)) {
+                    if ($model->save()) {
                         $title = 'New ' . $model->getRole($model->roll_id);
                         $type = Notification::TYPE_NEW;
                         $users = Users::find()->where([
@@ -208,10 +208,13 @@ class SiteController extends NewBaseController
                             'id' => $model->id
                         ]);
                     }
+                    else{
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        return $model->getErrors();
+                    }
                     $transaction->commit();
                 } catch (\Exception $e) {
                     $transaction->rollBack();
-                    print $e;
                 }
             }
         } else {

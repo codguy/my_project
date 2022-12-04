@@ -72,7 +72,7 @@ class Users extends UsersModel
             ->andFilterWhere(['like', 'authKey', $this->authKey])
             ->andFilterWhere(['like', 'accessToken', $this->accessToken])
             ->andFilterWhere(['like', 'gender', $this->gender])
-            ->andFilterWhere(['like', 'profile_picture', $this->profile_picture])
+            ->andFilterWhere(['like', 'image', $this->image])
             ->andFilterWhere(['like', 'created_by_id', $this->created_by_id]);
 
         return $dataProvider;

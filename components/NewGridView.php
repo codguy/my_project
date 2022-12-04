@@ -3,24 +3,23 @@
 namespace app\components;
 
 use Yii;
-use yii\web\Controller;
+use yii\grid\GridView;
 
-/**
- * UserController implements the CRUD actions for Users model.
- */
-class NewBaseController extends Controller
+class NewGridView extends GridView
 {
-    public $logMessage = NULL;
+    public $Export = false;
 
-    public $writeLog = false;
+    public $enable_row_click = false;
 
-    public function beforeAction($action)
+    public function export($action)
     {
-        if ($action->id == 'ignore' || $action->id == 'accept') {
-            $this->enableCsrfValidation = false;
-        }
-        //return true;
-        return parent::beforeAction($action);
+        $html = $this->renderItems();
+        print_r($html);die;
+        $file_name = "file_name.xls";
+        $excel_file = "Your Html Table Code";
+        header("Content-type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=$file_name");
+        echo $excel_file;
     }
 
     // public function afterAction($action, $result)

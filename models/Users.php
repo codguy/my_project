@@ -124,7 +124,7 @@ class Users extends NewActiveRecord implements IdentityInterface
 
             [
                 [
-                    'profile_picture'
+                    'image'
                 ],
                 'file',
                 'skipOnEmpty' => true,
@@ -150,7 +150,6 @@ class Users extends NewActiveRecord implements IdentityInterface
             'authKey' => 'Auth Key',
             'accessToken' => 'Access Token',
             'gender' => 'Gender',
-            'profile_picture' => 'Profile Picture',
             'created_on' => 'Created On',
             'created_by_id' => 'Created By ID',
             'updated_on' => 'Updated On'
