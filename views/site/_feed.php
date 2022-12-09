@@ -7,8 +7,10 @@ use app\models\Discussion;
 use yii\helpers\Html;
 ?>
 <?php
-$user = Users::find()->cache()->where($model->created_by_id)->one();
-$self = Users::find()->cache()->where(Yii::$app->user->id)->one();
+
+Yii::$app->cache->flush();
+$user = Users::find()->where($model->created_by_id)->one();
+$self = Users::find()->where(Yii::$app->user->id)->one();
 $liked = !empty(Like::findOne([
 	'model' => get_class($model),
 	'model_id' => $model->id

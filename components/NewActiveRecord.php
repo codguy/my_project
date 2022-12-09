@@ -7,6 +7,7 @@ use app\models\Notification;
 use app\models\User;
 use app\models\Users;
 use Yii;
+use yii\helpers\Url;
 use yii\web\IdentityInterface;
 
 class NewActiveRecord extends \yii\db\ActiveRecord
@@ -19,7 +20,7 @@ class NewActiveRecord extends \yii\db\ActiveRecord
 
     const STATE_ACTIVE = 1;
 
-    const STATE_INACTIVE = 2;
+    const STATE_INACTIVE = 0;
 
     const STATE_FREEZE = 3;
 
@@ -29,7 +30,7 @@ class NewActiveRecord extends \yii\db\ActiveRecord
 
     public function beforeSave($insert)
     {
-        if(!Yii::$app->user->isGuest){
+//         if(!Yii::$app->user->isGuest){
             if ($insert) {
                 $this->created_by_id = \Yii::$app->user->identity->id ?? Users::ROLE_ADMIN;
                 $this->created_on = date('Y-m-d H:i:s');
@@ -38,7 +39,7 @@ class NewActiveRecord extends \yii\db\ActiveRecord
                 $this->updated_on = date('Y-m-d H:i:s a');
             }
             return parent::beforeSave($insert);
-        }
+//         }
     }
 
     public static function createNofication($title, $type, $model, $to_user, $icon)
@@ -220,5 +221,10 @@ class NewActiveRecord extends \yii\db\ActiveRecord
     {
         Yii::$app->response->format = 'json';
         return $this->getErrors();
+    }
+
+    public function getUrl()
+    {
+        return Url::toRoute(['view', 'id' => $this->id]);
     }
 }

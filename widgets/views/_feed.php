@@ -7,7 +7,6 @@ use app\models\Discussion;
 use yii\helpers\Html;
 ?>
 <?php
-Yii::$app->cache->flush();
 $user = Users::findOne($model->created_by_id);
 $self = Users::find()->where(Yii::$app->user->id)->one();
 $liked = !empty(Like::findOne([
@@ -36,7 +35,8 @@ $comments = Discussion::find()->where([
 		<a href="" class="pull-left">
 			<?php
 
-			echo $user->getImage() ?>
+			$user->getImage() ?>
+			<img src="<?php echo $user->getImageUrl() ?>" class="elevation-2 profile_pic" alt="User Image" style="height: 50px !important;width: 50px !important;border: 1px solid white;" width="40px" height="40px">
 		</a>
 		<div class="media-body">
 			<a href="#">

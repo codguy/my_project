@@ -3,9 +3,7 @@
 namespace app\models;
 
 use app\components\NewActiveRecord;
-use Yii;
 use yii\web\IdentityInterface;
-use phpDocumentor\Reflection\PseudoTypes\True_;
 
 /**
  * This is the model class for table "tbl_user".
@@ -177,9 +175,6 @@ class Users extends NewActiveRecord implements IdentityInterface
         $user = self::find()->cache()->where([
             "id" => $id
         ])->one();
-        // if (!count($user)) {
-        // return null;
-        // }
         return new static($user);
     }
 

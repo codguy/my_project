@@ -35,5 +35,5 @@ $this->params['breadcrumbs'][] = $this->title;
             'created_on',
         ],
     ]) ?>
-<?= "<pre>".$model->message."</pre>";?>
+<?= Html::tag('pre', $model->message);?>
 </div>

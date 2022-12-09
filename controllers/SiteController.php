@@ -2,55 +2,64 @@
 namespace app\controllers;
 
 use app\components\NewBaseController;
-use Yii;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
+use app\components\backup\helpers\MysqlBackup;
 use app\models\ContactForm;
+use app\models\EmailTemplate;
+use app\models\Feed;
+use app\models\LoginForm;
 use app\models\Notification;
 use app\models\Users;
-use yii\web\UploadedFile;
-use app\models\Feed;
-use PHPUnit\Exception;
-use yii\base\ErrorException;
-use yii\log\EmailTarget;
-use app\models\EmailTemplate;
+use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use yii\web\Response;
+use yii\web\UploadedFile;
+use yii\data\ArrayDataProvider;
 
 class SiteController extends NewBaseController
 {
 
-    /**
-     *
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'only' => [
-                    'logout'
+                    'create',
+                    'login',
+                    'logout',
+                    'contact',
+                    'about',
+                    'sign-up',
+                    'create-email-template',
+                    'update-email-template',
+                    'delete-email-template'
                 ],
                 'rules' => [
                     [
                         'actions' => [
-                            'logout'
+                            'login',
+                            'logout',
+                            'contact',
+                            'about',
+                            'sign-up',
+                            'create-email-template',
+                            'update-email-template',
+                            'delete-email-template'
                         ],
                         'allow' => true,
-                        'roles' => [
-                            '@'
-                        ]
-                    ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => [
-                        'post'
+                        'matchCallback' => function ($rule, $action) {
+                            return true;
+                        }
+                    ],
+                    [
+                        'actions' => [
+                            'create'
+                        ],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return Users::isManager();
+                        }
                     ]
                 ]
             ]
@@ -207,8 +216,7 @@ class SiteController extends NewBaseController
                             'user/view',
                             'id' => $model->id
                         ]);
-                    }
-                    else{
+                    } else {
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         return $model->getErrors();
                     }
@@ -238,8 +246,8 @@ class SiteController extends NewBaseController
             $email_template->created_on = date('Y-m-d H:i:s');
             $email_template->updated_on = date('Y-m-d H:i:s');
             if ($email_template->save()) {
-                return $status = 'OK';            
-            }else{
+                return $status = 'OK';
+            } else {
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return $email_template->getErrors();
             }
@@ -258,10 +266,14 @@ class SiteController extends NewBaseController
 
     public function actionDeleteEmailTemplate($id)
     {
-        $model = EmailTemplate::find()->cache()->where(['id' =>$id])->one();
-        
+        $model = EmailTemplate::find()->cache()
+            ->where([
+            'id' => $id
+        ])
+            ->one();
+
         $model->delete();
-        
+
         return $this->redirect([
             'create-email-template'
         ]);

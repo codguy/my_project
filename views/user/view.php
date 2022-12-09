@@ -1,18 +1,13 @@
 <?php
 
-use app\models\Feed;
 use app\models\Follow;
 use app\models\Skill;
 use app\models\SocialLink;
 use app\models\Users;
-use yii\data\ActiveDataProvider;
-use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\widgets\ListView;
-use yii\bootstrap4\ActiveForm;
-use app\models\Course;
 use app\widgets\CreateFeed;
 use app\widgets\LoadFeed;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Users */
