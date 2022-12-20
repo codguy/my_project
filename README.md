@@ -46,7 +46,7 @@ Now you can open your console (`cmd`, `linux terminal`, `mac console`).
 You can then clone this project using the following command:
 
 ~~~
-https://github.com/codguy/my_project.git
+git clone https://github.com/codguy/my_project.git
 ~~~
 
 Now the application will be cloned into your system.
