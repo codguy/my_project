@@ -1,34 +1,32 @@
 <?php
-
 use app\models\Users;
 use yii\helpers\Html;
 use yii\helpers\Url;
-
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
+	<!-- Brand Logo -->
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
+	<!-- Sidebar -->
+	<div class="sidebar">
+		<!-- Sidebar user panel (optional) -->
         <?php $model = Yii::$app->user->identity; ?>
-        <a href="<?= Url::toRoute([
-                        'user/view',
-                        'id' => $model->id
-                    ]); ?>">
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="image">
-                    <img src="<?= $model->getImageUrl(); ?>" class="elevation-2 profile_pic" alt="User Image" height="40px" width="40px" style="height: 40px !important;width: 40px !important;border: 1px solid white;">
-                </div>
-                <div class="info">
+        <a href="<?=Url::toRoute(['user/view','id' => $model->id]);?>">
+			<div class="user-panel mt-3 pb-3 mb-3 d-flex">
+				<div class="image">
+					<img src="<?= $model->getImageUrl(); ?>"
+						class="elevation-2 profile_pic" alt="User Image" height="40px"
+						width="40px"
+						style="height: 40px !important; width: 40px !important; border: 1px solid white;">
+				</div>
+				<div class="info">
                     <?php echo $model->username; ?>
                 </div>
-            </div>
-        </a>
+			</div>
+		</a>
 
-        <!-- SidebarSearch Form -->
-        <!-- href be escaped -->
-        <!-- <div class="form-inline">
+		<!-- SidebarSearch Form -->
+		<!-- href be escaped -->
+		<div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
                 <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
                 <div class="input-group-append">
@@ -37,10 +35,10 @@ use yii\helpers\Url;
                     </button>
                 </div>
             </div>
-        </div> -->
+        </div> 	
 
-        <!-- Sidebar Menu -->
-        <nav class="mt-2">
+		<!-- Sidebar Menu -->
+		<nav class="mt-2">
             <?php
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
@@ -109,13 +107,22 @@ use yii\helpers\Url;
                         'url' => [
                             'log/index'
                         ],
-                        'iconStyle' => 'fa fa-file-text'
+                        'iconStyle' => 'fa fa-file-text',
+                        'visible' => (Yii::$app->user->identity->roll_id <= Users::ROLE_MANAGER) ? true : false
+                    ],
+                    [
+                        'label' => 'Backup',
+                        'url' => [
+                            'backup/index'
+                        ],
+                        'iconStyle' => 'fa fa-database',
+                        'visible' => (Yii::$app->user->identity->roll_id <= Users::ROLE_MANAGER) ? true : false
                     ]
                 ]
             ]);
             ?>
         </nav>
-        <!-- /.sidebar-menu -->
-    </div>
-    <!-- /.sidebar -->
+		<!-- /.sidebar-menu -->
+	</div>
+	<!-- /.sidebar -->
 </aside>

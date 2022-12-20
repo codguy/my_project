@@ -1,5 +1,4 @@
 <?php
-
 namespace app\controllers;
 
 use app\components\NewBaseController;
@@ -20,6 +19,7 @@ use app\models\Message;
 use yii\web\Response;
 use app\models\EmailTemplate;
 use yii\filters\AccessControl;
+use yii\filters\AccessRule;
 
 /**
  * UserController implements the CRUD actions for Users model.
@@ -35,46 +35,72 @@ class UserController extends NewBaseController
     {
         return [
             'access' => [
-                'class' => AccessControl::class,
-                'only' => [
-                    'login',
-                    'logout',
-                    'signup'
+                'class' => AccessControl::className(),
+                'ruleConfig' => [
+                    'class' => AccessRule::className()
                 ],
                 'rules' => [
                     [
-                        'allow' => true,
                         'actions' => [
-                            'login',
-                            'signup'
+                            'ajax'
                         ],
-                        'roles' => [
-                            '?'
-                        ]
+                        'allow' => true
                     ],
                     [
-                        'allow' => true,
                         'actions' => [
-                            'logout'
+                            'update',
+                            'create',
+                            'delete',
+                            'update-template',
+                            'delete-template',
+                            'shadow'
                         ],
+                        'allow' => true,
+                        'matchCallback' => function () {
+                            return Users::isAdmin() || Users::isManager();
+                        }
+                    ],
+                    [
+                        'actions' => [
+                            'update',
+                            'create',
+                            'delete',
+                            'delete-feed',
+                            'update-template',
+                            'delete-template',
+                            'shadow'
+                        ],
+                        'allow' => true,
+                        'matchCallback' => function () {
+                            return Users::isSelfAction();
+                        }
+                    ],
+
+                    [
+                        'actions' => [
+                            'index',
+                            'view',
+                            'add-social',
+                            'follow',
+                            'create-feed',
+                            'like-feed',
+                            'add-msg',
+                            'chat',
+                            'chat-box',
+                            'send-mail',
+                            'see-template',
+                            'test',
+                            'unshadow'
+                        ],
+                        'allow' => true,
                         'roles' => [
                             '@'
                         ]
-                    ],
-                    [
-                        'actions' => [
-                            'create-feed',
-                            'like-feed'
-                        ],
-                        'allow' => true,
-                        'matchCallback' => function ($rule, $action) {
-                            return Users::isAdmin();
-                        }
                     ]
                 ]
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => \yii\filters\VerbFilter::className(),
                 'actions' => [
                     'delete' => [
                         'post'
@@ -129,7 +155,7 @@ class UserController extends NewBaseController
             if ($model->load($this->request->post())) {
                 $model->created_on = date('Y-m-d H:i:s');
                 $model->updated_on = date('Y-m-d H:i:s');
-                $model->created_by_id = !empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
+                $model->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
                 $model->state_id = Users::STATE_ACTIVE;
                 $model->authKey = 'test' . $obj;
                 $model->accessToken = $obj . '-token';
@@ -247,16 +273,14 @@ class UserController extends NewBaseController
     {
         $newmodel = new SocialLink();
         $post = $this->request->post();
-        if (!empty($post)) {
+        if (! empty($post)) {
             foreach ($post as $key => $value) {
-                if (!empty($value)) {
-                    $prev = SocialLink::find()
-                        ->where([
-                            'created_by_id' => $id,
-                            'platform' => $key
-                        ])
-                        ->one();
-                    if (!empty($prev)) {
+                if (! empty($value)) {
+                    $prev = SocialLink::find()->where([
+                        'created_by_id' => $id,
+                        'platform' => $key
+                    ])->one();
+                    if (! empty($prev)) {
                         $prev->link = $value;
                         $prev->updated_on = date('Y-m-d H:i:s');
                         $prev->updateAttributes([
@@ -306,13 +330,13 @@ class UserController extends NewBaseController
         $post = $this->request->post();
         $user_model = $post['model'];
         $user = $user_model::findOne($post['id']);
-        if (!empty($post)) {
+        if (! empty($post)) {
             $prev = Follow::findOne([
                 'model_id' => $post['id'],
                 'model' => $post['model'],
                 'created_by_id' => \Yii::$app->user->identity->id
             ]);
-            if (!empty($prev)) {
+            if (! empty($prev)) {
                 $prev->delete();
             } else {
                 $model->created_by_id = \Yii::$app->user->identity->id;
@@ -334,7 +358,7 @@ class UserController extends NewBaseController
                         $notification->state_id = Notification::STATE_UNREAD;
                         $notification->model = get_class($model);
                         $notification->created_on = date('Y-m-d H:i:s');
-                        $notification->created_by_id = !empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
+                        $notification->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
                         $notification->save(false);
                     }
                     $transaction->commit();
@@ -355,7 +379,7 @@ class UserController extends NewBaseController
     {
         $model = new Skill();
         $post = $this->request->post();
-        if (!empty($post)) {
+        if (! empty($post)) {
             $model->level = $post['level'];
             $model->skill = $post['skill'];
             $model->model = $post['model'];
@@ -378,7 +402,7 @@ class UserController extends NewBaseController
     {
         $model = new Feed();
         $post = $this->request->post();
-        if (!empty($post)) {
+        if (! empty($post)) {
             $model->load($post);
             $model->created_by_id = \Yii::$app->user->id;
             $model->created_on = date('Y-m-d H:i:s');
@@ -409,13 +433,13 @@ class UserController extends NewBaseController
     {
         $model = new Like();
         $post = $this->request->post();
-        if (!empty($post)) {
+        if (! empty($post)) {
             $another = Like::findOne([
                 'model' => $post['model'],
                 'model_id' => $post['id'],
                 'created_by_id' => \Yii::$app->user->id
             ]);
-            if (!empty($another)) {
+            if (! empty($another)) {
                 $another->delete();
                 return true;
             }
@@ -437,8 +461,8 @@ class UserController extends NewBaseController
     {
         $feed = Feed::find()->cache()
             ->where([
-                'id' => $id
-            ])
+            'id' => $id
+        ])
             ->one();
         $like = Like::find()->where([
             'model' => get_class($feed),
@@ -458,7 +482,7 @@ class UserController extends NewBaseController
         $data = 'NOK';
         $msg = new Message();
         $post = $this->request->post();
-        if (!empty($post['msg'])) {
+        if (! empty($post['msg'])) {
             $msg->message = $post['msg'];
             $msg->created_by_id = \Yii::$app->user->id;
             $msg->created_on = date('Y-m-d H:i:s');
@@ -486,8 +510,8 @@ class UserController extends NewBaseController
             'created_by_id' => $id
         ])
             ->orWhere([
-                'user_id' => $id
-            ])
+            'user_id' => $id
+        ])
             ->all();
         return $this->renderAjax('_chat_area', [
             'model' => $message,
@@ -499,8 +523,8 @@ class UserController extends NewBaseController
     {
         $template = str_replace("{user_name}", "Satnam", EmailTemplate::find()->cache()
             ->where([
-                'id' => 3
-            ])
+            'id' => 3
+        ])
             ->one()->html);
         Yii::$app->mailer->compose('@app/mail/layouts/html', [
             'content' => $template
@@ -511,10 +535,25 @@ class UserController extends NewBaseController
             ->send();
     }
 
-    public function actionSeeTemplate($temp)
+    public function actionSeeTemplate($id)
     {
-        $template = EmailTemplate::findOne($temp);
+        $template = EmailTemplate::findOne($id);
         return $template->html;
+    }
+
+    public function actionUpdateTemplate($id)
+    {
+        $template = EmailTemplate::findOne($id);
+        return $template->html;
+    }
+
+    public function actionDeleteTemplate($id)
+    {
+        $template = EmailTemplate::findOne($id);
+        $template->delete();
+        return $this->redirect([
+            'site/create-email-template'
+        ]);
     }
 
     public function actionShadow($id)
@@ -522,7 +561,9 @@ class UserController extends NewBaseController
         $model = $this->findModel($id);
         $shadow_session = Yii::$app->session->set('shadow', Yii::$app->user->id);
         if (Yii::$app->user->login($model, 3600)) {
-            return $this->redirect(['site/index']);
+            return $this->redirect([
+                'site/index'
+            ]);
         }
     }
 
@@ -531,8 +572,10 @@ class UserController extends NewBaseController
         $logged_in_user = Yii::$app->session->get('shadow');
         $model = $this->findModel($logged_in_user);
         Yii::$app->session->remove('shadow');
-        if (Yii::$app->user->login($model, 3600*24*30)) {
-            return $this->redirect(['user/index']);
+        if (Yii::$app->user->login($model, 3600 * 24 * 30)) {
+            return $this->redirect([
+                'user/index'
+            ]);
         }
     }
 }

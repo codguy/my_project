@@ -2,54 +2,74 @@
 namespace app\controllers;
 
 use app\components\NewBaseController;
-use Yii;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\EmailTemplate;
+use app\models\Feed;
+use app\models\LoginForm;
 use app\models\Notification;
 use app\models\Users;
-use yii\web\UploadedFile;
-use app\models\Feed;
-use PHPUnit\Exception;
-use yii\base\ErrorException;
-use yii\log\EmailTarget;
-use app\models\EmailTemplate;
+use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\web\UploadedFile;
 
 class SiteController extends NewBaseController
 {
 
-    /**
-     *
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'only' => [
-                    'logout'
+                    'create',
+                    'login',
+                    'logout',
+                    'contact',
+                    'about',
+                    'sign-up',
+                    'create-email-template',
+                    'update-email-template',
+                    'delete-email-template'
                 ],
                 'rules' => [
                     [
                         'actions' => [
-                            'logout'
+                            'login',
+                            'logout',
+                            'contact',
+                            'about',
+                            'sign-up',
+                            'create-email-template',
+                            'update-email-template',
+                            'delete-email-template'
                         ],
                         'allow' => true,
-                        'roles' => [
-                            '@'
-                        ]
+                        'matchCallback' => function ($rule, $action) {
+                            return true;
+                        }
+                    ],
+                    [
+                        'actions' => [
+                            'create'
+                        ],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return Users::isManager();
+                        }
                     ]
                 ]
             ],
+            
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => [
+                    'delete' => [
+                        'post'
+                    ],
+                    'delete-email-template' => [
                         'post'
                     ]
                 ]
@@ -207,8 +227,7 @@ class SiteController extends NewBaseController
                             'user/view',
                             'id' => $model->id
                         ]);
-                    }
-                    else{
+                    } else {
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         return $model->getErrors();
                     }
@@ -238,8 +257,8 @@ class SiteController extends NewBaseController
             $email_template->created_on = date('Y-m-d H:i:s');
             $email_template->updated_on = date('Y-m-d H:i:s');
             if ($email_template->save()) {
-                return $status = 'OK';            
-            }else{
+                return $this->refresh();
+            } else {
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return $email_template->getErrors();
             }
@@ -252,16 +271,43 @@ class SiteController extends NewBaseController
             'dataProvider' => $dataProvder
         ]);
     }
+    
+    public function actionSeeEmailTemplate($id)
+    {
+        $template = EmailTemplate::findOne($id);
+        return $template->html;
+    }
 
-    public function actionUpdateEmailTemplate()
+    public function actionUpdateEmailTemplate($id)
     {}
+    
+    public function actionCloneEmailTemplate($id)
+    {
+        $new_template = new EmailTemplate();
+        $old_template = EmailTemplate::findOne($id);
+        if (! empty($old_template)) {
+            $new_template->title = $old_template->title;
+            $new_template->html = $old_template->html;
+            $new_template->json = $old_template->json;
+            $new_template->created_by_id = \Yii::$app->user->id;
+            $new_template->created_on = date('Y-m-d H:i:s');
+            $new_template->updated_on = date('Y-m-d H:i:s');
+            if ($new_template->save()) {
+                return $this->redirect([
+                    'create-email-template'
+                ]);
+            } else {
+                return print_r($new_template->getErrors());
+            }
+        }
+    }
 
     public function actionDeleteEmailTemplate($id)
     {
-        $model = EmailTemplate::find()->cache()->where(['id' =>$id])->one();
-        
+        $model = EmailTemplate::findOne($id);
+
         $model->delete();
-        
+
         return $this->redirect([
             'create-email-template'
         ]);

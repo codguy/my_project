@@ -22,7 +22,8 @@
         "kartik-v/yii2-icons": "@dev",
         "2amigos/yii2-ckeditor-widget" : "*",
         "kartik-v/yii2-date-range": "*",
-        "kop/yii2-scroll-pager": "*"
+        "kop/yii2-scroll-pager": "*",
+        "phpoffice/phpspreadsheet": "^1.25"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",
