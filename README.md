@@ -46,7 +46,7 @@ Now you can open your console (`cmd`, `linux terminal`, `mac console`).
 You can then clone this project using the following command:
 
 ~~~
-https://github.com/codguy/Academy.git
+https://github.com/codguy/my_project.git
 ~~~
 
 Now the application will be cloned into your system.
@@ -64,7 +64,7 @@ Now you have to run your server and open your database and import an `SQL` file 
 Once the above steps are done, open your browser and search :
 
 ~~~
-http://localhost/academy/web/
+http://localhost/my_project/web/
 ~~~
 
 
@@ -86,7 +86,7 @@ Now you have to run your server and open your database and import an `SQL` file 
 Once the above steps are done, open your browser and search :
 
 ~~~
-http://localhost/academy/web/
+http://localhost/my_project/web/
 ~~~
 
 Enjoy the project.. 😊
