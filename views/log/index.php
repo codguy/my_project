@@ -1,16 +1,9 @@
 <?php
-use app\components\grid\TGridView;
-use app\components\NewGridView;
 use app\components\PageHeader;
-use app\models\Log;
+use app\components\grid\TGridView;
 use kartik\daterange\DateRangePicker;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\grid\ActionColumn;
-use yii\grid\GridView;
 use yii\widgets\Pjax;
-use yii\helpers\ArrayHelper;
-use app\models\Users;
 
 /** @var yii\web\View $this */
 /** @var app\models\search\Log $searchModel */
@@ -84,13 +77,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 ])
             ],
             [
-                'class' => ActionColumn::class,
-                'urlCreator' => function ($action, Log $model, $key, $index, $column) {
-                    return Url::toRoute([
-                        $action,
-                        'id' => $model->id
-                    ]);
-                }
+                'header' => 'Action',
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '<div style="width: 85px;">{view}{delete}</div>',
+                'buttons' => [
+                    'delete' => function ($url, $model) {
+                        return Html::a('<span class="fa fa-remove"></span>', $url, [
+                            'title' => Yii::t('app', 'Delete this log'),
+                            'data-method' => 'post',
+                            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                            'class' => 'btn btn-danger me-1'
+                        ]);
+                    },
+                    'view' => function ($url, $model) {
+                        return Html::a('<span class="fa fa-eye fa-xs"></span>', $url, [
+                            'title' => Yii::t('app', 'View log'),
+                            'class' => 'btn btn-success me-1'
+                        ]);
+                    }
+                ]
             ]
         ]
     ]);

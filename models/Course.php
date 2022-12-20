@@ -78,8 +78,7 @@ class Course extends NewActiveRecord
                 [
                     'desciption'
                 ],
-                'string',
-                'max' => 255
+                'string'
             ],
             [
                 [
@@ -159,8 +158,8 @@ class Course extends NewActiveRecord
      */
     public function getImageUrl()
     {
-        if (! empty($this->image)) {
-            return Yii::$app->request->baseUrl . '/../uploads/' . $this->image;
+        if (! empty($this->hasImage())) {
+            return parent::getImageUrl();
         } else {
             return 'https://dummyimage.com/900x400/ced4da/6c757d.jpg';
         }
@@ -184,5 +183,28 @@ class Course extends NewActiveRecord
         ])
             ->one();
         return $trainer->username;
+    }
+
+    public function getAllChapters()
+    {
+        $chapters = Chapter::find()->where([
+            'course_id' => $this->id
+        ]);
+        $toSelf = Users::isSelf($this->trainer_id) ? '' : 'd-none';
+        $count = 1;
+        $html = '';
+        foreach ($chapters->each() as $chapter) {
+            $html .= Html::a('<li style="width: 90%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">Chapter : ' . $count ++ . ' ' . $chapter->title . '</li>', [
+                'course/view-chapter',
+                'id' => $chapter->id
+            ]);
+        }
+        $html .= Html::a('Add Chapters', [
+            'course/add-chapter',
+            'id' => $this->id
+        ], [
+            'class' => 'badge btn btn-outline-primary ' . $toSelf
+        ]);
+        return $html;
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace app\components;
 
 use Yii;
@@ -37,38 +36,28 @@ class PageHeader extends TBaseWidget
 
     public function renderHtml()
     {
-?>
+        ?>
 
+<div class="card mt-4">
+	<div class="page-head card-title">
+		<h1 class="px-4" style="font-size: 5rem;"><?php echo \yii\helpers\Html::encode($this->title); ?></h1>
 
-        <div class="page-head">
-            <h1><?php echo \yii\helpers\Html::encode($this->title); ?></h1>
-
-            <div class="head-content">
-                <?php if ($this->model != null) echo $this->model->getStateBadge(); ?>
+		<div class="head-content">
                 <?php
 
-                $class = 'app\modules\favorite\widgets\Favorite';
+        if ($this->model != null) {
+            echo $this->model->getStateBadge();
+        }
 
-                if (class_exists($class) && yii::$app->hasModule('favorite')) {
-                    if ($this->model != null) {
-                        echo $class::widget([
-                            'model' => $this->model
-                        ]);
-                    }
-                }
-
-                ?>
+        ?>
             </div>
             <?php if ($this->showActions) : ?>
-                <div class="state-information">
-
-
-                </div>
+                <div class="state-information"></div>
             <?php endif; ?>
 
         </div>
-
-        <!-- panel-menu -->
+</div>
+<!-- panel-menu -->
 
 
 

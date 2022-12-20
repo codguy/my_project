@@ -49,7 +49,7 @@ class BackupController extends NewBaseController
                         ],
                         'allow' => true,
                         'matchCallback' => function ($rule, $action) {
-                            return (Users::isAdmin() || Users::ism);
+                            return (Users::isAdmin() || Users::isManager());
                         }
                     ]
                 ]
@@ -204,8 +204,8 @@ class BackupController extends NewBaseController
 
     public function actionRestore($file = null)
     {
-        ini_set('max_execution_time', 0);
-        // ini_set('memory_limit', '8192M');
+//         ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '8192M');
 
         if (isset($file)) {
             $sql = new MysqlBackup();

@@ -23,7 +23,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'id' => 'users-grid-view',
         'enablePushState' => FALSE
     ]);
-    echo ListView::widget([
+    ?>
+    <?php
+
+echo ListView::widget([
         'dataProvider' => $dataProvider,
         'itemView' => '_card',
         'id' => "user-view",
@@ -31,19 +34,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'item'
         ],
         'layout' => '{items}{pager}',
-        // 'pager' => ['class' => \kop\y2sp\ScrollPager::class]
         'pager' => [
             'class' => \kop\y2sp\ScrollPager::className(),
             'container' => '.list-view',
             'triggerOffset' => 100,
-            'negativeMargin' => 100,
             'paginationSelector' => '.list-view .pagination',
             'triggerTemplate' => '<div style="text-align: center"><a style="cursor: pointer">{text}</a></div>',
             'noneLeftTemplate' => '<div style="clear: both; width: 100%; text-align: center">{text}</div>'
         ]
     ]);
-    Pjax::end();
     ?>
+   <?php
+
+Pjax::end();
+?>
 
 
 </div>

@@ -2,7 +2,6 @@
 namespace app\controllers;
 
 use app\components\NewBaseController;
-use app\components\backup\helpers\MysqlBackup;
 use app\models\ContactForm;
 use app\models\EmailTemplate;
 use app\models\Feed;
@@ -12,9 +11,9 @@ use app\models\Users;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Response;
 use yii\web\UploadedFile;
-use yii\data\ArrayDataProvider;
 
 class SiteController extends NewBaseController
 {
@@ -60,6 +59,18 @@ class SiteController extends NewBaseController
                         'matchCallback' => function ($rule, $action) {
                             return Users::isManager();
                         }
+                    ]
+                ]
+            ],
+            
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => [
+                        'post'
+                    ],
+                    'delete-email-template' => [
+                        'post'
                     ]
                 ]
             ]
@@ -246,7 +257,7 @@ class SiteController extends NewBaseController
             $email_template->created_on = date('Y-m-d H:i:s');
             $email_template->updated_on = date('Y-m-d H:i:s');
             if ($email_template->save()) {
-                return $status = 'OK';
+                return $this->refresh();
             } else {
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return $email_template->getErrors();
@@ -260,17 +271,40 @@ class SiteController extends NewBaseController
             'dataProvider' => $dataProvder
         ]);
     }
+    
+    public function actionSeeEmailTemplate($id)
+    {
+        $template = EmailTemplate::findOne($id);
+        return $template->html;
+    }
 
-    public function actionUpdateEmailTemplate()
+    public function actionUpdateEmailTemplate($id)
     {}
+    
+    public function actionCloneEmailTemplate($id)
+    {
+        $new_template = new EmailTemplate();
+        $old_template = EmailTemplate::findOne($id);
+        if (! empty($old_template)) {
+            $new_template->title = $old_template->title;
+            $new_template->html = $old_template->html;
+            $new_template->json = $old_template->json;
+            $new_template->created_by_id = \Yii::$app->user->id;
+            $new_template->created_on = date('Y-m-d H:i:s');
+            $new_template->updated_on = date('Y-m-d H:i:s');
+            if ($new_template->save()) {
+                return $this->redirect([
+                    'create-email-template'
+                ]);
+            } else {
+                return print_r($new_template->getErrors());
+            }
+        }
+    }
 
     public function actionDeleteEmailTemplate($id)
     {
-        $model = EmailTemplate::find()->cache()
-            ->where([
-            'id' => $id
-        ])
-            ->one();
+        $model = EmailTemplate::findOne($id);
 
         $model->delete();
 

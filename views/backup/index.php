@@ -4,6 +4,8 @@
 	<div class="backup-default-index">
 
 <?php
+use app\components\PageHeader;
+
 $this->params['breadcrumbs'][] = [
     'label' => 'Manage',
     'url' => array(
@@ -11,7 +13,7 @@ $this->params['breadcrumbs'][] = [
     )
 ];
 ?>
-
+<?= PageHeader::widget(['title' => $this->title]);?>
 <?php if(Yii::$app->session->hasFlash('success')): ?>
 <div class="alert alert-success">
 	<?php echo Yii::$app->session->getFlash('success'); ?>

@@ -17,9 +17,9 @@ use dosamigos\ckeditor\CKEditor;
             'enctype' => 'multipart/form-data'
         ],
         'id' => 'create-course',
-        'action' => [
-            'course/create'
-        ]
+//         'action' => [
+//             'course/create'
+//         ]
     ]);
     ?>
 
@@ -55,9 +55,9 @@ use dosamigos\ckeditor\CKEditor;
         }
     }
 
-    $(document).on('click', '#submit-form', function(){
-        var form = $("#create-course");
-        var data = $(form).serializeArray();
-        $('#create-course').submit();
-    });
+//     $(document).on('click', '#submit-form', function(){
+//         var form = $("#create-course");
+//         var data = $(form).serializeArray();
+//         $('#create-course').submit();
+//     });
 </script>

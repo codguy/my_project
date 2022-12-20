@@ -1,5 +1,4 @@
 <?php
-
 namespace app\models;
 
 use Yii;
@@ -19,7 +18,9 @@ use Yii;
  */
 class EmailTemplate extends \yii\db\ActiveRecord
 {
+
     /**
+     *
      * {@inheritdoc}
      */
     public static function tableName()
@@ -28,20 +29,58 @@ class EmailTemplate extends \yii\db\ActiveRecord
     }
 
     /**
+     *
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['title', 'html', 'json', 'created_by_id'], 'required'],
-            [['created_by_id'], 'integer'],
-            [['html','title', 'json'], 'string'],
-            [['created_on', 'updated_on'], 'safe'],
-            [['created_by_id'], 'exist', 'skipOnError' => true, 'targetClass' => TblUser::class, 'targetAttribute' => ['created_by_id' => 'id']],
+            [
+                [
+                    'title',
+                    'html',
+                    'json',
+                    'created_by_id'
+                ],
+                'required'
+            ],
+            [
+                [
+                    'created_by_id'
+                ],
+                'integer'
+            ],
+            [
+                [
+                    'html',
+                    'title',
+                    'json'
+                ],
+                'string'
+            ],
+            [
+                [
+                    'created_on',
+                    'updated_on'
+                ],
+                'safe'
+            ],
+            [
+                [
+                    'created_by_id'
+                ],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => TblUser::class,
+                'targetAttribute' => [
+                    'created_by_id' => 'id'
+                ]
+            ]
         ];
     }
 
     /**
+     *
      * {@inheritdoc}
      */
     public function attributeLabels()
@@ -53,7 +92,7 @@ class EmailTemplate extends \yii\db\ActiveRecord
             'json' => 'Json',
             'created_by_id' => 'Created By ID',
             'created_on' => 'Created On',
-            'updated_on' => 'Updated On',
+            'updated_on' => 'Updated On'
         ];
     }
 
@@ -64,6 +103,8 @@ class EmailTemplate extends \yii\db\ActiveRecord
      */
     public function getCreatedBy()
     {
-        return $this->hasOne(Users::class, ['id' => 'created_by_id']);
+        return $this->hasOne(Users::class, [
+            'id' => 'created_by_id'
+        ]);
     }
 }

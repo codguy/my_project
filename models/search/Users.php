@@ -69,10 +69,7 @@ class Users extends UsersModel
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSize' => 9
-            ]
+            'query' => $query
         ]);
 
         $this->load($params);

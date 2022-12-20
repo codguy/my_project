@@ -6,37 +6,37 @@ use yii\base\Exception;
 
 class MysqlBackup
 {
-    
+
     public $db_name;
-    
+
     public $username;
-    
+
     public $db_password;
-    
+
     public $host;
-    
+
     private $_moduleName = null;
-    
+
     public $tables = [];
-    
+
     public $fp;
-    
+
     public $file_name;
-    
+
     public $back_temp_file = 'db_backup_';
-    
+
     public $_path;
-    
+
     // this is the break point that we use to break the data in chunks
     const BREACKPOINT = " -- -------AutobackUpStart------ ";
-    
+
     public $enableZip = true;
-    
+
     public function setModule($moduleName = null)
     {
         $this->_moduleName = $moduleName;
     }
-    
+
     public static function log($strings)
     {
         if (php_sapi_name() == "cli") {
@@ -45,11 +45,13 @@ class MysqlBackup
             \Yii::debug($strings);
         }
     }
-    
+
     public function execSqlFile($sqlFile)
     {
         $message = "ok";
         $data = '';
+        print_r($sqlFile);
+        die();
         if (is_file($sqlFile)) {
             $handle = @fopen($sqlFile, "r");
             if ($handle) {
@@ -89,20 +91,20 @@ class MysqlBackup
         }
         return $message;
     }
-    
+
     public function topHeading()
     {
         $str = PHP_EOL . '-- -------------------------------------------' . PHP_EOL . 'SET AUTOCOMMIT=0;' . PHP_EOL . PHP_EOL . 'SET SQL_QUOTE_SHOW_CREATE = 1;' . PHP_EOL . 'SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;' . PHP_EOL . 'SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;' . PHP_EOL . 'START TRANSACTION;' . PHP_EOL . '-- -------------------------------------------' . PHP_EOL;
         return $str;
     }
-    
+
     public function botHeading()
     {
         $str = PHP_EOL . '-- -------------------------------------------' . PHP_EOL . 'COMMIT;' . PHP_EOL . 'SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;' . PHP_EOL . 'SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;' . PHP_EOL . '-- -------------------------------------------' . PHP_EOL;
-        
+
         return $str;
     }
-    
+
     public function clean($ignore = [
         'tbl-user',
         'tbl_user_role'
@@ -111,27 +113,27 @@ class MysqlBackup
         if (! $sql->StartBackup()) {
             return "error";
         }
-        
+
         $message = '';
-        
+
         foreach ($tables as $tableName) {
             if (in_array($tableName, $ignore))
                 continue;
-                fwrite($this->fp, '-- -------------------------------------------' . PHP_EOL);
-                fwrite($this->fp, 'DROP TABLE IF EXISTS ' . addslashes($tableName) . ';' . PHP_EOL);
-                fwrite($this->fp, '-- -------------------------------------------' . PHP_EOL);
-                
-                $message .= $tableName . ',';
+            fwrite($this->fp, '-- -------------------------------------------' . PHP_EOL);
+            fwrite($this->fp, 'DROP TABLE IF EXISTS ' . addslashes($tableName) . ';' . PHP_EOL);
+            fwrite($this->fp, '-- -------------------------------------------' . PHP_EOL);
+
+            $message .= $tableName . ',';
         }
         $sql->EndBackup();
         // logout so there is no problme later .
         Yii::$app->user->logout();
-        
+
         $sql->execSqlFile($this->file_name);
-        
+
         unlink($this->file_name);
     }
-    
+
     public function getTables()
     {
         if ($this->_moduleName != null) {
@@ -142,7 +144,7 @@ class MysqlBackup
         $tables = $cmd->queryColumn();
         return $tables;
     }
-    
+
     public function getModuleTables($moduleName)
     {
         if (class_exists("$moduleName")) {
@@ -151,30 +153,30 @@ class MysqlBackup
             $class = "app\\modules\\" . $moduleName . "\\Module";
         }
         self::log(__FUNCTION__ . ":" . $class);
-        
+
         if (method_exists($class, 'dbFile')) {
             $sqlFile = $class::dbFile();
             self::log(__FUNCTION__ . ":" . $sqlFile);
             if (is_array($sqlFile)) {
                 if (isset($sqlFile[0]))
                     $sqlFile = $sqlFile[0];
-                    else
-                        $sqlFile = null;
+                else
+                    $sqlFile = null;
             }
             if ($sqlFile != null && is_file($sqlFile)) {
                 self::log(__FUNCTION__ . " :DB:" . $sqlFile . ' ==> OK');
                 $sqlArray = file_get_contents($sqlFile);
-                
+
                 // TODO find tables name and create drop instuctions
                 if (preg_match_all("/CREATE TABLE(.*)`(.*)`/i", $sqlArray, $matches)) {
-                    //var_dump($matches[2]);
+                    // var_dump($matches[2]);
                     return $matches[2];
                 }
             }
         }
         return [];
     }
-    
+
     private function loadConfig()
     {
         if (file_exists(BACKUP_PATH)) {
@@ -191,12 +193,12 @@ class MysqlBackup
             }
         }
     }
-    
+
     public function fullBackup($addcheck = true)
     {
         if (shell_exec('which mysqldump')) {
             $this->loadConfig();
-            $cmd = 'mysqldump -u ' . $this->username . ' -p' . $this->db_password . ' '. $this->db_name . '> ' . escapeshellarg($this->getFilePath());
+            $cmd = 'mysqldump -u ' . $this->username . ' -p' . $this->db_password . ' ' . $this->db_name . '> ' . escapeshellarg($this->getFilePath());
             // self::log(__FUNCTION__ . ":cmd : " . $cmd);
             $outtext = shell_exec($cmd);
             $this->createZipBackup();
@@ -212,39 +214,39 @@ class MysqlBackup
         foreach ($tables as $tableName) {
             $this->getData($tableName);
         }
-        
+
         $sqlFile = $this->endBackup();
         self::log(__FUNCTION__ . ":Finished : " . $sqlFile);
         return $sqlFile;
     }
-    
+
     public function startBackup($addcheck = true)
     {
         $this->file_name = $this->getPath();
-        
+
         if ($this->_moduleName != null) {
             $this->file_name .= $this->_moduleName . '_' . date('Y.m.d_H.i.s') . '.sql';
         } else {
             $this->file_name .= $this->back_temp_file . date('Y.m.d_H.i.s') . '.sql';
         }
         $this->fp = fopen($this->file_name, 'w+');
-        
+
         if ($this->fp == null)
             return false;
-            fwrite($this->fp, 'SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";' . PHP_EOL);
-            fwrite($this->fp, 'SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;' . PHP_EOL);
-            fwrite($this->fp, 'SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;' . PHP_EOL);
-            fwrite($this->fp, '-- -------------------------------------------' . PHP_EOL);
-            if ($addcheck) {
-                fwrite($this->fp, 'SET AUTOCOMMIT=0;' . PHP_EOL);
-                fwrite($this->fp, 'START TRANSACTION;' . PHP_EOL);
-                fwrite($this->fp, 'SET SQL_QUOTE_SHOW_CREATE = 1;' . PHP_EOL);
-            }
-            fwrite($this->fp, '-- -------------------------------------------' . PHP_EOL);
-            $this->writeComment('START BACKUP');
-            return true;
+        fwrite($this->fp, 'SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";' . PHP_EOL);
+        fwrite($this->fp, 'SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;' . PHP_EOL);
+        fwrite($this->fp, 'SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;' . PHP_EOL);
+        fwrite($this->fp, '-- -------------------------------------------' . PHP_EOL);
+        if ($addcheck) {
+            fwrite($this->fp, 'SET AUTOCOMMIT=0;' . PHP_EOL);
+            fwrite($this->fp, 'START TRANSACTION;' . PHP_EOL);
+            fwrite($this->fp, 'SET SQL_QUOTE_SHOW_CREATE = 1;' . PHP_EOL);
+        }
+        fwrite($this->fp, '-- -------------------------------------------' . PHP_EOL);
+        $this->writeComment('START BACKUP');
+        return true;
     }
-    
+
     public function endBackup($addcheck = true)
     {
         if ($addcheck) {
@@ -253,27 +255,27 @@ class MysqlBackup
         fwrite($this->fp, '-- -------------------------------------------' . PHP_EOL);
         fwrite($this->fp, 'SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;' . PHP_EOL);
         fwrite($this->fp, 'SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;' . PHP_EOL);
-        
+
         fwrite($this->fp, self::BREACKPOINT);
-        
+
         fwrite($this->fp, '-- -------------------------------------------' . PHP_EOL);
         $this->writeComment('END BACKUP');
         fclose($this->fp);
         $this->fp = null;
         if ($this->enableZip) {
-            
+
             $this->createZipBackup();
         }
         return $this->file_name;
     }
-    
+
     public function getColumns($tableName)
     {
         $sql = 'SHOW CREATE TABLE ' . $tableName;
         $cmd = Yii::$app->db->createCommand($sql);
         $table = $cmd->queryOne();
         $create_query = $table['Create Table'] . ';';
-        
+
         $create_query = preg_replace('/^CREATE TABLE/', 'CREATE TABLE IF NOT EXISTS', $create_query);
         $create_query = preg_replace('/AUTO_INCREMENT\s*=\s*([0-9])+/', '', $create_query);
         if ($this->fp) {
@@ -285,7 +287,7 @@ class MysqlBackup
             return $create_query;
         }
     }
-    
+
     public function getData($tableName)
     {
         $sql = 'SELECT COUNT(*) as row_count FROM ' . $tableName;
@@ -295,10 +297,10 @@ class MysqlBackup
         $count = $dataReader['row_count'];
         // this is used to break the data in 100 records per section
         $var = 1000;
-        
+
         if ($count > $var) {
             // this sql is executed when we have records in a table greater than 100
-            
+
             $i = 1;
             $limit = 0;
             while ($count > $var) {
@@ -331,20 +333,22 @@ class MysqlBackup
         }
         if ($this->fp)
             fflush($this->fp);
-            return true;
+        return true;
     }
-    
+
     // this function is used to get the backup in chunks on each chunk a breakpoint is inserted
     private function writeData($dataReader, $tableName)
     {
         $val = '';
         $line = PHP_EOL;
         fwrite($this->fp, $line);
+        $counter = 0;
         foreach ($dataReader as $data) {
+
             $itemNames = array_keys($data);
             $itemNames = array_map("addslashes", $itemNames);
             $items = join('`,`', $itemNames);
-            
+
             $itemValues = array_values($data);
             for ($i = 0; $i < count($itemValues); $i ++) {
                 // if ($itemValues[$i] == '00:00:00' || $itemValues[$i] == '0000-00-00 00:00:00' || $itemValues[$i] == '0000-00-00') {
@@ -354,10 +358,16 @@ class MysqlBackup
                 // $itemValues[$i] = str_replace('`', 'â€˜', $itemValues[$i]);
             }
             $itemValues = array_map("addslashes", $itemValues);
-            
+
             $valueString = join('","', $itemValues);
-            if ($itemValues)
-                $val .= "(" . '"' . $valueString . '"' . ")," . PHP_EOL;
+            if ($itemValues) {
+                if ($counter != count($dataReader) - 1) {
+                    $val .= "(" . '"' . $valueString . '"' . ")," . PHP_EOL;
+                } else {
+                    $val .= "(" . '"' . $valueString . '"' . ")";
+                }
+            }
+            $counter++;
         }
         $val = rtrim($val, ",\n");
         if ($val != "") {
@@ -371,11 +381,11 @@ class MysqlBackup
             }
         }
     }
-    
+
     public function getFilePath()
     {
         $this->file_name = $this->getPath();
-        
+
         if ($this->_moduleName != null) {
             $this->file_name .= $this->_moduleName . '_' . date('Y.m.d_H.i.s') . '.sql';
         } else {
@@ -383,10 +393,11 @@ class MysqlBackup
         }
         return $this->file_name;
     }
+
     public function getPath()
     {
         if ($this->_path == null) {
-            
+
             if ($this->_moduleName != null) {
                 $this->_path = Yii::$app->getModule($this->_moduleName)->basePath . '/db/';
             } else {
@@ -401,14 +412,14 @@ class MysqlBackup
         }
         return $this->_path;
     }
-    
+
     private function writeComment($string)
     {
         fwrite($this->fp, PHP_EOL . '-- -------------------------------------------' . PHP_EOL);
         fwrite($this->fp, PHP_EOL . '-- ' . $string . PHP_EOL);
         fwrite($this->fp, PHP_EOL . '-- -------------------------------------------' . PHP_EOL);
     }
-    
+
     /**
      * Charge method to backup and create a zip with this
      */
@@ -420,7 +431,7 @@ class MysqlBackup
             if ($zip->open($file_name, \ZipArchive::CREATE) === TRUE) {
                 $zip->addFile($this->file_name, basename($this->file_name));
                 $zip->close();
-                
+
                 @unlink($this->file_name);
                 $this->file_name = $file_name;
             }
@@ -428,7 +439,7 @@ class MysqlBackup
             echo "ZipArchive missing class ";
         }
     }
-    
+
     /**
      * Method responsible for reading a directory and add them to the zip
      *
@@ -441,14 +452,14 @@ class MysqlBackup
             while (($file = readdir($handle)) !== false) {
                 if (is_dir($directory . $file) && $file != "." && $file != ".." && ! in_array($directory . $file . '/', $this->module->excludeDirectoryBackup))
                     $this->zipDirectory($zip, $alias . $file . '/', $directory . $file . '/');
-                    
-                    if (is_file($directory . $file) && ! in_array($directory . $file, $this->module->excludeFileBackup))
-                        $zip->addFile($directory . $file, $alias . $file);
+
+                if (is_file($directory . $file) && ! in_array($directory . $file, $this->module->excludeFileBackup))
+                    $zip->addFile($directory . $file, $alias . $file);
             }
             closedir($handle);
         }
     }
-    
+
     /**
      * Zip file execution
      *

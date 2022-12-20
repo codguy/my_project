@@ -19,12 +19,15 @@ $this->params['breadcrumbs'][] = $this->title;
 body{
     background: -webkit-linear-gradient(left, #36d1dc, #5b86e5);
 }
-.contact-form{
-    background: #fff;
-    margin-top: 10%;
-    margin-bottom: 5%;
-    width: 70%;
-    border-radius: 12px;
+.contact-form {
+	background: #fff;
+	margin-bottom: 5%;
+	width: 70%;
+	border-radius: 12px;
+	position: absolute !important;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 .contact-form .form-control{
     border-radius:0.8rem;
@@ -76,7 +79,7 @@ body{
             <div class="contact-image">
                 <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>
             </div>
-            <form method="post card-body">
+            <form method="post" class="card-body">
                 <h3>Drop Us a Message</h3>
                <div class="row">
                     <div class="col-md-6">
