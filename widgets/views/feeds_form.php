@@ -42,7 +42,10 @@ $form = ActiveForm::begin([
             <?= Html::submitButton(Yii::t('app', 'Post'), ['class' => 'btn btn-sm btn-dark waves-effect waves-light float-right']) ?>
         </div>
         <div>
-            <a href="#" class="btn btn-sm btn-light text-black-50"><i class="far fa-user"></i></a> <a href="#" class="btn btn-sm btn-light text-black-50"><i class="fa fa-map-marker"></i></a> <a href="#" class="btn btn-sm btn-light text-black-50" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-camera"></i></a> <a href="#" class="btn btn-sm btn-light text-black-50"><i class="far fa-smile"></i></a>
+            <a href="#" class="btn btn-sm btn-light text-black-50"><i class="far fa-user"></i></a> 
+            <a href="#" class="btn btn-sm btn-light text-black-50"><i class="fa fa-map-marker"></i></a> 
+            <a href="#" class="btn btn-sm btn-light text-black-50" data-toggle="modal" id="image-btn" data-target="#exampleModal"><i class="fa fa-camera"></i></a> 
+            <a href="#" class="btn btn-sm btn-light text-black-50"><i class="far fa-smile"></i></a>
         </div>
     </div>
 </span>
@@ -53,9 +56,6 @@ $form = ActiveForm::begin([
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Uploading a new
                     photo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <p class="body-desc">It will be easier for your friends to
@@ -96,4 +96,9 @@ $form = ActiveForm::begin([
             preview.style.display = "block";
         }
     }
+    
+    $(document).on('change', '#file-ip-1', function(){
+    	$('#image-btn').addClass('btn-primary');
+    	$('#image-btn').removeClass('btn-light text-black-50');
+    });
 </script>

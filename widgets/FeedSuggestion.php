@@ -12,7 +12,7 @@ class FeedSuggestion extends \yii\bootstrap4\Widget
     public function init()
     {
         parent::init();
-        $this->user = Users::find()->cache(60)->limit(10);
+        $this->user = Users::find()->cache(60)->limit(5)->orderBy('id desc');
     }
 
     public function run()

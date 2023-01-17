@@ -177,6 +177,7 @@ class UserController extends NewBaseController
                             Notification::createNofication($title, $type, $model, $user->id, 'user');
                         }
                         Notification::createNofication('Welcome', Notification::TYPE_SUCCESS, $model, $model->id, 'user');
+                        \Yii::$app->session->setFlash('info', 'New User Added');
                         $this->redirect([
                             'view',
                             'id' => $model->id
@@ -187,7 +188,7 @@ class UserController extends NewBaseController
                     $transaction->commit();
                 } catch (\Exception $e) {
                     $transaction->rollBack();
-                    print $e;
+                    \Yii::$app->session->setFlash('error', $e->getMessage());
                 }
             }
         } else {
@@ -221,6 +222,7 @@ class UserController extends NewBaseController
                 $title = 'Updated : ' . $model->username;
                 $type = Notification::TYPE_UPDATED;
                 Notification::createNofication($title, $type, $model, $model->id, 'user');
+                \Yii::$app->session->setFlash('info', 'User Updated');
                 return $this->redirect([
                     'view',
                     'id' => $model->id
@@ -245,6 +247,7 @@ class UserController extends NewBaseController
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+        \Yii::$app->session->setFlash('success', 'User Deleted');
 
         return $this->redirect([
             'index'
@@ -308,10 +311,12 @@ class UserController extends NewBaseController
                         $transaction->commit();
                     } catch (\Exception $e) {
                         $transaction->rollBack();
+                        \Yii::$app->session->setFlash('error', $e->getMessage());
                         print $e;
                     }
                 }
             }
+            \Yii::$app->session->setFlash('success', 'Social Links added');
             return $this->redirect([
                 'user/view',
                 'id' => $id
@@ -372,6 +377,7 @@ class UserController extends NewBaseController
             'model_id' => $post['id'],
             'model' => $post['model']
         ])->count();
+        \Yii::$app->session->setFlash('Success', 'Folloed');
         return $count;
     }
 

@@ -12,7 +12,7 @@
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/yiisoft/yii2"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": "*",
         "yiisoft/yii2": "*",
@@ -23,7 +23,9 @@
         "2amigos/yii2-ckeditor-widget" : "*",
         "kartik-v/yii2-date-range": "*",
         "kop/yii2-scroll-pager": "*",
-        "phpoffice/phpspreadsheet": "^1.25"
+        "phpoffice/phpspreadsheet": "^1.25",
+        "odaialali/yii2-toastr": "*",
+        "mludvik/yii2-tags-input": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",

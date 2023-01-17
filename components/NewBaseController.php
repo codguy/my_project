@@ -1,15 +1,41 @@
 <?php
-
 namespace app\components;
 
+use app\models\Log;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\AccessRule;
 use yii\web\Controller;
+use app\models\ActionLog;
 
 /**
  * UserController implements the CRUD actions for Users model.
  */
 class NewBaseController extends Controller
 {
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'ruleConfig' => [
+                    'class' => AccessRule::className()
+                ],
+                'rules' => [
+                    [
+                        'actions' => [
+                            'clear-cache',
+                            'create-backup',
+                            'data-backup'
+                        ],
+                        'allow' => true
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public $logMessage = NULL;
 
     public $writeLog = false;
@@ -19,23 +45,47 @@ class NewBaseController extends Controller
         if ($action->id == 'ignore' || $action->id == 'accept') {
             $this->enableCsrfValidation = false;
         }
-        //return true;
+
+        // Yii::$app->session->setFlash('error', \Yii::$app->controller->id.'/'.$action->id);
         return parent::beforeAction($action);
     }
 
-    // public function afterAction($action, $result)
-    // {
-    //     $response = $result;
-    //     return $result;
-    // }
+    public function afterAction($action, $result)
+    {
+        $result = parent::afterAction($action, $result);
+        $params = [
+            'GET' => \Yii::$app->request->get(),
+            'POST' => \Yii::$app->request->post()
+        ];
+        $log = new ActionLog();
+        $log->status = Yii::$app->response->statusCode;
+        $log->controller = Yii::$app->controller->id;
+        $log->action = Yii::$app->controller->action->id;
+        $log->params = json_encode($params, JSON_PRETTY_PRINT);
+        $log->type = \Yii::$app->getRequest()->getMethod();
+        $log->save(false);
+        return $result;
+    }
 
+    public function array_to_string($array_attributes)
+    {
+        $dataAttributes = array_map(function ($value, $key) {
+            if (!is_array($key)) {
+                return '&emsp;' . $key . '=>' . $value . ' <br>';
+            }
+        }, array_values($array_attributes), array_keys($array_attributes));
+
+        $dataAttributes = implode(' ', $dataAttributes);
+        return $dataAttributes;
+    }
 
     public function actionClearCache()
     {
         Yii::$app->cache->flush();
-        Yii::$app->session->getFlash('error', 'Cache cleared');
+        Yii::$app->session->setFlash('success', 'Cache cleared');
         return $this->goHome();
     }
+
     public static function actionCreateBackup($tables = '*', $filepath = BASE_PATH . '/../db/backup.sql')
     {
         if ($tables == '*') {
@@ -67,7 +117,7 @@ class NewBaseController extends Controller
             }
             $return .= "\n\n\n";
         }
-        //save file
+        // save file
         // $handle = fopen($filepath, 'w+');
         // fwrite($handle, $return);
         // fclose($handle);
@@ -109,7 +159,7 @@ class NewBaseController extends Controller
             }
             $return .= "\n\n\n";
         }
-        //save file
+        // save file
         $handle = fopen($filepath, 'w+');
         fwrite($handle, $return);
         fclose($handle);

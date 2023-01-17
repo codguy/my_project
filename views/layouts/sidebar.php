@@ -103,6 +103,14 @@ use yii\helpers\Url;
                         'iconStyle' => 'fas fa-paint-brush'
                     ],
                     [
+                        'label' => 'Backup',
+                        'url' => [
+                            'backup/index'
+                        ],
+                        'iconStyle' => 'fa fa-database',
+                        'visible' => (Yii::$app->user->identity->roll_id <= Users::ROLE_MANAGER) ? true : false
+                    ],
+                    [
                         'label' => 'Logs',
                         'url' => [
                             'log/index'
@@ -111,11 +119,11 @@ use yii\helpers\Url;
                         'visible' => (Yii::$app->user->identity->roll_id <= Users::ROLE_MANAGER) ? true : false
                     ],
                     [
-                        'label' => 'Backup',
+                        'label' => 'Action Log',
                         'url' => [
-                            'backup/index'
+                            'action-log/index'
                         ],
-                        'iconStyle' => 'fa fa-database',
+                        'iconStyle' => 'fa fa-history',
                         'visible' => (Yii::$app->user->identity->roll_id <= Users::ROLE_MANAGER) ? true : false
                     ]
                 ]
