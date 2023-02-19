@@ -28,9 +28,9 @@ class ActionColumn extends \yii\grid\ActionColumn
                     'title' => Yii::t('yii', 'View'),
                     'aria-label' => Yii::t('yii', 'View'),
                     'data-pjax' => '0',
-                    'class' => 'btn btn-flat mr-1 mb-1 waves-effect waves-light'
+                    'class' => 'btn btn-success mr-1 mb-1 waves-effect waves-light'
                 ], $this->buttonOptions);
-                return Html::a('<i class="users-edit-icon feather icon-eye"></i>', $url, $options);
+                return Html::a('<i class="users-edit-icon fa fa-eye"></i>', $url, $options);
             };
         }
 
@@ -41,9 +41,9 @@ class ActionColumn extends \yii\grid\ActionColumn
                     'title' => Yii::t('yii', 'Update'),
                     'aria-label' => Yii::t('yii', 'Update'),
                     'data-pjax' => '0',
-                    'class' => 'btn btn-flat mr-1 mb-1 waves-effect waves-light'
+                    'class' => 'btn btn-warning mr-1 mb-1 waves-effect waves-light text-white'
                 ], $this->buttonOptions);
-                return Html::a('<i class="users-edit-icon feather icon-edit-1"></i>', $url, $options);
+                return Html::a('<i class="users-edit-icon fa fa-pen"></i>', $url, $options);
             };
         }
 
@@ -57,9 +57,9 @@ class ActionColumn extends \yii\grid\ActionColumn
                     'data-method' => 'post',
                     'data-pjax' => '0',
                     'data-url' => $url,
-                    'class' => 'btn btn-flat mr-1 mb-1 waves-effect waves-light'
+                    'class' => 'btn btn-danger mr-1 mb-1 waves-effect waves-light'
                 ], $this->buttonOptions);
-                return Html::a('<i class="users-delete-icon feather icon-trash-2"></i>', $url, $options);
+                return Html::a('<i class="users-delete-icon fa fa-trash"></i>', $url, $options);
             };
         }
     }

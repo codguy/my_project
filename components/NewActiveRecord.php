@@ -362,6 +362,9 @@ class NewActiveRecord extends \yii\db\ActiveRecord
             $modelClass = get_class($this);
             $pos = strrpos($modelClass, '\\');
             $class = substr($modelClass, $pos + 1);
+            if($class == 'Users'){
+                $class = 'User';
+            }
         }
         return $admin . Inflector::camel2id($class);
     }
@@ -381,7 +384,6 @@ class NewActiveRecord extends \yii\db\ActiveRecord
         }
 
         $params = array_filter($params);
-
         if ($absolute || \Yii::$app instanceof yii\console\Application) {
             return \Yii::$app->getUrlManager()->createAbsoluteUrl($params);
         }

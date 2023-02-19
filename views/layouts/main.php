@@ -34,7 +34,7 @@ $this->beginPage()?>
 
     $this->head()?>
 </head>
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini sidebar-collapse">
     <?php
 
     $this->beginBody()?>
@@ -55,6 +55,21 @@ $this->beginPage()?>
     $(document).ready(function() {
         $('.nav-icon').removeClass('fa-circle');
     });
+    $(document).on('change', '#flexSwitchCheckChecked', function(){
+    	var mode = $(this).is(':checked');
+    	localStorage.setItem("dark-mode", mode);
+    	console.log(localStorage.getItem("dark-mode"));
+    	 if(mode){
+    	 	$('body').addClass('dark-mode');
+    	 } else {
+    	 	$('body').removeClass('dark-mode');
+    	 }
+    });
+    if(localStorage.getItem('dark-mode') == 'true'){
+	 	$('body').addClass('dark-mode');
+		$('#flexSwitchCheckChecked').attr('checked', 'checked');
+	}
+    
 		
 </script>
 </html>

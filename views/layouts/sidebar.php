@@ -5,7 +5,6 @@ use yii\helpers\Url;
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 	<!-- Brand Logo -->
-
 	<!-- Sidebar -->
 	<div class="sidebar">
 		<!-- Sidebar user panel (optional) -->
@@ -13,30 +12,35 @@ use yii\helpers\Url;
         <a href="<?=Url::toRoute(['user/view','id' => $model->id]);?>">
 			<div class="user-panel mt-3 pb-3 mb-3 d-flex">
 				<div class="image">
-					<img src="<?= $model->getImageUrl(); ?>"
-						class="elevation-2 profile_pic" alt="User Image" height="40px"
-						width="40px"
-						style="height: 40px !important; width: 40px !important; border: 1px solid white;">
+					<img src="<?= $model->getImageUrl(); ?>" class="elevation-2 profile_pic" alt="User Image" height="40px" width="40px" style="height: 40px !important; width: 40px !important; border: 1px solid white;">
 				</div>
 				<div class="info">
                     <?php echo $model->username; ?>
                 </div>
 			</div>
 		</a>
-
 		<!-- SidebarSearch Form -->
 		<!-- href be escaped -->
 		<div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-sidebar">
-                        <i class="fas fa-search fa-fw"></i>
-                    </button>
+			<div class="input-group" data-widget="sidebar-search">
+				<input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+				<div class="input-group-append">
+					<button class="btn btn-sidebar">
+						<i class="fas fa-search fa-fw"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="user-panel d-flex form-check form-switch">
+				<div class="image">
+					<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" />
+				</div>
+				<div class="info">
+                    <div class="info">
+                    <label class="form-check-label text-white" for="flexSwitchCheckChecked">Night Mode</label>
                 </div>
-            </div>
-        </div> 	
-
+                </div>
+			</div>
 		<!-- Sidebar Menu -->
 		<nav class="mt-2">
             <?php
