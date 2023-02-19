@@ -7,7 +7,6 @@ use dosamigos\ckeditor\CKEditor;
 /* @var $model app\models\Course */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
 <div class="course-form">
 
     <?php
@@ -16,24 +15,17 @@ use dosamigos\ckeditor\CKEditor;
         'options' => [
             'enctype' => 'multipart/form-data'
         ],
-        'id' => 'create-course',
-//         'action' => [
-//             'course/create'
-//         ]
+        'id' => 'create-course'
     ]);
     ?>
 
     
     <div class="col-8 float-left">
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-        <?= $form->field($model, 'dificulty')->textInput(['type' => 'range', 'min' => 1, 'max' => 3]) ?>
+        <?= $form->field($model, 'dificulty')->textInput(['type' => 'range', 'min' => 1, 'max' => 3, "class" => ""]) ?>
     </div>
-	<div class="col-4 float-left"
-		style="border: solid 1px grey; border-radius: 10px;">
-		<img id="file-ip-1-preview" height="150px;" /><br /> <label
-			for="file-ip-1" class="btn btn-primary"
-			style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">Upload
-			Image</label>
+	<div class="col-4 float-left" style="border: solid 1px grey; border-radius: 10px; height: 200px;">
+		<img id="file-ip-1-preview" height="150px;" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" /><br /> <label for="file-ip-1" class="btn btn-primary" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">Upload Image</label>
         <?= $form->field($model, 'image', ['template' => '{input}'])->fileInput(['onchange' => "showPreview(event);", 'id' => "file-ip-1", 'class' => 'form-input d-none']) ?>
     </div>
 

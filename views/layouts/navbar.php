@@ -7,6 +7,18 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 ?>
+<style>
+.ui-autocomplete {
+	top: 47px;
+	left: 226.517px;
+	width: 224px;
+	z-index: 99999;
+	opacity: .9;
+	color: white;
+background-color: #495057;
+border: 0px;
+}
+</style>
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-dark navbar-dark">
 	<!-- Left navbar links -->
@@ -21,51 +33,34 @@ use yii\widgets\ActiveForm;
 	<form class="form-inline ml-3">
 		<div class="input-group input-group-sm">
 			<?php
-    $model = new Users();
-    $form = ActiveForm::begin([
-        'options' => [
-            'enctype' => 'multipart/form-data'
-        ]
-    ]);
-    echo $form->field($model, 'username')
-        ->widget(\yii\jui\AutoComplete::classname(), [
-        'clientOptions' => [
-            'source' => Users::find()->select('Username')->limit(10)
-                ->column(),
-            'enabled' => true,
-        ],
-        'options' => [
-            'placeholder' => 'Search',
-            'class' => 'form-control form-control-navbar',
-        ]
-    ])
-        ->label(false);
-    ActiveForm::end();
-    ?>
+$model = new Users();
+$form = ActiveForm::begin([
+    'options' => [
+        'enctype' => 'multipart/form-data'
+    ]
+]);
+echo $form->field($model, 'username')
+    ->widget(\yii\jui\AutoComplete::classname(), [
+    'clientOptions' => [
+        'source' => Users::find()->select('Username')
+            ->limit(10)
+            ->column(),
+        'enabled' => true
+    ],
+    'options' => [
+        'placeholder' => 'Search',
+        'class' => 'form-control form-control-navbar',
+    ]
+])
+    ->label(false);
+ActiveForm::end();
+?>
 		</div>
 	</form>
-	    
-
 	<!-- Right navbar links -->
 	<ul class="navbar-nav ml-auto">
 		<!-- Navbar Search -->
-		<li class="nav-item"><a class="nav-link" data-widget="navbar-search" href="#" role="button"> <i class="fas fa-search"></i>
-		</a>
-			<div class="navbar-search-block">
-				<form class="form-inline">
-					<div class="input-group input-group-sm">
-						<input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-						<div class="input-group-append">
-							<button class="btn btn-navbar" type="submit">
-								<i class="fas fa-search"></i>
-							</button>
-							<button class="btn btn-navbar" type="button" data-widget="navbar-search">
-								<i class="fas fa-times"></i>
-							</button>
-						</div>
-					</div>
-				</form>
-			</div></li>
+		
 		<!-- Messages Dropdown Menu -->
 		<?php
 
@@ -162,7 +157,7 @@ if (! Yii::$app->user->isGuest) {
 		<li class="nav-item dropdown"><a class="nav-link" data-toggle="dropdown" href="#"> <i class="far fa-user"></i>
 		</a>
 			<div class="dropdown-menu dropdown-menu-right">
-                <?=Html::a('Logout <i class="fas fa-sign-out-alt"></i>', ['/site/logout'], ['data-method' => 'post','class' => 'nav-link'])?>
+                <?=Html::a('Logout <i class="fas fa-sign-out-alt"></i>', ['/site/logout'], ['data-method' => 'post','class' => 'nav-link text-black'])?>
             </div></li>
 	</ul>
 </nav>

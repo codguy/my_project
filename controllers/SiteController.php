@@ -139,6 +139,7 @@ class SiteController extends NewBaseController
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            \Yii::$app->session->setFlash('success', 'Welcome Back !');
             return $this->goBack();
         }
 

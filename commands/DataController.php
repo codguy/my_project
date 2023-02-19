@@ -83,7 +83,7 @@ class DataController extends Controller
             }
         }
     }
-    
+
     public function actionAddCourse($count = 1)
     {
         for ($i = 0; $i < $count; $i ++) {
@@ -100,35 +100,28 @@ class DataController extends Controller
             $model->dob = date("Y-m-d", DataController::getRandomDate());
             $model->created_on = date("Y-m-d H:i:m");
             $model->updated_on = date("Y-m-d H:i:m");
-            try {
-                if ($model->save()) {
-                    $title = 'New ' . $model->getRole($model->roll_id);
-                    $type = Notification::TYPE_NEW;
-                    $users = Users::findAll([
-                        '<=',
-                        'roll_id',
-                        Users::ROLE_TRAINER
-                    ]);
-                    foreach ($users as $user) {
-                        $notification = new Notification();
-                        $notification->title = $title;
-                        $notification->type_id = $type;
-                        $notification->model_id = $model->id;
-                        $notification->to_user_id = $user->id;
-                        $notification->icon = 'user';
-                        $notification->state_id = Notification::STATE_UNREAD;
-                        $notification->model = get_class($model);
-                        $notification->created_on = date('Y-m-d H:i:s');
-                        $notification->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
-                        $notification->save(false);
-                    }
-                    echo "New User " . $model->username . "\n";
-                } else {
-                    print_r($model->getErrorMessage());
-                    die();
+            if ($model->save()) {
+                $title = 'New ' . $model->getRole($model->roll_id);
+                $type = Notification::TYPE_NEW;
+                $users = Users::findAll([
+                    '<=',
+                    'roll_id',
+                    Users::ROLE_TRAINER
+                ]);
+                foreach ($users as $user) {
+                    $notification = new Notification();
+                    $notification->title = $title;
+                    $notification->type_id = $type;
+                    $notification->model_id = $model->id;
+                    $notification->to_user_id = $user->id;
+                    $notification->icon = 'user';
+                    $notification->state_id = Notification::STATE_UNREAD;
+                    $notification->model = get_class($model);
+                    $notification->created_on = date('Y-m-d H:i:s');
+                    $notification->created_by_id = ! empty(\Yii::$app->user->id) ? \Yii::$app->user->id : Users::ROLE_ADMIN;
+                    $notification->save(false);
                 }
-            } catch (Exception $e) {
-                die();
+                echo "New course " . $model->username . "\n";
             }
         }
     }

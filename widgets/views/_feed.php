@@ -57,13 +57,13 @@ $comments = Discussion::find()->where([
 
 		<p>
 		<div class="btn-group">
-			<button class="btn btn-white btn-xs like-btn" data-id="<?php echo $model->id ?>" data-key="<?php echo get_class($model) ?>">
+			<button class="btn btn-white like-btn" data-id="<?php echo $model->id ?>" data-key="<?php echo get_class($model) ?>">
 				<i class="fa fa-thumbs-up text-<?= $liked ?> mr-2"></i><?= $like_count ?>
 			</button>
-			<button class="btn btn-white btn-xs">
+			<button class="btn btn-white">
 				<i class="fa fa-comments"></i> Comment
 			</button>
-			<button class="btn btn-white btn-xs">
+			<button class="btn btn-white">
 				<i class="fa fa-share"></i> Share
 			</button>
 		</div>
@@ -96,14 +96,14 @@ $comments = Discussion::find()->where([
 			<div class="social-comment">
 				<div class="row">
 
-					<div class="media media-comment">
+					<div class="media media-comment pl-0">
 						<?php echo $self->image ?>
 						<form class="form-horizontal" style="width: 100%;">
 							<div class="input-group input-group-sm mb-0">
 
 
 
-								<input class="form-control form-control-sm" placeholder="Write comment..." id="discuss<?php echo $model->id ?>" style="height: 60px; margin-left:10px;">
+								<input class="form-control form-control-sm ml-0" placeholder="Write comment..." id="discuss<?php echo $model->id ?>" style="height: 60px; margin-left:10px;">
 								<div class="input-group-append">
 									<?php echo Html::button('send', ["id" => "discuss-btn", "class" => "btn btn-secondary discuss-btn", 'data-id' => $model->id, 'data-key' => get_class($model)]) ?>
 								</div>

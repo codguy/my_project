@@ -1,9 +1,12 @@
 <?php
 namespace app\components;
+
 use app\models\Notification;
 use app\models\Users;
 use app\models\image;
 use Yii;
+use yii\helpers\Inflector;
+use yii\helpers\StringHelper;
 use yii\helpers\Url;
 
 class NewActiveRecord extends \yii\db\ActiveRecord
@@ -25,26 +28,40 @@ class NewActiveRecord extends \yii\db\ActiveRecord
 
     public $image;
 
-    public function beforeSave ($insert)
+    public static function label($n = 1)
+    {
+        $className = Inflector::camel2words(StringHelper::basename(get_called_class()));
+        if ($n == 2)
+            return Inflector::pluralize($className);
+        return $className;
+    }
+
+    public function __toString()
+    {
+        return $this->label(1);
+    }
+
+    public function beforeSave($insert)
     {
         if ($insert) {
             $this->created_by_id = \Yii::$app->user->identity->id ?? Users::ROLE_ADMIN;
             $this->created_on = date('Y-m-d H:i:s');
-            $this->updated_on = date('Y-m-d H:i:s');
+            if (isset($this->updated_on)) {
+                $this->updated_on = date('Y-m-d H:i:s');
+            }
         } else {
             $this->updated_on = date('Y-m-d H:i:s a');
         }
         return parent::beforeSave($insert);
     }
 
-    public function afterSave ($insert, $changedAttributes)
+    public function afterSave($insert, $changedAttributes)
     {
         \Yii::$app->cache->flush();
         return parent::afterSave($insert, $changedAttributes);
     }
 
-    public static function createNofication ($title, $type, $model, $to_user,
-            $icon)
+    public static function createNofication($title, $type, $model, $to_user, $icon)
     {
         $notification = new Notification();
         $notification->title = $title;
@@ -59,11 +76,11 @@ class NewActiveRecord extends \yii\db\ActiveRecord
         $notification->save(false);
     }
 
-    public static function findOne ($condition, $duration = 10)
+    public static function findOne($condition, $duration = 10)
     {
         if (! is_array($condition)) {
             $condition = [
-                    'id' => $condition
+                'id' => $condition
             ];
         }
         return static::find()->cache($duration)
@@ -71,17 +88,17 @@ class NewActiveRecord extends \yii\db\ActiveRecord
             ->one();
     }
 
-    public static function findLast ($condition, $duration = 10)
+    public static function findLast($condition, $duration = 10)
     {
         return static::find()->cache($duration)
             ->where($condition)
             ->orderBy([
-                'id' => SORT_DESC
+            'id' => SORT_DESC
         ])
             ->one();
     }
 
-    public function getTime ()
+    public function getTime()
     {
         $start = strtotime($this->created_on);
         $end = strtotime('now');
@@ -121,71 +138,72 @@ class NewActiveRecord extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function getDificulty ($diff)
+    public function getDificulty($diff)
     {
         $list = [
-                self::DIFF_EASY => '<span class="badge badge-success">Easy</span>',
-                self::DIFF_NORMAL => '<span class="badge badge-primary">Normal</span>',
-                self::DIFF_HARD => '<span class="badge badge-danger">Hard</span>'
+            self::DIFF_EASY => '<span class="badge badge-success">Easy</span>',
+            self::DIFF_NORMAL => '<span class="badge badge-primary">Normal</span>',
+            self::DIFF_HARD => '<span class="badge badge-danger">Hard</span>'
         ];
         return ! empty($diff) ? $list[$diff] : $list;
     }
 
-    public static function isAdmin ($id = false)
+    public static function isAdmin($id = false)
     {
         $user = Users::find()->cache()
-            ->where(
-                [
-                        'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
-                ])
+            ->where([
+            'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
+        ])
             ->one();
         return ($user->roll_id == Users::ROLE_ADMIN) ? true : false;
     }
 
-    public static function isManager ($id = false)
+    public static function isManager($id = false)
     {
         $user = Users::find()->cache()
-            ->where(
-                [
-                        'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
-                ])
+            ->where([
+            'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
+        ])
             ->one();
         return ($user->roll_id == Users::ROLE_MANAGER) ? true : false;
     }
 
-    public static function isTrainer ($id = false)
+    public static function isTrainer($id = false)
     {
         $user = Users::find()->cache()
-            ->where(
-                [
-                        'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
-                ])
+            ->where([
+            'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
+        ])
             ->one();
         return ($user->roll_id == Users::ROLE_TRAINER) ? true : false;
     }
 
-    public static function isStudent ($id = false)
+    public static function isStudent($id = false)
     {
         $user = Users::find()->cache()
-            ->where(
-                [
-                        'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
-                ])
+            ->where([
+            'id' => ! empty($id) ? $id : \Yii::$app->user->identity->id
+        ])
             ->one();
         return ($user->roll_id == Users::ROLE_STUDENT) ? true : false;
     }
 
-    public static function isSelfAction ()
+    public static function isSelfAction()
     {
         return (\Yii::$app->request->get('id') == \Yii::$app->user->id) ? true : false;
     }
 
-    public static function isUsers ($id = false)
+    public static function isUsers($id = false)
     {
         return ($id == \Yii::$app->user->identity->getId()) ? true : false;
     }
 
-    public function createPath ($path)
+    public static function isSelfMade($id = false)
+    {
+        return ($this->created_by_id == \Yii::$app->user->identity->getId()) ? true : false;
+    }
+
+    public function createPath($path)
     {
         if (is_dir($path))
             return true;
@@ -194,34 +212,31 @@ class NewActiveRecord extends \yii\db\ActiveRecord
         return ($return && is_writable($prev_path)) ? mkdir($path, 0777, true) : false;
     }
 
-    public function hasImage ()
+    public function hasImage()
     {
-        $image = image::findLast(
-                [
-                        'model' => get_class($this),
-                        'model_id' => $this->id
-                ], 5);
+        $image = image::findLast([
+            'model' => get_class($this),
+            'model_id' => $this->id
+        ], 5);
         return ! empty($image) ? $image : false;
     }
 
-    public function getImageUrl ()
+    public function getImageUrl()
     {
         $image = $this->hasImage();
         if (! empty($image)) {
-            return Yii::$app->request->baseUrl . '/../uploads/' . $image->folder .
-                    '/' . $image->name;
+            return Yii::$app->request->baseUrl . '/../uploads/' . $image->folder . '/' . $image->name;
         } else {
             return Yii::$app->request->baseUrl . '/images/user-icon.png';
         }
     }
 
-    public function getImage ($size = 50)
+    public function getImage($size = 50)
     {
-        return '<img src=' . $this->getImageUrl() . ' height="' . $size .
-                '" width="' . $size . '" class="img-fluid rounded">';
+        return '<img src=' . $this->getImageUrl() . ' height="' . $size . '" width="' . $size . '" class="img-fluid rounded">';
     }
 
-    public function upload ()
+    public function upload()
     {
         if ($this->validate(false)) {
             $class = get_class($this);
@@ -246,69 +261,66 @@ class NewActiveRecord extends \yii\db\ActiveRecord
         }
     }
 
-    public function getErrorMessage ()
+    public function getErrorMessage()
     {
         Yii::$app->response->format = 'json';
         return $this->getErrors();
     }
 
-    public function getUrl ()
+    public function getUrl()
     {
         return Url::toRoute([
-                'view',
-                'id' => $this->id
+            'view',
+            'id' => $this->id
         ]);
     }
 
-    function ip_info ($ip = NULL, $purpose = "location", $deep_detect = TRUE)
+    function ip_info($ip = NULL, $purpose = "location", $deep_detect = TRUE)
     {
         $output = NULL;
         $purpose = str_replace(array(
-                "name",
-                "\n",
-                "\t",
-                " ",
-                "-",
-                "_"
+            "name",
+            "\n",
+            "\t",
+            " ",
+            "-",
+            "_"
         ), NULL, strtolower(trim($purpose)));
         $support = array(
-                "country",
-                "countrycode",
-                "state",
-                "region",
-                "city",
-                "location",
-                "address"
+            "country",
+            "countrycode",
+            "state",
+            "region",
+            "city",
+            "location",
+            "address"
         );
         $continents = array(
-                "AF" => "Africa",
-                "AN" => "Antarctica",
-                "AS" => "Asia",
-                "EU" => "Europe",
-                "OC" => "Australia (Oceania)",
-                "NA" => "North America",
-                "SA" => "South America"
+            "AF" => "Africa",
+            "AN" => "Antarctica",
+            "AS" => "Asia",
+            "EU" => "Europe",
+            "OC" => "Australia (Oceania)",
+            "NA" => "North America",
+            "SA" => "South America"
         );
-        if (filter_var($ip, FILTER_VALIDATE_IP) &&
-                in_array($purpose, $support)) {
-            $ipdat = @json_decode(
-                    file_get_contents("http://www.geoplugin.net/json.gp"));
+        if (filter_var($ip, FILTER_VALIDATE_IP) && in_array($purpose, $support)) {
+            $ipdat = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp"));
             if (@strlen(trim($ipdat->geoplugin_countryCode)) == 2) {
                 switch ($purpose) {
                     case "location":
                         $output = array(
-                                "city" => @$ipdat->geoplugin_city,
-                                "state" => @$ipdat->geoplugin_regionName,
-                                "country" => @$ipdat->geoplugin_countryName,
-                                "country_code" => @$ipdat->geoplugin_countryCode,
-                                "continent" => @$continents[strtoupper(
-                                        $ipdat->geoplugin_continentCode)],
-                                "continent_code" => @$ipdat->geoplugin_continentCode
+                            "city" => @$ipdat->geoplugin_city,
+                            "state" => @$ipdat->geoplugin_regionName,
+                            "country" => @$ipdat->geoplugin_countryName,
+                            "country_code" => @$ipdat->geoplugin_countryCode,
+                            "continent" => @$continents[strtoupper($ipdat->geoplugin_continentCode)],
+                            "continent_code" => @$ipdat->geoplugin_continentCode
                         );
                         break;
                     case "address":
                         $address = array(
-                                $ipdat->geoplugin_countryName
+                            $ipdat->geoplugin_countryName
                         );
                         if (@strlen($ipdat->geoplugin_regionName) >= 1)
                             $address[] = $ipdat->geoplugin_regionName;
@@ -336,4 +348,56 @@ class NewActiveRecord extends \yii\db\ActiveRecord
         }
         return $output;
     }
+
+    protected function getControllerID()
+    {
+        if (empty($this->_controllerId)) {
+            $admin = '';
+            if (! (\Yii::$app instanceof yii\console\Application)) {
+                $adminPath = Yii::$app->controller->module->basePath . DIRECTORY_SEPARATOR . 'controllers/admin';
+                if (is_dir($adminPath)) {
+                    $admin = 'admin/';
+                }
+            }
+            $modelClass = get_class($this);
+            $pos = strrpos($modelClass, '\\');
+            $class = substr($modelClass, $pos + 1);
+            if($class == 'Users'){
+                $class = 'User';
+            }
+        }
+        return $admin . Inflector::camel2id($class);
+    }
+
+    public function getModelUrl($action = 'view', $id = null, $absolute = false)
+    {
+        $params = [
+            $this->getControllerID() . '/' . $action
+        ];
+        if ($id != null) {
+            if (is_array($id))
+                $params = array_merge($params, $id);
+            else
+                $params['id'] = $id;
+        } elseif ($this->hasAttribute('id')) {
+            $params['id'] = $this->id;
+        }
+
+        $params = array_filter($params);
+        if ($absolute || \Yii::$app instanceof yii\console\Application) {
+            return \Yii::$app->getUrlManager()->createAbsoluteUrl($params);
+        }
+        return \Yii::$app->getUrlManager()->createUrl($params);
+    }
+
+    public function getRelatedData($data)
+    {
+        $model = $this->$data;
+        if (! empty($data)) {
+            $url = $model->getModelUrl();
+            $html = "<a href=".$url.">".$model->username."</a>";
+            return $html;
+        }
+    }
 }
+?>

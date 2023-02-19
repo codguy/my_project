@@ -40,21 +40,24 @@ class HelloController extends NewConsoleController
     {
         $commands = [
             "hello/index",
-            "data/add-user"
+            "add-course"
+//             "data/add-user"
         ];
         do {
             $this->ConsolePrint("Time : " . date('Y-m-d h:i:s A') . PHP_EOL);
             foreach ($commands as $command) {
                 $this->ConsolePrint("Command : " . $command);
                 try {
-                    exec("yii " . $command, $output, $retval);
+                    $output = '';
+                    exec("php yii " . $command, $output, $retval);
+                    print_r($retval);
                 } catch (\Exception $e) {
                     echo "Exception caught";
                     exit();
                 }
                 // $this->ConsolePrint($output);
             }
-            sleep(5);
+            sleep(1);
         } while (true);
     }
 }

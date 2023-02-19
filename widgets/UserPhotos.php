@@ -24,7 +24,7 @@ class UserPhotos extends \yii\bootstrap4\Widget
     {
         $images = image::find()->cache(30)->where([
             'model' => Feed::class
-        ])->limit(9);
+        ])->limit(6)->orderBy('id DESC');
         return $this->render('user_photos_view', ['user' => $this->user, 'images' => $images]);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 namespace app\controllers;
+
 use app\components\NewBaseController;
 use app\models\Chapter;
 use app\models\Course;
@@ -7,7 +8,8 @@ use app\models\Discussion;
 use app\models\Notification;
 use app\models\Users;
 use app\models\search\Course as CourseSearch;
-use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use yii\filters\AccessRule;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
@@ -21,19 +23,56 @@ class CourseController extends NewBaseController
      *
      * @inheritDoc
      */
-    public function behaviors ()
+    public function behaviors()
     {
-        return array_merge(parent::behaviors(),
-                [
-                        'verbs' => [
-                                'class' => VerbFilter::className(),
-                                'actions' => [
-                                        'delete' => [
-                                                'POST'
-                                        ]
-                                ]
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'ruleConfig' => [
+                    'class' => AccessRule::className()
+                ],
+                'rules' => [
+                    [
+                        'actions' => [
+                            'ajax'
+                        ],
+                        'allow' => true
+                    ],
+                    [
+                        'actions' => [
+                            'update',
+                            'create',
+                            'delete',
+                            'add-chapter'
+                        ],
+                        'allow' => true,
+                        'matchCallback' => function () {
+                            return Users::isAdmin() || Users::isManager() || Users::isTrainer();
+                        }
+                    ],
+                    [
+                        'actions' => [
+                            'index',
+                            'view',
+                            'view-chapter',
+                            'discuss'
+                        ],
+                        'allow' => true,
+                        'roles' => [
+                            '@'
                         ]
-                ]);
+                    ]
+                ]
+            ],
+            'verbs' => [
+                'class' => \yii\filters\VerbFilter::className(),
+                'actions' => [
+                    'delete' => [
+                        'post'
+                    ]
+                ]
+            ]
+        ];
     }
 
     /**
@@ -41,16 +80,15 @@ class CourseController extends NewBaseController
      *
      * @return string
      */
-    public function actionIndex ()
+    public function actionIndex()
     {
         $searchModel = new CourseSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
         // print_r($dataProvider->query->count());die;
-        return $this->render('index',
-                [
-                        'searchModel' => $searchModel,
-                        'dataProvider' => $dataProvider
-                ]);
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider
+        ]);
     }
 
     /**
@@ -61,10 +99,10 @@ class CourseController extends NewBaseController
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView ($id)
+    public function actionView($id)
     {
         return $this->render('view', [
-                'model' => $this->findModel($id)
+            'model' => $this->findModel($id)
         ]);
     }
 
@@ -75,7 +113,7 @@ class CourseController extends NewBaseController
      *
      * @return string|\yii\web\Response
      */
-    public function actionCreate ()
+    public function actionCreate()
     {
         $model = new Course();
 
@@ -92,21 +130,18 @@ class CourseController extends NewBaseController
                 }
                 $title = 'New Course: ' . $model->name;
                 $type = Notification::TYPE_NEW;
-                $users = Users::find()->where(
-                        [
-                                '>=',
-                                'roll_id',
-                                Users::ROLE_TRAINER
-                        ]);
+                $users = Users::find()->where([
+                    '>=',
+                    'roll_id',
+                    Users::ROLE_TRAINER
+                ]);
                 foreach ($users->each() as $user) {
-                    Notification::createNofication($title, $type, $model,
-                            $user->id, 'book');
+                    Notification::createNofication($title, $type, $model, $user->id, 'book');
                 }
-                Notification::createNofication('Course Published',
-                        Notification::TYPE_SUCCESS, $model, $model->id, 'book');
+                Notification::createNofication('Course Published', Notification::TYPE_SUCCESS, $model, $model->id, 'book');
                 return $this->redirect([
-                        'view',
-                        'id' => $model->id
+                    'view',
+                    'id' => $model->id
                 ]);
             }
         } else {
@@ -114,7 +149,7 @@ class CourseController extends NewBaseController
         }
 
         return $this->render('create', [
-                'model' => $model
+            'model' => $model
         ]);
     }
 
@@ -128,7 +163,7 @@ class CourseController extends NewBaseController
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate ($id)
+    public function actionUpdate($id)
     {
         $model = $this->findModel($id);
         $image = $model->image;
@@ -143,15 +178,15 @@ class CourseController extends NewBaseController
                 }
                 if ($model->save(false)) {
                     return $this->redirect([
-                            'view',
-                            'id' => $model->id
+                        'view',
+                        'id' => $model->id
                     ]);
                 }
             }
         }
 
         return $this->render('update', [
-                'model' => $model
+            'model' => $model
         ]);
     }
 
@@ -165,12 +200,12 @@ class CourseController extends NewBaseController
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete ($id)
+    public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect([
-                'index'
+            'index'
         ]);
     }
 
@@ -183,21 +218,20 @@ class CourseController extends NewBaseController
      * @return Course the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel ($id)
+    protected function findModel($id)
     {
         if (($model = Course::find()->cache()
             ->where([
-                'id' => $id
+            'id' => $id
         ])
             ->one()) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException(
-                \Yii::t('app', 'The requested page does not exist.'));
+        throw new NotFoundHttpException(\Yii::t('app', 'The requested page does not exist.'));
     }
 
-    public function actionAddChapter ($id)
+    public function actionAddChapter($id)
     {
         $model = new Chapter();
         $post = $this->request->post();
@@ -209,31 +243,30 @@ class CourseController extends NewBaseController
             $model->desciption = $post['Chapter']['desciption'];
             if ($model->load($post) && $model->save(false)) {
                 return $this->redirect([
-                        'view',
-                        'id' => $id
+                    'view',
+                    'id' => $id
                 ]);
             }
         }
 
         return $this->render('add_chapter', [
-                'model' => $model,
-                'id' => $id
+            'model' => $model,
+            'id' => $id
         ]);
     }
 
-    public function actionViewChapter ($id)
+    public function actionViewChapter($id)
     {
-        return $this->render('_chapter',
-                [
-                        'model' => Chapter::find()->cache()
-                            ->where([
-                                'id' => $id
-                        ])
-                            ->one()
-                ]);
+        return $this->render('_chapter', [
+            'model' => Chapter::find()->cache()
+                ->where([
+                'id' => $id
+            ])
+                ->one()
+        ]);
     }
 
-    public function actionDiscuss ()
+    public function actionDiscuss()
     {
         $model = new Discussion();
         $post = $this->request->post();
