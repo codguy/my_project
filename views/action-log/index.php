@@ -37,12 +37,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'class' => ActionColumn::className(),
+                'class' => \app\components\ActionColumn::className(),
                 'urlCreator' => function ($action, ActionLog $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }
             ],
         ],
+        'pager' => [
+            'class' => yii\bootstrap4\LinkPager::class
+        ]
     ]); ?>
 
     <?php Pjax::end(); ?>
