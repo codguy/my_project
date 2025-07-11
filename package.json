@@ -1,0 +1,32 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">     <a href=\"https://github.com/yiisoft\" target=\"_blank\">         <img src=\"https://avatars.githubusercontent.com/u/52915370?s=96&v=4\" height=\"100px\">     </a>     <h1 align=\"center\">Project setup</h1>     <br> </p>",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "node ./node_modules/tailwindcss/lib/cli.js -i ./web/css/tailwind-input.css -o ./web/css/app.css --minify",
+    "watch:css": "node ./node_modules/tailwindcss/lib/cli.js -i ./web/css/tailwind-input.css -o ./web/css/app.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codguy/my_project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/codguy/my_project/issues"
+  },
+  "homepage": "https://github.com/codguy/my_project#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11"
+  }
+}

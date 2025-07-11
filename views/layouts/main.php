@@ -28,6 +28,8 @@ $this->beginPage()?>
 
     $this->registerCssFile('@web/css/bootstrap.css');
     $this->registerCssFile('@web/css/site.css');
+    // Register Tailwind CSS output file
+    $this->registerCssFile('@web/css/app.css'); // Added this line
     $this->registerCsrfMetaTags()?>
     <title><?= Html::encode($this->title) ?></title>
     <?php
